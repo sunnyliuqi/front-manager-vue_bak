@@ -9,6 +9,7 @@ function resolve (dir) {
 
 // vue.config.js
 module.exports = {
+  publicPath: '/admin/',
   configureWebpack: {
     plugins: [
       // Ignore all locale files of moment.js

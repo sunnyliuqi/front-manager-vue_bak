@@ -42,7 +42,7 @@
             </a-input>
           </a-form-item>
         </a-tab-pane>
-        <a-tab-pane key="tab2" tab="手机号登录">
+       <!-- <a-tab-pane key="tab2" tab="手机号登录">
           <a-form-item>
             <a-input size="large" type="text" placeholder="手机号" v-decorator="['mobile', {rules: [{ required: true, pattern: /^1[34578]\d{9}$/, message: '请输入正确的手机号' }], validateTrigger: 'change'}]">
               <a-icon slot="prefix" type="mobile" :style="{ color: 'rgba(0,0,0,.25)' }"/>
@@ -67,17 +67,17 @@
               ></a-button>
             </a-col>
           </a-row>
-        </a-tab-pane>
+        </a-tab-pane>-->
       </a-tabs>
 
-      <a-form-item>
+     <!-- <a-form-item>
         <a-checkbox v-decorator="['rememberMe']">自动登录</a-checkbox>
         <router-link
           :to="{ name: 'recover', params: { user: 'aaa'} }"
           class="forge-password"
           style="float: right;"
         >忘记密码</router-link>
-      </a-form-item>
+      </a-form-item>-->
 
       <a-form-item style="margin-top:24px">
         <a-button
@@ -90,7 +90,7 @@
         >确定</a-button>
       </a-form-item>
 
-      <div class="user-login-other">
+     <!-- <div class="user-login-other">
         <span>其他登录方式</span>
         <a>
           <a-icon class="item-icon" type="alipay-circle"></a-icon>
@@ -102,7 +102,7 @@
           <a-icon class="item-icon" type="weibo-circle"></a-icon>
         </a>
         <router-link class="register" :to="{ name: 'register' }">注册账户</router-link>
-      </div>
+      </div>-->
     </a-form>
 
     <two-step-captcha
