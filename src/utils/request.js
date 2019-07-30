@@ -44,17 +44,19 @@ const err = (error) => {
 
 // request interceptor
 service.interceptors.request.use(config => {
-  const apiNoAuth = API_NO_AUTHORIZATIONS
   //  是否需要会话
-  if (apiNoAuth.indexOf(config.url) === -1) {
+  const isAuth = !(API_NO_AUTHORIZATIONS.includes(config.url))
+
+  if (isAuth) {
     const token = Vue.ls.get(ACCESS_TOKEN)
     if (token) {
       config.headers['Authorization'] = token // 让每个请求携带自定义 token 请根据实际情况自行修改
     }
   }
-  const apiFrom = API_CONTENT_TYPE_FROM
   // 是否需要表单提交url
-  if (apiFrom.indexOf(config.url) !== -1) {
+  const isFrom = API_CONTENT_TYPE_FROM.includes(config.url)
+
+  if (isFrom) {
     config.headers['Content-Type'] = 'application/x-www-form-urlencoded;charset=UTF-8'
     if (!config.params) {
       config.params = config.data
