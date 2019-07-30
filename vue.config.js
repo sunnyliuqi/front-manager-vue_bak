@@ -95,15 +95,50 @@ module.exports = {
 
   devServer: {
     // development server port 8000
-    port: 8000
-    // proxy: {
-    //   '/api': {
-    //     // target: 'https://mock.ihx.me/mock/5baf3052f7da7e07e04a5116/antd-pro',
-    //     target: 'https://mock.ihx.me/mock/5baf3052f7da7e07e04a5116/antd-pro',
-    //     ws: false,
-    //     changeOrigin: true
-    //   }
-    // }
+    port: 8001,
+    proxy: {
+      /** 单工程服务代理配置 start**/
+      '/api/demo': {
+        target: 'http://localhost:67',
+        changeOrigin: true,
+        pathRewrite: { '^/api': '' }
+      },
+      '/api/demo/sys': {
+        target: 'http://localhost:68',
+        changeOrigin: true,
+        pathRewrite: { '^/api/demo': '' }
+      },
+      '/api/upload/files': {
+        target: 'http://localhost:69',
+        changeOrigin: true,
+        pathRewrite: { '^/api': '' }
+      },
+      /** 单工程服务代理配置 end**/
+      /** 微服务代理配置 start**/
+      /* '/api/demo': {
+        target: 'http://localhost:80',
+        changeOrigin: true,
+        pathRewrite: { '^/api': '' }
+      },
+      '/api/demo/sys': {
+        target: 'http://localhost:80',
+        changeOrigin: true,
+        pathRewrite: { '^/api/demo': '' }
+      },
+      '/api/upload/files': {
+        target: 'http://localhost:80',
+        changeOrigin: true,
+        pathRewrite: { '^/api': '' }
+      }, */
+
+      /** 微服务代理配置 end**/
+      // 代码生成代理
+      '/createFile': {
+        target: 'http://localhost:9229',
+        changeOrigin: true,
+        pathRewrite: { '^/createFile': '/createFile' }
+      }
+    }
   },
 
   // disable source map in production

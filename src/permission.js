@@ -4,7 +4,6 @@ import store from './store'
 
 import NProgress from 'nprogress' // progress bar
 import 'nprogress/nprogress.css' // progress bar style
-import notification from 'ant-design-vue/es/notification'
 import { setDocumentTitle, domTitle } from '@/utils/domUtil'
 import { ACCESS_TOKEN } from '@/store/mutation-types'
 
@@ -21,11 +20,20 @@ router.beforeEach((to, from, next) => {
       next({ path: '/dashboard/workplace' })
       NProgress.done()
     } else {
-      if (store.getters.roles.length === 0) {
+      store
+        .dispatch('GetInfo')
+        .catch(() => {
+          store.dispatch('Logout').then(() => {
+            next({ path: '/user/login', query: { redirect: to.fullPath } })
+          })
+        })
+      if (store.getters.serviceMenus.length === 0) {
         store
-          .dispatch('GetInfo')
+          .dispatch('GetMenus')
           .then(res => {
-            const roles = res.result && res.result.role
+            console.log('当前用户拥有的菜单：' + JSON.stringify(res.result.menus))
+            console.log('当前用户拥有的操作码：' + JSON.stringify(res.result.operationCodes))
+            /* const roles = res.result && res.result.role
             store.dispatch('GenerateRoutes', { roles }).then(() => {
               // 根据roles权限生成可访问的路由表
               // 动态添加可访问路由表
@@ -38,13 +46,9 @@ router.beforeEach((to, from, next) => {
                 // 跳转到目的路由
                 next({ path: redirect })
               }
-            })
+            }) */
           })
           .catch(() => {
-            notification.error({
-              message: '错误',
-              description: '请求用户信息失败，请重试'
-            })
             store.dispatch('Logout').then(() => {
               next({ path: '/user/login', query: { redirect: to.fullPath } })
             })
