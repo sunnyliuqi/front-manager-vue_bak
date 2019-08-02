@@ -17,7 +17,7 @@ router.beforeEach((to, from, next) => {
   if (Vue.ls.get(ACCESS_TOKEN)) {
     /* has token */
     if (to.path === '/user/login') {
-      next({ path: '/dashboard/workplace' })
+      next({ path: '/' })
       NProgress.done()
     } else {
       store
@@ -33,8 +33,8 @@ router.beforeEach((to, from, next) => {
           .then(res => {
             console.log('当前用户拥有的菜单：' + JSON.stringify(res.result.menus))
             console.log('当前用户拥有的操作码：' + JSON.stringify(res.result.operationCodes))
-            /* const roles = res.result && res.result.role
-            store.dispatch('GenerateRoutes', { roles }).then(() => {
+            const menus = res.result.menus
+            store.dispatch('GenerateRoutes', { menus }).then(() => {
               // 根据roles权限生成可访问的路由表
               // 动态添加可访问路由表
               router.addRoutes(store.getters.addRouters)
@@ -46,7 +46,7 @@ router.beforeEach((to, from, next) => {
                 // 跳转到目的路由
                 next({ path: redirect })
               }
-            }) */
+            })
           })
           .catch(() => {
             store.dispatch('Logout').then(() => {
