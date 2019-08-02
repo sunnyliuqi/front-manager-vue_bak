@@ -11,7 +11,14 @@ function hasPermission (menus, route) {
   if (route.path === '/') {
     return true
   }
-  return menus.includes(route.path)
+  let hasPermiss = false
+  menus.forEach(menu => {
+    if (menu.url === route.path) {
+      route.meta.sort = menu.sort
+      hasPermiss = true
+    }
+  })
+  return hasPermiss
 }
 
 /**
@@ -31,7 +38,7 @@ function hasRole(roles, route) {
 }
 
 function filterAsyncRouter (routerMap, menus) {
-/*  const accessedRouters = routerMap.filter(route => {
+  const accessedRouters = routerMap.filter(route => {
     if (hasPermission(menus, route)) {
       if (route.children && route.children.length) {
         route.children = filterAsyncRouter(route.children, menus)
@@ -40,8 +47,10 @@ function filterAsyncRouter (routerMap, menus) {
     }
     return false
   })
-  return accessedRouters */
-  return routerMap
+  return accessedRouters.sort(function (a, b) {
+    return b.meta.sort - a.meta.sort
+  })
+  //  return routerMap
 }
 
 const permission = {
