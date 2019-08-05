@@ -16,6 +16,7 @@ export function login (parameter) {
   return axios({
     url: '/loginjwt',
     method: 'post',
+    contentType: 'application/x-www-form-urlencoded;charset=UTF-8',
     params: parameter
   })
 }

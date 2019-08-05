@@ -3,7 +3,7 @@ import axios from 'axios'
 import store from '@/store'
 import notification from 'ant-design-vue/es/notification'
 import { VueAxios } from './axios'
-import { ACCESS_TOKEN, API_CONTENT_TYPE_FROM, API_NO_AUTHORIZATIONS } from '@/store/mutation-types'
+import { ACCESS_TOKEN, API_NO_AUTHORIZATIONS } from '@/store/mutation-types'
 
 // 创建 axios 实例
 const service = axios.create({
@@ -51,15 +51,6 @@ service.interceptors.request.use(config => {
     const token = Vue.ls.get(ACCESS_TOKEN)
     if (token) {
       config.headers['Authorization'] = token // 让每个请求携带自定义 token 请根据实际情况自行修改
-    }
-  }
-  // 是否需要表单提交url
-  const isFrom = API_CONTENT_TYPE_FROM.includes(config.url)
-
-  if (isFrom) {
-    config.headers['Content-Type'] = 'application/x-www-form-urlencoded;charset=UTF-8'
-    if (!config.params) {
-      config.params = config.data
     }
   }
   return config

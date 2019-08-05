@@ -15,8 +15,6 @@ export const CONTENT_WIDTH_TYPE = {
   Fixed: 'Fixed'
 }
 // 不需要登录认证的API
-export const API_NO_AUTHORIZATIONS = [ '/loginjwt', '/logoutjwt', '/loginMobileJwt' ]
-// 表单提交
-export const API_CONTENT_TYPE_FROM = [ '/loginjwt', '/logoutjwt', '/loginMobileJwt' ]
+export const API_NO_AUTHORIZATIONS = [ '/loginjwt', '/loginMobileJwt' ]
 // 会话时间
 export const TOKEN_TIME_OUT = 7

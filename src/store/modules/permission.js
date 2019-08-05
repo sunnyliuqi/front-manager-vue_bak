@@ -8,7 +8,7 @@ import { asyncRouterMap, constantRouterMap } from '@/config/router.config'
  * @returns {boolean}
  */
 function hasPermission (menus, route) {
-  if (route.path === '/') {
+  if (route.meta !== undefined && route.meta.static !== undefined && route.meta.static === true) {
     return true
   }
   let hasPermiss = false
