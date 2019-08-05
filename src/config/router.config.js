@@ -18,6 +18,7 @@ export const asyncRouterMap = [
         name: 'exception',
         component: RouteView,
         redirect: '/exception/403',
+        hidden: true,
         meta: { title: '异常页', static: true },
         children: [
           {
@@ -124,7 +125,7 @@ export const asyncRouterMap = [
     ]
   },
   {
-    path: '*', redirect: '/404', hidden: true
+    path: '*', redirect: '/404', hidden: true, meta: { static: true }
   }
 ]
 
@@ -157,7 +158,7 @@ export const constantRouterMap = [
     ]
   },
 
-  {
+  /* {
     path: '/test',
     component: BlankLayout,
     redirect: '/test/home',
@@ -168,7 +169,7 @@ export const constantRouterMap = [
         component: () => import('@/views/Home')
       }
     ]
-  },
+  }, */
 
   {
     path: '/404',
