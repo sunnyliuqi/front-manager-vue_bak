@@ -1,4 +1,4 @@
-import api from './index'
+import path from './index'
 import { axios } from '@/utils/request'
 
 /**
@@ -14,48 +14,49 @@ import { axios } from '@/utils/request'
  */
 export function login (parameter) {
   return axios({
-    url: '/loginjwt',
+    url: path.default + '/loginjwt',
     method: 'post',
     contentType: 'application/x-www-form-urlencoded;charset=UTF-8',
     params: parameter
   })
 }
-
+// 用户信息
+export function getInfo () {
+  return axios({
+    url: path.default + '/token/user',
+    method: 'post'
+  })
+}
+// 用户菜单和操作码
+export function getMenus () {
+  return axios({
+    url: path.default + '/token/user/menus',
+    method: 'post'
+  })
+}
+// 用户退出
+export function logout () {
+  return axios({
+    url: path.default + '/logoutjwt',
+    method: 'post'
+  })
+}
+// 发送短信验证码
 export function getSmsCaptcha (parameter) {
   return axios({
-    url: api.SendSms,
+    url: path.default + '/validationcode/sms/create',
     method: 'post',
     data: parameter
   })
 }
-
-export function getInfo () {
-  return axios({
-    url: '/token/user',
-    method: 'post'
-  })
-}
-
-export function getMenus () {
-  return axios({
-    url: '/token/user/menus',
-    method: 'post'
-  })
-}
-export function logout () {
-  return axios({
-    url: '/logoutjwt',
-    method: 'post'
-  })
-}
-
 /**
  * get user 2step code open?
  * @param parameter {*}
  */
 export function get2step (parameter) {
   return axios({
-    url: api.twoStepCode,
+    // url: path.default + '/loginMobileJwt',
+    url: '/auth/2step-code',
     method: 'post',
     data: parameter
   })

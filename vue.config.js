@@ -97,46 +97,22 @@ module.exports = {
     // development server port 8000
     port: 8001,
     proxy: {
-      /** 单工程服务代理配置 start**/
-      '/api/demo': {
-        target: 'http://localhost:67',
+      // 系统服务
+      '/api/sys': {
+        target: 'http://192.168.3.167:68',
         changeOrigin: true,
         pathRewrite: { '^/api': '' }
       },
-      '/api/demo/sys': {
-        target: 'http://localhost:68',
-        changeOrigin: true,
-        pathRewrite: { '^/api/demo': '' }
-      },
-      '/api/upload/files': {
-        target: 'http://localhost:69',
+      // 文件上传服务
+      '/api/upload': {
+        target: 'http://192.168.3.167:69',
         changeOrigin: true,
         pathRewrite: { '^/api': '' }
       },
-      /** 单工程服务代理配置 end**/
-      /** 微服务代理配置 start**/
-      /* '/api/demo': {
-        target: 'http://localhost:80',
-        changeOrigin: true,
-        pathRewrite: { '^/api': '' }
-      },
-      '/api/demo/sys': {
-        target: 'http://localhost:80',
-        changeOrigin: true,
-        pathRewrite: { '^/api/demo': '' }
-      },
-      '/api/upload/files': {
-        target: 'http://localhost:80',
-        changeOrigin: true,
-        pathRewrite: { '^/api': '' }
-      }, */
-
-      /** 微服务代理配置 end**/
-      // 代码生成代理
-      '/createFile': {
-        target: 'http://localhost:9229',
-        changeOrigin: true,
-        pathRewrite: { '^/createFile': '/createFile' }
+      // 文件回显需要在nginx 配置
+      '/uploads': {
+        target: 'http://192.168.3.167',
+        changeOrigin: true
       }
     }
   },

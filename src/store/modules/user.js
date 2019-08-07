@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import { login, getInfo, logout, getMenus } from '@/api/login'
+import { FILE_DISPLAY_PREFIX } from '@/api/upload'
 import { ACCESS_TOKEN, TOKEN_TIME_OUT } from '@/store/mutation-types'
 import { welcome } from '@/utils/util'
 
@@ -24,7 +25,7 @@ const user = {
       state.welcome = welcome
     },
     SET_AVATAR: (state, avatar) => {
-      state.avatar = avatar
+      state.avatar = FILE_DISPLAY_PREFIX + avatar
     },
     SET_ROLES: (state, roles) => {
       state.roles = roles

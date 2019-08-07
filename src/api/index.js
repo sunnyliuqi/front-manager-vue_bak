@@ -1,12 +1,10 @@
-const api = {
-  Login: '/auth/login',
-  Logout: '/auth/logout',
-  ForgePassword: '/auth/forge-password',
-  Register: '/auth/register',
-  twoStepCode: '/auth/2step-code',
-  SendSms: '/account/sms',
-  SendSmsErr: '/account/sms_err',
-  // get my info
-  UserInfo: '/user/info'
+// 系统多服务配置，对应后端的context-path配置
+const path = {
+  // 默认服务 系统管理
+  default: '/sys',
+  // 上传文件服务
+  upload: '/upload',
+  // 显示文件，nginx文件显示配置
+  uploads: '/uploads'
 }
-export default api
+export default path
