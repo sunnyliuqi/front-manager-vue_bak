@@ -12,35 +12,6 @@ export const asyncRouterMap = [
     redirect: '/auto/completeList',
     children: [
 
-      // Exception
-      {
-        path: '/exception',
-        name: 'exception',
-        component: RouteView,
-        redirect: '/exception/403',
-        hidden: true,
-        meta: { title: '异常页', static: true },
-        children: [
-          {
-            path: '/exception/403',
-            name: 'Exception403',
-            component: () => import(/* webpackChunkName: "fail" */ '@/views/exception/403'),
-            meta: { title: '403', static: true }
-          },
-          {
-            path: '/exception/404',
-            name: 'Exception404',
-            component: () => import(/* webpackChunkName: "fail" */ '@/views/exception/404'),
-            meta: { title: '404', static: true }
-          },
-          {
-            path: '/exception/500',
-            name: 'Exception500',
-            component: () => import(/* webpackChunkName: "fail" */ '@/views/exception/500'),
-            meta: { title: '500', static: true }
-          }
-        ]
-      },
       // 自动生成
       {
         path: '/auto',
@@ -121,7 +92,36 @@ export const asyncRouterMap = [
             meta: { title: '个人资料', keepAlive: true, hidden: true, static: true }
           }
         ]
-      }
+      }/* ,
+      // Exception
+      {
+        path: '/exception',
+        name: 'exception',
+        component: RouteView,
+        redirect: '/exception/403',
+        hidden: true,
+        meta: { title: '异常页', static: true },
+        children: [
+          {
+            path: '/exception/403',
+            name: 'Exception403',
+            component: () => import(/!* webpackChunkName: "fail" *!/ '@/views/exception/403'),
+            meta: { title: '403', static: true }
+          },
+          {
+            path: '/exception/404',
+            name: 'Exception404',
+            component: () => import(/!* webpackChunkName: "fail" *!/ '@/views/exception/404'),
+            meta: { title: '404', static: true }
+          },
+          {
+            path: '/exception/500',
+            name: 'Exception500',
+            component: () => import(/!* webpackChunkName: "fail" *!/ '@/views/exception/500'),
+            meta: { title: '500', static: true }
+          }
+        ]
+      } */
     ]
   },
   {
@@ -170,10 +170,17 @@ export const constantRouterMap = [
       }
     ]
   }, */
-
+  {
+    path: '/403',
+    component: () => import(/* webpackChunkName: "fail" */ '@/views/exception/403')
+  },
   {
     path: '/404',
     component: () => import(/* webpackChunkName: "fail" */ '@/views/exception/404')
+  },
+  {
+    path: '/500',
+    component: () => import(/* webpackChunkName: "fail" */ '@/views/exception/500')
   }
 
 ]

@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import axios from 'axios'
 import store from '@/store'
+import router from '@/router'
 import notification from 'ant-design-vue/es/notification'
 import { VueAxios } from './axios'
 import { ACCESS_TOKEN, API_NO_AUTHORIZATIONS } from '@/store/mutation-types'
@@ -16,9 +17,7 @@ const err = (error) => {
     const data = error.response.data
     const token = Vue.ls.get(ACCESS_TOKEN)
     if (error.response.status === 403) {
-      notification.error({
-        message: data.msg
-      })
+      router.push('/403')
     }
     if (error.response.status === 401 && !(data.result && data.result.isLogin)) {
       notification.error({
@@ -33,10 +32,10 @@ const err = (error) => {
       }
     }
     if (error.response.status <= 504 && error.response.status >= 500) {
-      this.$router.push('/exception/500')
+      router.push('/500')
     }
     if (error.response.status >= 404 && error.response.status < 422) {
-      this.$router.push('/exception/404')
+      router.push('/404')
     }
   }
   // return Promise.reject(error)
@@ -58,6 +57,7 @@ service.interceptors.request.use(config => {
 
 // response interceptor
 service.interceptors.response.use((response) => {
+  console.log('接口服务响应数据：' + JSON.stringify(response.data))
   return response.data
 }, err)
 
