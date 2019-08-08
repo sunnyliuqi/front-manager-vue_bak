@@ -41,6 +41,14 @@ export function logout () {
     method: 'post'
   })
 }
+// 更新密码
+export function updatePasswd (parameter) {
+  return axios({
+    url: path.default + '/user/updatePassword',
+    method: 'post',
+    data: parameter
+  })
+}
 // 发送短信验证码
 export function getSmsCaptcha (parameter) {
   return axios({

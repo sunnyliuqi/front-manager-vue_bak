@@ -19,11 +19,9 @@
               <span>个人资料</span>
             </router-link>
           </a-menu-item>
-          <a-menu-item key="1">
-            <router-link :to="{ name: 'updeatePasswd' }">
+          <a-menu-item key="1" @click="$refs.updatePasswd.show()">
               <a-icon type="lock"/>
               <span>修改密码</span>
-            </router-link>
           </a-menu-item>
           <a-menu-divider/>
           <a-menu-item key="3">
@@ -35,17 +33,20 @@
         </a-menu>
       </a-dropdown>
     </div>
+    <update-passwd ref="updatePasswd" />
   </div>
 </template>
 
 <script>
 import NoticeIcon from '@/components/NoticeIcon'
+import UpdatePasswd from '@/components/UpdatePasswd'
 import { mapActions, mapGetters } from 'vuex'
 
 export default {
   name: 'UserMenu',
   components: {
-    NoticeIcon
+    NoticeIcon,
+    UpdatePasswd
   },
   methods: {
     ...mapActions(['Logout']),

@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import { login, getInfo, logout, getMenus } from '@/api/login'
+import { login, getInfo, logout, getMenus, updatePasswd } from '@/api/login'
 import { FILE_DISPLAY_PREFIX } from '@/api/upload'
 import { ACCESS_TOKEN, TOKEN_TIME_OUT } from '@/store/mutation-types'
 import { welcome } from '@/utils/util'
@@ -81,7 +81,7 @@ const user = {
       })
     },
     // 登出
-    Logout ({ commit, state }) {
+    Logout ({ commit }) {
       return new Promise((resolve) => {
         logout().then(() => {
           commit('SET_TOKEN', '')
@@ -90,6 +90,16 @@ const user = {
           resolve()
         }).catch(() => {
           resolve()
+        })
+      })
+    },
+    // 更新密码
+    UpdPasswd ({ commit }, passwdInfo) {
+      return new Promise((resolve, reject) => {
+        updatePasswd(passwdInfo).then(response => {
+          resolve(response)
+        }).catch(error => {
+          reject(error)
         })
       })
     }
