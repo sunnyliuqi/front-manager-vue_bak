@@ -91,7 +91,6 @@ export default {
       this.confirmLoading = true
       this.form.validateFields((err, values) => {
         if (!err) {
-          console.log('Received values of form: ', values)
           const params = { ...values }
           this.UpdPasswd(params).then((res) => {
             if (res.code === 10000) {

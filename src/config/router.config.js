@@ -88,7 +88,7 @@ export const asyncRouterMap = [
             path: '/sys/personal',
             name: 'personal',
             hidden: true,
-            component: () => import('@/views/form/advancedForm/AdvancedForm'),
+            component: () => import('@/views/user/UserInfo'),
             meta: { title: '个人资料', keepAlive: true, hidden: true, static: true }
           }
         ]

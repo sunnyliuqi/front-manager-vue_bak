@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import { login, getInfo, logout, getMenus, updatePasswd } from '@/api/login'
+import { login, getInfo, logout, getMenus, updatePasswd, updateUserInfo } from '@/api/login'
 import { FILE_DISPLAY_PREFIX } from '@/api/upload'
 import { ACCESS_TOKEN, TOKEN_TIME_OUT } from '@/store/mutation-types'
 import { welcome } from '@/utils/util'
@@ -97,6 +97,16 @@ const user = {
     UpdPasswd ({ commit }, passwdInfo) {
       return new Promise((resolve, reject) => {
         updatePasswd(passwdInfo).then(response => {
+          resolve(response)
+        }).catch(error => {
+          reject(error)
+        })
+      })
+    },
+    // 更新个人资料
+    UpdateUserInfo ({ commit }, userInfo) {
+      return new Promise((resolve, reject) => {
+        updateUserInfo(userInfo).then(response => {
           resolve(response)
         }).catch(error => {
           reject(error)

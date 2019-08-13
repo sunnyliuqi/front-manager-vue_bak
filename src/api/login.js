@@ -42,11 +42,19 @@ export function logout () {
   })
 }
 // 更新密码
-export function updatePasswd (parameter) {
+export function updatePasswd (data) {
   return axios({
     url: path.default + '/user/updatePassword',
     method: 'post',
-    data: parameter
+    data: data
+  })
+}
+// 更新用户信息
+export function updateUserInfo (data) {
+  return axios({
+    url: path.default + '/user/updateInfo',
+    method: 'put',
+    data: data
   })
 }
 // 发送短信验证码

@@ -99,19 +99,18 @@ module.exports = {
     proxy: {
       // 系统服务
       '/api/sys': {
-        target: 'http://192.168.3.167:68',
-        changeOrigin: true,
-        pathRewrite: { '^/api': '' }
-      },
-      // 文件上传服务
-      '/api/upload': {
-        target: 'http://192.168.3.167:69',
+        target: 'http://192.168.3.1:68',
         changeOrigin: true,
         pathRewrite: { '^/api': '' }
       },
       // 文件回显需要在nginx 配置
       '/uploads': {
         target: 'http://192.168.3.167',
+        changeOrigin: true
+      },
+      // 文件上传服务
+      '/upload': {
+        target: 'http://192.168.3.167:69',
         changeOrigin: true
       }
     }
