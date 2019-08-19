@@ -39,7 +39,7 @@ export const asyncRouterMap = [
           {
             path: '/sys/user',
             name: 'user',
-            component: () => import('@/views/form/BasicForm'),
+            component: () => import('@/views/sys/user/UserList'),
             meta: { title: '用户管理', keepAlive: true }
           },
           {

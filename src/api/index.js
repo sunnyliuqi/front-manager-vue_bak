@@ -8,3 +8,6 @@ const path = {
   uploads: '/uploads'
 }
 export default path
+export function parsePageParams (data) {
+  return {}
+}

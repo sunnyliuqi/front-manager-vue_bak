@@ -58,7 +58,7 @@ service.interceptors.request.use(config => {
 
 // response interceptor
 service.interceptors.response.use((response) => {
-  console.log('接口服务响应数据：' + JSON.stringify(response.data))
+  // console.log('接口服务响应数据：' + JSON.stringify(response.data))
   if (response.data.code !== 10000 && response.data.code !== 0) {
     message.error(response.data.msg)
   }
