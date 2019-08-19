@@ -1,6 +1,5 @@
 <template>
     <a-drawer
-      :maskClosable="false"
       title="详情"
       :width="customWidth"
       @close="onClose"
