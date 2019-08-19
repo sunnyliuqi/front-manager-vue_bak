@@ -1,5 +1,4 @@
 <template>
-  <div>
     <a-drawer
       :maskClosable="false"
       title="详情"
@@ -75,7 +74,6 @@
         </a-button>
       </div>
     </a-drawer>
-  </div>
 </template>
 
 <script>
