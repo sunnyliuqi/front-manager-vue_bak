@@ -68,6 +68,8 @@ export function checkWorkNum (params) {
   return axios({
     url: path.default + '/user/checkWorkNum',
     method: 'GET',
+    // 设置后，业务错误时不会调用弹出全局错误信息
+    headers: { 'check': true },
     // id=params.id&workNum=params.workNum
     params: params
   })
@@ -77,6 +79,7 @@ export function checkUserName (params) {
   return axios({
     url: path.default + '/user/checkUserName',
     method: 'GET',
+    headers: { 'check': true },
     // id=params.id&userName=params.userName
     params: params
   })

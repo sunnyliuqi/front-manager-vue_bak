@@ -34,7 +34,7 @@
               'password',
               {rules: [{ required: true, message: '新密码不能为空!' },
                        { min: 6, message: '新密码长度最小6位' },
-                       { validator: this.handlePasswordCheck }]}
+                       { validator: handlePasswordCheck }]}
             ]"
           />
         </a-form-item>
@@ -49,7 +49,7 @@
               'repassword',
               {rules: [{ required: true, message: '确认密码不能为空!' },
                        { min: 6, message: '确认密码长度最小6位' },
-                       {validator:this.handlePasswordCheck}]}
+                       {validator:handlePasswordCheck}]}
             ]"
           />
         </a-form-item>
@@ -78,9 +78,11 @@ export default {
       const password = this.form.getFieldValue('password')
       if (value === undefined) {
         callback(new Error('请输入密码'))
+        return
       }
       if (value && password && value.trim() !== password.trim()) {
         callback(new Error('两次密码不一致'))
+        return
       }
       callback()
     },

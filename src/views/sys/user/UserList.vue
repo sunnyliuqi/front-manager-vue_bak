@@ -30,7 +30,7 @@
               </a-form-item>
             </a-col>
             <a-col :md="8" :sm="12" :xs="24">
-              <a-form-item label="所属机构" >
+              <a-form-item label="所属机构">
                 <a-tree-select
                   allowClear
                   showSearch
@@ -43,13 +43,13 @@
             </a-col>
             <a-col :md="8" :sm="12" :xs="24">
               <a-form-item
-                label="入职时间" >
-                <a-range-picker v-model="queryParam.enterDate" />
+                label="入职时间">
+                <a-range-picker v-model="queryParam.enterDate"/>
               </a-form-item>
             </a-col>
             <a-col :md="8" :sm="12" :xs="24">
               <a-form-item label="状态">
-                <a-select v-model="queryParam.enabled" placeholder="请选择状态" >
+                <a-select v-model="queryParam.enabled" placeholder="请选择状态">
                   <a-select-option value="">全部</a-select-option>
                   <a-select-option value="true">正常</a-select-option>
                   <a-select-option value="false">冻结</a-select-option>
@@ -59,7 +59,7 @@
             <a-col :md="8" :sm="12" :xs="24">
               <span
                 class="table-page-search-submitButtons">
-                <a-button type="primary" @click="$refs.table.refresh(true)">查询</a-button>
+                <a-button type="primary" @click="$refs.userTable.refresh(true)">查询</a-button>
                 <a-button style="margin-left: 8px" @click="restQuery()">重置</a-button>
               </span>
             </a-col>
@@ -72,49 +72,74 @@
       </div>
     </div>
     <s-table
-      ref="table"
+      ref="userTable"
       size="default"
       :rowKey="(record) => record.id"
       :columns="columns"
       :data="loadData"
       showPagination="auto"
     >
-      <span slot="enabled" slot-scope="text" >
+      <span slot="enabled" slot-scope="text">
         {{ getEnableName(text) }}
       </span>
       <span slot="action" slot-scope="text, record">
         <template>
           <a @click="handleDetail(record)">详情</a>
-          <a-divider type="vertical" />
+          <a-divider type="vertical"/>
           <a @click="handleUpdate(record)">修改</a>
-          <a-divider type="vertical" />
+          <a-divider type="vertical"/>
           <a @click="handleDelete(record)">删除</a>
-          <a-divider type="vertical" />
+          <a-divider type="vertical"/>
           <a @click="handleDisabled(record)">冻结</a>
-          <a-divider type="vertical" />
+          <a-divider type="vertical"/>
           <a @click="handleEnabled(record)">解冻</a>
-          <a-divider type="vertical" />
+          <a-divider type="vertical"/>
           <a @click="handleRestPassword(record)">重置密码</a>
         </template>
       </span>
     </s-table>
-    <detail ref="userDetail" :record="info" />
+    <detail ref="userDetail" :file-display-prefix="fileDisplayPrefix" :record="info"/>
+    <add
+      ref="userAdd"
+      :file-display-prefix="fileDisplayPrefix"
+      :parse-file-respon="parseFileRespon"
+      :upload-url="uploadUrl"
+      :record="info"
+      :roles="roles"
+      :save="save"
+      :refresh="refresh"
+      :check-user-name="checkUserName"
+      :check-work-num="checkWorkNum"
+      :tree-data="treeData"
+      :filter-tree-node="filterTreeNode"/>
   </a-card>
 </template>
 
 <script>
 import moment from 'moment'
 import { isEmpty } from '@/utils/common'
-import { queryList, save, update, get, del, checkWorkNum, checkUserName, enabled, resetPassword, getUserInfo } from '@/api/sys/user'
+import { FILE_DISPLAY_PREFIX, parseFileRespon, UPLOAD_URL } from '@/api/upload'
+import {
+  checkUserName,
+  checkWorkNum,
+  del,
+  enabled,
+  get,
+  queryList,
+  resetPassword,
+  save,
+  update
+} from '@/api/sys/user'
 import { treeList } from '@/api/sys/organization'
 import { roleList } from '@/api/sys/role'
 import { STable } from '@/components'
 import Detail from './components/Detail'
+import Add from './components/Add'
 
 /**
- * 格式化所属机构树
- * @param list
- */
+   * 格式化所属机构树
+   * @param list
+   */
 const formatTree = list => {
   list.forEach(item => {
     item.title = item.name
@@ -126,9 +151,19 @@ const formatTree = list => {
 }
 export default {
   name: 'UserList',
-  components: { STable, Detail },
+  components: { STable, Detail, Add },
   data () {
     return {
+      fileDisplayPrefix: FILE_DISPLAY_PREFIX,
+      uploadUrl: UPLOAD_URL + '/files',
+      parseFileRespon: parseFileRespon,
+      checkUserName: checkUserName,
+      checkWorkNum: checkWorkNum,
+      save: save,
+      update: update,
+      del: del,
+      enabled: enabled,
+      resetPassword: resetPassword,
       // 查询参数
       queryParam: {
         searchBeginTime: '',
@@ -196,7 +231,8 @@ export default {
             }
           })
       },
-      treeData: []
+      treeData: [],
+      roles: []
     }
   },
   created () {
@@ -220,7 +256,10 @@ export default {
     },
     restQuery () {
       this.queryParam = {}
-      this.$refs.table.refresh(true)
+      this.$refs.userTable.refresh(true)
+    },
+    refresh () {
+      this.$refs.userTable.refresh()
     },
     handleDetail (record) {
       get(record).then(res => {
@@ -231,7 +270,13 @@ export default {
       })
     },
     handleAdd () {
-
+      this.info = ''
+      roleList().then(res => {
+        if (res.code === 10000) {
+          this.roles = res.result
+          this.$refs.userAdd.show()
+        }
+      })
     },
     handleUpdate (record) {
 
