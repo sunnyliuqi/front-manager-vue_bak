@@ -88,29 +88,50 @@
           <a-divider type="vertical"/>
           <a @click="handleUpdate(record)">修改</a>
           <a-divider type="vertical"/>
-          <a @click="handleDelete(record)">删除</a>
+          <a-popconfirm title="您确认删除吗?" @confirm="handleDelete(record)" okText="确认" cancelText="取消">
+            <a href="javascript:void(0)">删除</a>
+          </a-popconfirm>
           <a-divider type="vertical"/>
-          <a @click="handleDisabled(record)">冻结</a>
+          <a-popconfirm title="确认冻结该用户吗?" @confirm="handleDisabled(record)" okText="确认" cancelText="取消">
+            <a v-if="record.enabled" href="javascript:void(0)">冻结</a>
+          </a-popconfirm>
+          <a-popconfirm title="确认解冻该用户吗?" @confirm="handleEnabled(record)" okText="确认" cancelText="取消">
+            <a v-if="!record.enabled" href="javascript:void(0)">解冻</a>
+          </a-popconfirm>
           <a-divider type="vertical"/>
-          <a @click="handleEnabled(record)">解冻</a>
-          <a-divider type="vertical"/>
-          <a @click="handleRestPassword(record)">重置密码</a>
+          <a-popconfirm title="确认要重置该用户的密码吗?" @confirm="handleRestPassword(record)" okText="确认" cancelText="取消">
+            <a href="javascript:void(0)">重置密码</a>
+          </a-popconfirm>
         </template>
       </span>
     </s-table>
-    <detail ref="userDetail" :file-display-prefix="fileDisplayPrefix" :record="info"/>
+    <detail ref="userDetail" :file-display-prefix="fileDisplayPrefix" :record="record"/>
     <add
       ref="userAdd"
       :file-display-prefix="fileDisplayPrefix"
       :parse-file-respon="parseFileRespon"
       :upload-url="uploadUrl"
-      :record="info"
+      :record="record"
       :roles="roles"
       :save="save"
       :refresh="refresh"
       :check-user-name="checkUserName"
       :check-work-num="checkWorkNum"
       :tree-data="treeData"
+      :filter-tree-node="filterTreeNode"/>
+    <edit
+      ref="userEdit"
+      :file-display-prefix="fileDisplayPrefix"
+      :parse-file-respon="parseFileRespon"
+      :upload-url="uploadUrl"
+      :record="record"
+      :roles="roles"
+      :update="update"
+      :refresh="refresh"
+      :check-user-name="checkUserName"
+      :check-work-num="checkWorkNum"
+      :tree-data="treeData"
+      :moment="moment"
       :filter-tree-node="filterTreeNode"/>
   </a-card>
 </template>
@@ -135,6 +156,7 @@ import { roleList } from '@/api/sys/role'
 import { STable } from '@/components'
 import Detail from './components/Detail'
 import Add from './components/Add'
+import Edit from './components/Edit'
 
 /**
    * 格式化所属机构树
@@ -151,24 +173,37 @@ const formatTree = list => {
 }
 export default {
   name: 'UserList',
-  components: { STable, Detail, Add },
+  components: { STable, Detail, Add, Edit },
   data () {
     return {
+      // 文件显示前缀
       fileDisplayPrefix: FILE_DISPLAY_PREFIX,
+      // 文件上传地址
       uploadUrl: UPLOAD_URL + '/files',
+      // 解析文件上传响应函数
       parseFileRespon: parseFileRespon,
+      // 检查用户名唯一性
       checkUserName: checkUserName,
+      // 检查工号唯一性
       checkWorkNum: checkWorkNum,
+      // 保存方法
       save: save,
+      // 修改方法
       update: update,
+      // 删除方法
       del: del,
+      // 启用 禁用方法
       enabled: enabled,
+      // 重置密码方法
       resetPassword: resetPassword,
+      // 日期工具类
+      moment: moment,
       // 查询参数
       queryParam: {
         searchBeginTime: '',
         searchEndTime: ''
       },
+      // 列表表头
       columns: [
         {
           title: '编码',
@@ -215,7 +250,9 @@ export default {
           scopedSlots: { customRender: 'action' }
         }
       ],
-      info: {},
+      // 单个记录行
+      record: {},
+      // 列表加载数据方法
       loadData: parameter => {
         if (!isEmpty(this.queryParam.enterDate) && Object.keys(this.queryParam.enterDate).length === 2) {
           this.queryParam.searchBeginTime = moment(this.queryParam.enterDate[0]).format('YYYY-MM-DD')
@@ -231,7 +268,9 @@ export default {
             }
           })
       },
+      // 所属机构
       treeData: [],
+      // 角色集合
       roles: []
     }
   },
@@ -248,29 +287,34 @@ export default {
     filterTreeNode (inputValue, treeNode) {
       return treeNode.data.props.title.indexOf(inputValue) > -1
     },
+    // 启用 禁用 名称回显
     getEnableName (enableKey) {
       if (!isEmpty(enableKey)) {
         return enableKey ? '正常' : '禁用'
       }
       return ''
     },
+    // 重置查询
     restQuery () {
       this.queryParam = {}
       this.$refs.userTable.refresh(true)
     },
+    // 刷新列表
     refresh () {
       this.$refs.userTable.refresh()
     },
+    // 打开详情
     handleDetail (record) {
       get(record).then(res => {
         if (res.code === 10000) {
-          this.info = res.result
+          this.record = res.result
           this.$refs.userDetail.show()
         }
       })
     },
+    // 打开新增
     handleAdd () {
-      this.info = ''
+      this.record = {}
       roleList().then(res => {
         if (res.code === 10000) {
           this.roles = res.result
@@ -278,20 +322,58 @@ export default {
         }
       })
     },
+    // 打开更新
     handleUpdate (record) {
-
+      get(record).then(res => {
+        if (res.code === 10000) {
+          this.record = res.result
+          roleList().then(res => {
+            if (res.code === 10000) {
+              this.roles = res.result
+              this.$refs.userEdit.show()
+            }
+          })
+        }
+      })
     },
+    // 删除记录
     handleDelete (record) {
-
+      const param = { id: record.id }
+      this.del(param).then(res => {
+        if (res.code === 10000) {
+          this.$message.info(res.msg)
+          this.refresh()
+        }
+      })
     },
+    // 禁用
     handleDisabled (record) {
-
+      const param = { id: record.id, enabled: false }
+      this.enabled(param).then(res => {
+        if (res.code === 10000) {
+          this.$message.info(res.msg)
+          this.refresh()
+        }
+      })
     },
+    // 启用
     handleEnabled (record) {
-
+      const param = { id: record.id, enabled: true }
+      this.enabled(param).then(res => {
+        if (res.code === 10000) {
+          this.$message.info(res.msg)
+          this.refresh()
+        }
+      })
     },
+    // 重置密码
     handleRestPassword (record) {
-
+      const param = { id: record.id }
+      this.resetPassword(param).then(res => {
+        if (res.code === 10000) {
+          this.$message.info(res.msg)
+        }
+      })
     }
   }
 }
