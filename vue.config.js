@@ -109,7 +109,7 @@ module.exports = {
         changeOrigin: true
       },
       // 文件上传服务
-      '/upload': {
+      '/api/upload': {
         target: 'http://192.168.3.167:69',
         changeOrigin: true
       }
