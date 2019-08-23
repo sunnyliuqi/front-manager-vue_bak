@@ -229,7 +229,7 @@
 
 <script>
 export default {
-  name: 'UserAdd',
+  name: 'UserEdit',
   props: {
     record: {
       type: Object,
