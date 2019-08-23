@@ -14,5 +14,5 @@ ln -s /home/scda/global/node_modules/manager/node_modules node_modules
 echo '开始构建项目'
 cnpm run build
 echo '复制构建文件到静态文件目录'
-rm -rf /home/scda/project/html/admin
-mv dist /home/scda/project/html/admin
+rm -rf /home/scda/project/html/vue
+mv dist /home/scda/project/html/vue
