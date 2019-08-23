@@ -9,7 +9,7 @@ then
 else
     echo '不需要更新依赖'
 fi
-echo '添加依赖软连接到当前路径'
+#echo '添加依赖软连接到当前路径'
 # ln -s /home/scda/global/node_modules/manager/vue_node_modules node_modules
 echo '开始构建项目'
 cnpm run build
