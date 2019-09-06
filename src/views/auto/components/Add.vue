@@ -234,8 +234,7 @@ export default {
       }, {
         title: '字段名称',
         dataIndex: 'columnName',
-        key: 'columnName',
-        editable: true
+        key: 'columnName'
       }, {
         title: '字段长度',
         dataIndex: 'columnLength',
