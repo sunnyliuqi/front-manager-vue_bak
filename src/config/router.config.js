@@ -23,7 +23,7 @@ export const asyncRouterMap = [
           {
             path: '/auto/completeList',
             name: 'frame',
-            component: () => import('@/views/dashboard/Analysis'),
+            component: () => import('@/views/auto/AutoList'),
             meta: { title: '代码生成', keepAlive: true }
           }
         ]

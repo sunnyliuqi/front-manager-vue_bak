@@ -162,7 +162,7 @@ export default {
               this.localPagination.pageSize
           }) || false
           // 为防止删除数据后导致页面当前页面数据长度为 0 ,自动翻页到上一页
-          if (r.records.length === 0 && this.showPagination && this.localPagination.current > 1) {
+          if (this.showPagination && r.records.length === 0 && this.showPagination && this.localPagination.current > 1) {
             this.localPagination.current--
             this.loadData()
             return
@@ -178,7 +178,11 @@ export default {
             this.localPagination = false
           }
           // console.log('loadData -> this.localPagination', this.localPagination)
-          this.localDataSource = r.records // 返回结果中的数组数据
+          if (['auto', true].includes(this.showPagination)) {
+            this.localDataSource = r.records // 返回结果中的数组数据
+          } else {
+            this.localDataSource = r
+          }
           this.localLoading = false
         })
       }
