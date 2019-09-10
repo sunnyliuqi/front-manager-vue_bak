@@ -140,7 +140,85 @@
         :columns="columns"
         :data="loadData"
         :showPagination="false"
-      />
+      >
+        <span slot="columnName" slot-scope="text, record">
+          <a-input
+            class="editTable"
+            :value="text"
+            @change="e => handleChange({'columnName': e.target.value}, record)"
+          />
+        </span>
+        <span slot="columnLength" slot-scope="text, record">
+          <a-input-number
+            class="editTable"
+            :value="text"
+            @change="value => handleChange({'columnLength':value}, record)"
+          />
+        </span>
+        <span slot="scale" slot-scope="text, record">
+          <a-input-number
+            class="editTable"
+            :value="text"
+            @change="value => handleChange({'scale':value}, record)"
+          />
+        </span>
+        <span slot="javaType" slot-scope="text, record">
+          <a-select class="editTable" :value="text" @change=" value => handleChange({'javaType':value}, record)">
+            <a-select-option value="String">String</a-select-option>
+            <a-select-option value="Integer">Integer</a-select-option>
+            <a-select-option value="Double">Double</a-select-option>
+            <a-select-option value="BigDecimal">BigDecimal</a-select-option>
+            <a-select-option value="Float">Float</a-select-option>
+            <a-select-option value="Date">Date</a-select-option>
+          </a-select>
+        </span>
+        <span slot="notNullFlag" slot-scope="text, record">
+          <a-checkbox class="editTable" :checked="getChecked(text)" @change="e => handleChange({'notNullFlag': e.target.checked}, record)" />
+        </span>
+        <span slot="listFlag" slot-scope="text, record">
+          <a-checkbox class="editTable" :checked="getChecked(text)" @change="e => handleChange({'listFlag':e.target.checked}, record)" />
+        </span>
+        <span slot="queryFlag" slot-scope="text, record">
+          <a-checkbox class="editTable" :checked="getChecked(text)" @change="e => handleQueryChange({'queryFlag':e.target.checked},undefined, record)" />
+        </span>
+        <span slot="queryMode" slot-scope="text, record">
+          <a-select class="editTable" style="min-width: 80px" :value="text" @change=" value => handleQueryChange(undefined,{'queryMode':value}, record)">
+            <a-select-option value="">请选择</a-select-option>
+            <a-select-option value="=">=</a-select-option>
+            <a-select-option value="like">like</a-select-option>
+          </a-select>
+        </span>
+        <span slot="insertFlag" slot-scope="text, record">
+          <a-checkbox class="editTable" :default-checked="true" @change="e => handleChange({'insertFlag':e.target.checked}, record)" />
+        </span>
+        <span slot="editFlag" slot-scope="text, record">
+          <a-checkbox class="editTable" :checked="getChecked(text)" @change="e => handleChange({'editFlag':e.target.checked}, record)" />
+        </span>
+        <span slot="sort" slot-scope="text, record">
+          <a-input-number
+            class="editTable"
+            :value="text"
+            @change="value => handleChange({'sort':value}, record)"
+          />
+        </span>
+        <span slot="componentType" slot-scope="text, record">
+          <a-select class="editTable" style="min-width: 80px" :value="text" @change=" value => handleChange({'componentType':value}, record)">
+            <a-select-option value="">请选择</a-select-option>
+            <a-select-option value="Input">Input</a-select-option>
+            <a-select-option value="InputNumber">InputNumber</a-select-option>
+            <a-select-option value="Select">Select</a-select-option>
+            <a-select-option value="DatePicker_date">Date</a-select-option>
+            <a-select-option value="DatePicker_datetime">DateTime</a-select-option>
+          </a-select>
+        </span>
+        <span slot="componentData" slot-scope="text, record">
+          <a-input
+            class="editTable"
+            :value="text"
+            @change="e => handleChange({'componentData': e.target.value}, record)"
+          />
+        </span>
+      </s-table>
       <div
         :style="{
           position: 'absolute',
@@ -234,69 +312,89 @@ export default {
       }, {
         title: '字段名称',
         dataIndex: 'columnName',
-        key: 'columnName'
+        key: 'columnName',
+        scopedSlots: { customRender: 'columnName' }
       }, {
         title: '字段长度',
         dataIndex: 'columnLength',
-        key: 'columnLength'
+        key: 'columnLength',
+        scopedSlots: { customRender: 'columnLength' }
       }, {
         title: '字段精度',
         dataIndex: 'scale',
-        key: 'scale'
+        key: 'scale',
+        scopedSlots: { customRender: 'scale' }
       }, {
         title: 'java类型',
         dataIndex: 'javaType',
-        key: 'javaType'
+        key: 'javaType',
+        scopedSlots: { customRender: 'javaType' }
       }, {
         title: '不可为空',
         dataIndex: 'notNullFlag',
-        key: 'notNullFlag'
+        key: 'notNullFlag',
+        scopedSlots: { customRender: 'notNullFlag' }
       }, {
         title: '列表',
         dataIndex: 'listFlag',
-        key: 'listFlag'
+        key: 'listFlag',
+        scopedSlots: { customRender: 'listFlag' }
       }, {
         title: '查询',
         dataIndex: 'queryFlag',
-        key: 'queryFlag'
+        key: 'queryFlag',
+        scopedSlots: { customRender: 'queryFlag' }
+      }, {
+        title: '查询方式',
+        dataIndex: 'queryMode',
+        key: 'queryMode',
+        scopedSlots: { customRender: 'queryMode' }
       }, {
         title: '插入',
         dataIndex: 'insertFlag',
         key: 'insertFlag',
-        width: 50
+        width: 50,
+        scopedSlots: { customRender: 'insertFlag' }
       }, {
         title: '编辑',
         dataIndex: 'editFlag',
-        key: 'editFlag'
+        key: 'editFlag',
+        scopedSlots: { customRender: 'editFlag' }
       }, {
         title: '排序',
         dataIndex: 'sort',
-        key: 'sort'
-      }, {
-        title: '查询方式',
-        dataIndex: 'queryMode',
-        key: 'queryMode'
+        key: 'sort',
+        scopedSlots: { customRender: 'sort' }
       }, {
         title: '组件类型',
         dataIndex: 'componentType',
-        key: 'componentType'
+        key: 'componentType',
+        scopedSlots: { customRender: 'componentType' }
       }, {
         title: '选项或字典值',
         dataIndex: 'componentData',
-        key: 'componentData'
+        key: 'componentData',
+        scopedSlots: { customRender: 'componentData' }
       }],
       // 列表加载数据方法
       tableName: '',
+      columnInfos: [],
       loadData: parameter => {
-        const initData = []
         if (this.isEmpty(this.tableName)) {
+          const initData = []
           return new Promise(function (resolve) {
             resolve(initData)
           })
         } else {
           return this.tableColumnInfo(this.tableName).then(res => {
             if (res.code === 10000) {
-              return res.result
+              this.columnInfos = res.result
+              this.columnInfos.forEach(item => {
+                item.queryMode = this.getChecked(item.queryFlag) ? '=' : ''
+                item.componentType = ''
+                item.componentData = ''
+              })
+              return this.columnInfos
             }
           })
         }
@@ -327,6 +425,48 @@ export default {
     }
   },
   methods: {
+    // 获取是否选中
+    getChecked (value) {
+      if (!this.isEmpty(value) && (value === '1' || value === true)) {
+        return true
+      }
+      return false
+    },
+    // 查询级联切换
+    handleQueryChange (flagObj, modeObj, record) {
+      const target = this.columnInfos.filter(item => item.tableColumn === record.tableColumn)[0]
+      if (!this.isEmpty(target)) {
+        if (!this.isEmpty(flagObj)) {
+          let queryMode = {}
+          if (flagObj.queryFlag) {
+            queryMode = { 'queryMode': '=' }
+          } else {
+            queryMode = { 'queryMode': '' }
+          }
+          Object.assign(target, flagObj, queryMode)
+        }
+        if (!this.isEmpty(modeObj)) {
+          let queryFlag = {}
+          if (modeObj.queryMode === '') {
+            queryFlag = { 'queryFlag': false }
+          } else {
+            queryFlag = { 'queryFlag': true }
+          }
+          Object.assign(target, modeObj, queryFlag)
+        }
+        const tempColumnInfos = JSON.parse(JSON.stringify(this.columnInfos))
+        this.columnInfos.splice(0, this.columnInfos.length, ...tempColumnInfos)
+      }
+    },
+    // 表列信息值更新
+    handleChange (valueObj, record) {
+      const target = this.columnInfos.filter(item => item.tableColumn === record.tableColumn)[0]
+      if (!this.isEmpty(target)) {
+        Object.assign(target, valueObj)
+        const tempColumnInfos = JSON.parse(JSON.stringify(this.columnInfos))
+        this.columnInfos.splice(0, this.columnInfos.length, ...tempColumnInfos)
+      }
+    },
     show () {
       this.addVisible = true
     },
@@ -338,6 +478,9 @@ export default {
       this.routerNode = {}
       this.hasRouterNode = false
       this.newRouterList = {}
+      this.tableName = ''
+      this.columnInfos = []
+      this.$refs.columnInfoTable.refresh()
       this.form.resetFields()
     },
     // 刷新列表
@@ -406,6 +549,8 @@ export default {
       this.formLoading = true
       this.form.validateFields((err, values) => {
         if (!err) {
+          debugger
+          values.tableInfo = this.columnInfos
           this.save(values).then(res => {
             if (res.code === 10000) {
               this.$message.info(res.result)
@@ -427,5 +572,8 @@ export default {
 </script>
 
 <style scoped>
-
+.editTable {
+  margin: -5px 0;
+  min-width: 50px
+}
 </style>
