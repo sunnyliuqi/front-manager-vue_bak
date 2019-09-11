@@ -20,43 +20,47 @@
                 rules: [ { required: true }]
               }]"
               @change="radioHasPage"
-              buttonStyle="solid" >
+              buttonStyle="solid">
               <a-radio-button value="2">只生成路由</a-radio-button>
               <a-radio-button value="1">生成页面</a-radio-button>
             </a-radio-group>
           </a-form-item>
         </a-col>
-        <a-col :span="24" v-if="hasPage ==='1'">
-          <a-form-item
-            label="列表样式"
-            :labelCol="{ span: 4 }"
-            :wrapperCol="{ span: 10 }">
-            <a-radio-group
-              v-decorator="['tableType',{
-                initialValue: tableType
-              }]"
-              @change="radioTableType"
-              buttonStyle="solid" >
-              <a-radio-button value="1">基本table</a-radio-button>
-              <a-radio-button value="2">带有checkbox</a-radio-button>
-            </a-radio-group>
-          </a-form-item>
-        </a-col>
-        <a-col :span="24" v-if="hasPage ==='1'">
-          <a-form-item
-            label="数据库表"
-            :labelCol="{ span: 4 }"
-            :wrapperCol="{ span: 10 }">
-            <a-select
-              :options="getTableInfos"
-              @change="refreshColumn"
-              v-decorator="['tableName',{
-                initialValue: ''
-              }]"
-            >
-            </a-select>
-          </a-form-item>
-        </a-col>
+        <keep-alive>
+          <a-col :span="24" v-if="hasPage ==='1'">
+            <a-form-item
+              label="列表样式"
+              :labelCol="{ span: 4 }"
+              :wrapperCol="{ span: 10 }">
+              <a-radio-group
+                v-decorator="['tableType',{
+                  initialValue: tableType
+                }]"
+                @change="radioTableType"
+                buttonStyle="solid">
+                <a-radio-button value="1">基本table</a-radio-button>
+                <a-radio-button value="2">带有checkbox</a-radio-button>
+              </a-radio-group>
+            </a-form-item>
+          </a-col>
+        </keep-alive>
+        <keep-alive>
+          <a-col :span="24" v-if="hasPage ==='1'">
+            <a-form-item
+              label="数据库表"
+              :labelCol="{ span: 4 }"
+              :wrapperCol="{ span: 10 }">
+              <a-select
+                :options="getTableInfos"
+                @change="refreshColumn"
+                v-decorator="['tableName',{
+                  initialValue: tableName
+                }]"
+              >
+              </a-select>
+            </a-form-item>
+          </a-col>
+        </keep-alive>
         <a-col :span="24">
           <a-form-item
             label="路由"
@@ -133,92 +137,118 @@
         :router-list="routerList"
         @setRouter="setRouter"
       />
-      <s-table
-        ref="columnInfoTable"
-        size="default"
-        :rowKey="(record) => record.tableColumn"
-        :columns="columns"
-        :data="loadData"
-        :showPagination="false"
-      >
-        <span slot="columnName" slot-scope="text, record">
-          <a-input
-            class="editTable"
-            :value="text"
-            @change="e => handleChange({'columnName': e.target.value}, record)"
-          />
-        </span>
-        <span slot="columnLength" slot-scope="text, record">
-          <a-input-number
-            class="editTable"
-            :value="text"
-            @change="value => handleChange({'columnLength':value}, record)"
-          />
-        </span>
-        <span slot="scale" slot-scope="text, record">
-          <a-input-number
-            class="editTable"
-            :value="text"
-            @change="value => handleChange({'scale':value}, record)"
-          />
-        </span>
-        <span slot="javaType" slot-scope="text, record">
-          <a-select class="editTable" :value="text" @change=" value => handleChange({'javaType':value}, record)">
-            <a-select-option value="String">String</a-select-option>
-            <a-select-option value="Integer">Integer</a-select-option>
-            <a-select-option value="Double">Double</a-select-option>
-            <a-select-option value="BigDecimal">BigDecimal</a-select-option>
-            <a-select-option value="Float">Float</a-select-option>
-            <a-select-option value="Date">Date</a-select-option>
-          </a-select>
-        </span>
-        <span slot="notNullFlag" slot-scope="text, record">
-          <a-checkbox class="editTable" :checked="getChecked(text)" @change="e => handleChange({'notNullFlag': e.target.checked}, record)" />
-        </span>
-        <span slot="listFlag" slot-scope="text, record">
-          <a-checkbox class="editTable" :checked="getChecked(text)" @change="e => handleChange({'listFlag':e.target.checked}, record)" />
-        </span>
-        <span slot="queryFlag" slot-scope="text, record">
-          <a-checkbox class="editTable" :checked="getChecked(text)" @change="e => handleQueryChange({'queryFlag':e.target.checked},undefined, record)" />
-        </span>
-        <span slot="queryMode" slot-scope="text, record">
-          <a-select class="editTable" style="min-width: 80px" :value="text" @change=" value => handleQueryChange(undefined,{'queryMode':value}, record)">
-            <a-select-option value="">请选择</a-select-option>
-            <a-select-option value="=">=</a-select-option>
-            <a-select-option value="like">like</a-select-option>
-          </a-select>
-        </span>
-        <span slot="insertFlag" slot-scope="text, record">
-          <a-checkbox class="editTable" :default-checked="true" @change="e => handleChange({'insertFlag':e.target.checked}, record)" />
-        </span>
-        <span slot="editFlag" slot-scope="text, record">
-          <a-checkbox class="editTable" :checked="getChecked(text)" @change="e => handleChange({'editFlag':e.target.checked}, record)" />
-        </span>
-        <span slot="sort" slot-scope="text, record">
-          <a-input-number
-            class="editTable"
-            :value="text"
-            @change="value => handleChange({'sort':value}, record)"
-          />
-        </span>
-        <span slot="componentType" slot-scope="text, record">
-          <a-select class="editTable" style="min-width: 80px" :value="text" @change=" value => handleChange({'componentType':value}, record)">
-            <a-select-option value="">请选择</a-select-option>
-            <a-select-option value="Input">Input</a-select-option>
-            <a-select-option value="InputNumber">InputNumber</a-select-option>
-            <a-select-option value="Select">Select</a-select-option>
-            <a-select-option value="DatePicker_date">Date</a-select-option>
-            <a-select-option value="DatePicker_datetime">DateTime</a-select-option>
-          </a-select>
-        </span>
-        <span slot="componentData" slot-scope="text, record">
-          <a-input
-            class="editTable"
-            :value="text"
-            @change="e => handleChange({'componentData': e.target.value}, record)"
-          />
-        </span>
-      </s-table>
+      <keep-alive>
+        <s-table
+          v-if="hasPage ==='1'"
+          ref="columnInfoTable"
+          size="default"
+          :rowKey="(record) => record.tableColumn"
+          :columns="columns"
+          :data="loadData"
+          :showPagination="false"
+        >
+          <span slot="columnName" slot-scope="text, record">
+            <a-input
+              class="editTable"
+              :value="text"
+              @change="e => handleChange({'columnName': e.target.value}, record)"
+            />
+          </span>
+          <span slot="columnLength" slot-scope="text, record">
+            <a-input-number
+              class="editTable"
+              :value="text"
+              @change="value => handleChange({'columnLength':value}, record)"
+            />
+          </span>
+          <span slot="scale" slot-scope="text, record">
+            <a-input-number
+              class="editTable"
+              :value="text"
+              @change="value => handleChange({'scale':value}, record)"
+            />
+          </span>
+          <span slot="javaType" slot-scope="text, record">
+            <a-select class="editTable" :value="text" @change=" value => handleChange({'javaType':value}, record)">
+              <a-select-option value="String">String</a-select-option>
+              <a-select-option value="Integer">Integer</a-select-option>
+              <a-select-option value="Double">Double</a-select-option>
+              <a-select-option value="BigDecimal">BigDecimal</a-select-option>
+              <a-select-option value="Float">Float</a-select-option>
+              <a-select-option value="Date">Date</a-select-option>
+            </a-select>
+          </span>
+          <span slot="notNullFlag" slot-scope="text, record">
+            <a-checkbox
+              class="editTable"
+              :checked="getChecked(text)"
+              @change="e => handleChange({'notNullFlag': e.target.checked}, record)"/>
+          </span>
+          <span slot="listFlag" slot-scope="text, record">
+            <a-checkbox
+              class="editTable"
+              :checked="getChecked(text)"
+              @change="e => handleChange({'listFlag':e.target.checked}, record)"/>
+          </span>
+          <span slot="queryFlag" slot-scope="text, record">
+            <a-checkbox
+              class="editTable"
+              :checked="getChecked(text)"
+              @change="e => handleQueryChange({'queryFlag':e.target.checked},undefined, record)"/>
+          </span>
+          <span slot="queryMode" slot-scope="text, record">
+            <a-select
+              class="editTable"
+              style="min-width: 80px"
+              :value="text"
+              @change=" value => handleQueryChange(undefined,{'queryMode':value}, record)">
+              <a-select-option value="">请选择</a-select-option>
+              <a-select-option value="=">=</a-select-option>
+              <a-select-option value="like">like</a-select-option>
+            </a-select>
+          </span>
+          <span slot="insertFlag" slot-scope="text, record">
+            <a-checkbox
+              class="editTable"
+              :default-checked="true"
+              @change="e => handleChange({'insertFlag':e.target.checked}, record)"/>
+          </span>
+          <span slot="editFlag" slot-scope="text, record">
+            <a-checkbox
+              class="editTable"
+              :checked="getChecked(text)"
+              @change="e => handleChange({'editFlag':e.target.checked}, record)"/>
+          </span>
+          <span slot="sort" slot-scope="text, record">
+            <a-input-number
+              class="editTable"
+              :value="text"
+              @change="value => handleChange({'sort':value}, record)"
+            />
+          </span>
+          <span slot="componentType" slot-scope="text, record">
+            <a-select
+              class="editTable"
+              style="min-width: 80px"
+              :value="text"
+              @change=" value => handleChange({'componentType':value}, record)">
+              <a-select-option value="">请选择</a-select-option>
+              <a-select-option value="Input">Input</a-select-option>
+              <a-select-option value="InputNumber">InputNumber</a-select-option>
+              <a-select-option value="Select">Select</a-select-option>
+              <a-select-option value="DatePicker_date">Date</a-select-option>
+              <a-select-option value="DatePicker_datetime">DateTime</a-select-option>
+            </a-select>
+          </span>
+          <span slot="componentData" slot-scope="text, record">
+            <a-input
+              class="editTable"
+              :value="text"
+              @change="e => handleChange({'componentData': e.target.value}, record)"
+            />
+          </span>
+        </s-table>
+      </keep-alive>
       <div
         :style="{
           position: 'absolute',
@@ -247,6 +277,7 @@
 <script>
 import AddRouter from './RouterAdd'
 import { STable } from '@/components'
+
 export default {
   name: 'AutoAdd',
   props: {
@@ -572,8 +603,8 @@ export default {
 </script>
 
 <style scoped>
-.editTable {
-  margin: -5px 0;
-  min-width: 50px
-}
+  .editTable {
+    margin: -5px 0;
+    min-width: 50px
+  }
 </style>
