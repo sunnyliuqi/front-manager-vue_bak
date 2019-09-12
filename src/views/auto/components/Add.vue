@@ -157,15 +157,9 @@
           <span slot="columnLength" slot-scope="text, record">
             <a-input-number
               class="editTable"
+              :min="0"
               :value="text"
               @change="value => handleChange({'columnLength':value}, record)"
-            />
-          </span>
-          <span slot="scale" slot-scope="text, record">
-            <a-input-number
-              class="editTable"
-              :value="text"
-              @change="value => handleChange({'scale':value}, record)"
             />
           </span>
           <span slot="javaType" slot-scope="text, record">
@@ -177,6 +171,14 @@
               <a-select-option value="Float">Float</a-select-option>
               <a-select-option value="Date">Date</a-select-option>
             </a-select>
+          </span>
+          <span slot="scale" slot-scope="text, record">
+            <a-input-number
+              class="editTable"
+              :min="0"
+              :value="text"
+              @change="value => handleChange({'scale':value}, record)"
+            />
           </span>
           <span slot="notNullFlag" slot-scope="text, record">
             <a-checkbox
@@ -222,6 +224,7 @@
           <span slot="sort" slot-scope="text, record">
             <a-input-number
               class="editTable"
+              :min="0"
               :value="text"
               @change="value => handleChange({'sort':value}, record)"
             />
@@ -310,6 +313,9 @@ export default {
     },
     checkRouter: {
       type: Function
+    },
+    createCode: {
+      type: Function
     }
   },
   components: { AddRouter, STable },
@@ -351,15 +357,15 @@ export default {
         key: 'columnLength',
         scopedSlots: { customRender: 'columnLength' }
       }, {
-        title: '字段精度',
-        dataIndex: 'scale',
-        key: 'scale',
-        scopedSlots: { customRender: 'scale' }
-      }, {
         title: 'java类型',
         dataIndex: 'javaType',
         key: 'javaType',
         scopedSlots: { customRender: 'javaType' }
+      }, {
+        title: '字段精度',
+        dataIndex: 'scale',
+        key: 'scale',
+        scopedSlots: { customRender: 'scale' }
       }, {
         title: '不可为空',
         dataIndex: 'notNullFlag',
@@ -511,7 +517,6 @@ export default {
       this.newRouterList = {}
       this.tableName = ''
       this.columnInfos = []
-      this.$refs.columnInfoTable.refresh()
       this.form.resetFields()
     },
     // 刷新列表
@@ -580,17 +585,46 @@ export default {
       this.formLoading = true
       this.form.validateFields((err, values) => {
         if (!err) {
-          debugger
           values.tableInfo = this.columnInfos
-          this.save(values).then(res => {
-            if (res.code === 10000) {
-              this.$message.info(res.result)
-              this.refresh()
+          if (this.hasPage === '1') {
+            for (let i = 0; i < this.columnInfos.length; i++) {
+              const item = this.columnInfos[i]
+              if (this.isEmpty(item.componentType)) {
+                this.$message.info('组件类型不能为空')
+                this.formLoading = false
+                return
+              }
+              if (!this.isEmpty(item.componentType) && item.componentType === 'Select' && this.isEmpty(item.componentData)) {
+                this.$message.info('组件类型为Select时,选项或字典值不能为空')
+                this.formLoading = false
+                return
+              }
             }
-          }).finally(() => {
-            this.formLoading = false
-            this.onClose()
-          })
+          }
+          console.log(values)
+          debugger
+          if (this.hasPage === '1') {
+            // 生成页面
+            this.save(values).then(res => {
+              if (res.code === 10000) {
+                this.$message.info(res.result)
+                this.refresh()
+              }
+            }).finally(() => {
+              this.formLoading = false
+              this.$refs.columnInfoTable.refresh()
+              this.onClose()
+            })
+          } else {
+          // 只生成路由
+            this.createCode(values).then(res => {
+            debugger
+              console.info(res)
+            }).finally(() => {
+              this.formLoading = false
+              this.onClose()
+            })
+          }
         } else {
           setTimeout(() => {
             this.formLoading = false

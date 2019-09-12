@@ -56,3 +56,12 @@ export function checkRouter (params) {
     params: params
   })
 }
+// 前端代码生成
+export function createCode (data) {
+  return axios({
+    url: path.createCode,
+    method: 'POST',
+    // 设置后，业务错误时不会调用弹出全局错误信息
+    data: data
+  })
+}

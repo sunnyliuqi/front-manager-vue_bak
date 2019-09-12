@@ -113,6 +113,12 @@ module.exports = {
         target: 'http://127.0.0.1:69',
         changeOrigin: true,
         pathRewrite: { '^/api': '' }
+      },
+      // 前端代码生成
+      '/api/createFile': {
+        target: 'http://127.0.0.1:9229',
+        changeOrigin: true,
+        pathRewrite: { '^/api': '' }
       }
     }
   },

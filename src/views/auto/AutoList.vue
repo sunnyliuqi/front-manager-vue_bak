@@ -57,6 +57,7 @@
       :check-router="checkRouter"
       :router-list="routerList"
       :is-empty="isEmpty"
+      :create-code="createCode"
       :refresh="refresh"
       />
   </a-card>
@@ -70,7 +71,8 @@ import {
   tableInfo,
   tableColumnInfo,
   save,
-  checkRouter
+  checkRouter,
+  createCode
 } from '@/api/auto'
 import { STable } from '@/components'
 import Add from './components/Add'
@@ -81,6 +83,8 @@ export default {
   components: { STable, Add },
   data () {
     return {
+      // 前端代码生成
+      createCode: createCode,
       // 检查路由唯一性
       checkRouter: checkRouter,
       // 保存方法

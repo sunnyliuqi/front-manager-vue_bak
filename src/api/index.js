@@ -5,7 +5,9 @@ const path = {
   // 上传文件服务
   upload: '/upload',
   // 显示文件，nginx文件显示配置
-  uploads: '/uploads'
+  uploads: '/uploads',
+  // 前端代码生成服务
+  createCode: '/createFile'
 }
 export default path
 export function parsePageParams (data) {
