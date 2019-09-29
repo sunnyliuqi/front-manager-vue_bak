@@ -253,34 +253,48 @@ export default {
       default: 720
     },
     refresh: {
-      type: Function
+      type: Function,
+      default: undefined
     },
     save: {
-      type: Function
+      type: Function,
+      default: undefined
     },
     checkUserName: {
-      type: Function
+      type: Function,
+      default: undefined
     },
     checkWorkNum: {
-      type: Function
+      type: Function,
+      default: undefined
     },
     treeData: {
-      type: Array
+      type: Array,
+      default: function () {
+        return []
+      }
     },
     roles: {
-      type: Array
+      type: Array,
+      default: function () {
+        return []
+      }
     },
     filterTreeNode: {
-      type: Function
+      type: Function,
+      default: undefined
     },
     fileDisplayPrefix: {
-      type: String
+      type: String,
+      default: ''
     },
     uploadUrl: {
-      type: String
+      type: String,
+      default: ''
     },
     parseFileRespon: {
-      type: Function
+      type: Function,
+      default: undefined
     }
   },
   data () {

@@ -32,7 +32,7 @@
     <s-table
       ref="autoTable"
       size="default"
-      :rowKey="(record) => record.id"
+      :rowKey="(recordActive) => recordActive.id"
       :columns="columns"
       :data="loadData"
       showPagination="auto"
@@ -50,7 +50,7 @@
     </s-table>
     <add
       ref="autoAdd"
-      :record="record"
+      :record="recordActive"
       :save="save"
       :table-info="tableInfo"
       :table-column-info="tableColumnInfo"
@@ -131,7 +131,7 @@ export default {
         }
       ],
       // 单个记录行
-      record: {},
+      recordActive: {},
       // 列表加载数据方法
       loadData: parameter => {
         return queryList(Object.assign(parameter, this.queryParam))

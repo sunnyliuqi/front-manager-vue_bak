@@ -79,7 +79,8 @@ export default {
       }
     },
     isEmpty: {
-      type: Function
+      type: Function,
+      default: undefined
     }
   },
   data () {

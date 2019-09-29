@@ -147,23 +147,23 @@
           :data="loadData"
           :showPagination="false"
         >
-          <span slot="columnName" slot-scope="text, record">
+          <span slot="columnName" slot-scope="text, recordChildren">
             <a-input
               class="editTable"
               :value="text"
-              @change="e => handleChange({'columnName': e.target.value}, record)"
+              @change="e => handleChange({'columnName': e.target.value}, recordChildren)"
             />
           </span>
-          <span slot="columnLength" slot-scope="text, record">
+          <span slot="columnLength" slot-scope="text, recordChildren">
             <a-input-number
               class="editTable"
               :min="0"
               :value="text"
-              @change="value => handleChange({'columnLength':value}, record)"
+              @change="value => handleChange({'columnLength':value}, recordChildren)"
             />
           </span>
-          <span slot="javaType" slot-scope="text, record">
-            <a-select class="editTable" :value="text" @change=" value => handleChange({'javaType':value}, record)">
+          <span slot="javaType" slot-scope="text, recordChildren">
+            <a-select class="editTable" :value="text" @change=" value => handleChange({'javaType':value}, recordChildren)">
               <a-select-option value="String">String</a-select-option>
               <a-select-option value="Integer">Integer</a-select-option>
               <a-select-option value="Double">Double</a-select-option>
@@ -172,69 +172,69 @@
               <a-select-option value="Date">Date</a-select-option>
             </a-select>
           </span>
-          <span slot="scale" slot-scope="text, record">
+          <span slot="scale" slot-scope="text, recordChildren">
             <a-input-number
               class="editTable"
               :min="0"
               :value="text"
-              @change="value => handleChange({'scale':value}, record)"
+              @change="value => handleChange({'scale':value}, recordChildren)"
             />
           </span>
-          <span slot="notNullFlag" slot-scope="text, record">
+          <span slot="notNullFlag" slot-scope="text, recordChildren">
             <a-checkbox
               class="editTable"
               :checked="getChecked(text)"
-              @change="e => handleChange({'notNullFlag': e.target.checked}, record)"/>
+              @change="e => handleChange({'notNullFlag': e.target.checked}, recordChildren)"/>
           </span>
-          <span slot="listFlag" slot-scope="text, record">
+          <span slot="listFlag" slot-scope="text, recordChildren">
             <a-checkbox
               class="editTable"
               :checked="getChecked(text)"
-              @change="e => handleChange({'listFlag':e.target.checked}, record)"/>
+              @change="e => handleChange({'listFlag':e.target.checked}, recordChildren)"/>
           </span>
-          <span slot="queryFlag" slot-scope="text, record">
+          <span slot="queryFlag" slot-scope="text, recordChildren">
             <a-checkbox
               class="editTable"
               :checked="getChecked(text)"
-              @change="e => handleQueryChange({'queryFlag':e.target.checked},undefined, record)"/>
+              @change="e => handleQueryChange({'queryFlag':e.target.checked},undefined, recordChildren)"/>
           </span>
-          <span slot="queryMode" slot-scope="text, record">
+          <span slot="queryMode" slot-scope="text, recordChildren">
             <a-select
               class="editTable"
               style="min-width: 80px"
               :value="text"
-              @change=" value => handleQueryChange(undefined,{'queryMode':value}, record)">
+              @change=" value => handleQueryChange(undefined,{'queryMode':value}, recordChildren)">
               <a-select-option value="">请选择</a-select-option>
               <a-select-option value="=">=</a-select-option>
               <a-select-option value="like">like</a-select-option>
             </a-select>
           </span>
-          <span slot="insertFlag" slot-scope="text, record">
+          <span slot="insertFlag" slot-scope="text, recordChildren">
             <a-checkbox
               class="editTable"
               :default-checked="true"
-              @change="e => handleChange({'insertFlag':e.target.checked}, record)"/>
+              @change="e => handleChange({'insertFlag':e.target.checked}, recordChildren)"/>
           </span>
-          <span slot="editFlag" slot-scope="text, record">
+          <span slot="editFlag" slot-scope="text, recordChildren">
             <a-checkbox
               class="editTable"
               :checked="getChecked(text)"
-              @change="e => handleChange({'editFlag':e.target.checked}, record)"/>
+              @change="e => handleChange({'editFlag':e.target.checked}, recordChildren)"/>
           </span>
-          <span slot="sort" slot-scope="text, record">
+          <span slot="sort" slot-scope="text, recordChildren">
             <a-input-number
               class="editTable"
               :min="0"
               :value="text"
-              @change="value => handleChange({'sort':value}, record)"
+              @change="value => handleChange({'sort':value}, recordChildren)"
             />
           </span>
-          <span slot="componentType" slot-scope="text, record">
+          <span slot="componentType" slot-scope="text, recordChildren">
             <a-select
               class="editTable"
               style="min-width: 80px"
               :value="text"
-              @change=" value => handleChange({'componentType':value}, record)">
+              @change=" value => handleChange({'componentType':value}, recordChildren)">
               <a-select-option value="">请选择</a-select-option>
               <a-select-option value="Input">Input</a-select-option>
               <a-select-option value="InputNumber">InputNumber</a-select-option>
@@ -243,11 +243,11 @@
               <a-select-option value="DatePicker_datetime">DateTime</a-select-option>
             </a-select>
           </span>
-          <span slot="componentData" slot-scope="text, record">
+          <span slot="componentData" slot-scope="text, recordChildren">
             <a-input
               class="editTable"
               :value="text"
-              @change="e => handleChange({'componentData': e.target.value}, record)"
+              @change="e => handleChange({'componentData': e.target.value}, recordChildren)"
             />
           </span>
         </s-table>
@@ -297,25 +297,32 @@ export default {
       }
     },
     tableInfo: {
-      type: Function
+      type: Function,
+      default: undefined
     },
     isEmpty: {
-      type: Function
+      type: Function,
+      default: undefined
     },
     tableColumnInfo: {
-      type: Function
+      type: Function,
+      default: undefined
     },
     refresh: {
-      type: Function
+      type: Function,
+      default: undefined
     },
     save: {
-      type: Function
+      type: Function,
+      default: undefined
     },
     checkRouter: {
-      type: Function
+      type: Function,
+      default: undefined
     },
     createCode: {
-      type: Function
+      type: Function,
+      default: undefined
     }
   },
   components: { AddRouter, STable },
@@ -470,8 +477,8 @@ export default {
       return false
     },
     // 查询级联切换
-    handleQueryChange (flagObj, modeObj, record) {
-      const target = this.columnInfos.filter(item => item.tableColumn === record.tableColumn)[0]
+    handleQueryChange (flagObj, modeObj, recordChildren) {
+      const target = this.columnInfos.filter(item => item.tableColumn === recordChildren.tableColumn)[0]
       if (!this.isEmpty(target)) {
         if (!this.isEmpty(flagObj)) {
           let queryMode = {}
@@ -496,8 +503,8 @@ export default {
       }
     },
     // 表列信息值更新
-    handleChange (valueObj, record) {
-      const target = this.columnInfos.filter(item => item.tableColumn === record.tableColumn)[0]
+    handleChange (valueObj, recordChildren) {
+      const target = this.columnInfos.filter(item => item.tableColumn === recordChildren.tableColumn)[0]
       if (!this.isEmpty(target)) {
         Object.assign(target, valueObj)
         const tempColumnInfos = JSON.parse(JSON.stringify(this.columnInfos))

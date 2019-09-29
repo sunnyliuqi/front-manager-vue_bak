@@ -74,7 +74,7 @@
     <s-table
       ref="userTable"
       size="default"
-      :rowKey="(record) => record.id"
+      :rowKey="(recordActive) => recordActive.id"
       :columns="columns"
       :data="loadData"
       showPagination="auto"
@@ -105,13 +105,13 @@
         </template>
       </span>
     </s-table>
-    <detail ref="userDetail" :file-display-prefix="fileDisplayPrefix" :record="record"/>
+    <detail ref="userDetail" :file-display-prefix="fileDisplayPrefix" :record="recordActive"/>
     <add
       ref="userAdd"
       :file-display-prefix="fileDisplayPrefix"
       :parse-file-respon="parseFileRespon"
       :upload-url="uploadUrl"
-      :record="record"
+      :record="recordActive"
       :roles="roles"
       :save="save"
       :refresh="refresh"
@@ -124,7 +124,7 @@
       :file-display-prefix="fileDisplayPrefix"
       :parse-file-respon="parseFileRespon"
       :upload-url="uploadUrl"
-      :record="record"
+      :record="recordActive"
       :roles="roles"
       :update="update"
       :refresh="refresh"
@@ -251,7 +251,7 @@ export default {
         }
       ],
       // 单个记录行
-      record: {},
+      recordActive: {},
       // 列表加载数据方法
       loadData: parameter => {
         if (!isEmpty(this.queryParam.enterDate) && Object.keys(this.queryParam.enterDate).length === 2) {
@@ -307,14 +307,14 @@ export default {
     handleDetail (record) {
       get(record).then(res => {
         if (res.code === 10000) {
-          this.record = res.result
+          this.recordActive = res.result
           this.$refs.userDetail.show()
         }
       })
     },
     // 打开新增
     handleAdd () {
-      this.record = {}
+      this.recordActive = {}
       roleList().then(res => {
         if (res.code === 10000) {
           this.roles = res.result
@@ -326,7 +326,7 @@ export default {
     handleUpdate (record) {
       get(record).then(res => {
         if (res.code === 10000) {
-          this.record = res.result
+          this.recordActive = res.result
           roleList().then(res => {
             if (res.code === 10000) {
               this.roles = res.result

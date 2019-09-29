@@ -93,7 +93,8 @@ export default {
       default: 720
     },
     fileDisplayPrefix: {
-      type: String
+      type: String,
+      default: ''
     }
   },
   data () {
