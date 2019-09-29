@@ -1,6 +1,6 @@
 <template>
   <div class="footer">
-<!--    <div class="links">
+    <!--    <div class="links">
       <a
         href="https://www.isimpo.com/"
         target="_blank"

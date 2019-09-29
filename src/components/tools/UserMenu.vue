@@ -20,8 +20,8 @@
             </router-link>
           </a-menu-item>
           <a-menu-item key="1" @click="$refs.updatePasswd.show()">
-              <a-icon type="lock"/>
-              <span>修改密码</span>
+            <a-icon type="lock"/>
+            <span>修改密码</span>
           </a-menu-item>
           <a-menu-divider/>
           <a-menu-item key="3">

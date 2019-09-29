@@ -73,6 +73,7 @@
       "parser": "babel-eslint"
     },
     "rules": {
+      "no-unused-vars": "off",
       "generator-star-spacing": "off",
       "no-mixed-operators": 0,
       "vue/max-attributes-per-line": [

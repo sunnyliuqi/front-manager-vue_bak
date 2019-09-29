@@ -8,7 +8,7 @@
             <span class="title">Simpo</span>
           </a>
         </div>
-<!--        <div class="desc">
+        <!--        <div class="desc">
 
         </div>-->
       </div>

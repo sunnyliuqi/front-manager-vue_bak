@@ -618,7 +618,6 @@ export default {
           } else {
           // 只生成路由
             this.createCode(values).then(res => {
-            debugger
               console.info(res)
             }).finally(() => {
               this.formLoading = false
