@@ -190,12 +190,6 @@ export default {
       save: save,
       // 修改方法
       update: update,
-      // 删除方法
-      del: del,
-      // 启用 禁用方法
-      enabled: enabled,
-      // 重置密码方法
-      resetPassword: resetPassword,
       // 日期工具类
       moment: moment,
       // 查询参数
@@ -339,7 +333,7 @@ export default {
     // 删除记录
     handleDelete (record) {
       const param = { id: record.id }
-      this.del(param).then(res => {
+      del(param).then(res => {
         if (res.code === 10000) {
           this.$message.info(res.msg)
           this.refresh()
@@ -349,7 +343,7 @@ export default {
     // 禁用
     handleDisabled (record) {
       const param = { id: record.id, enabled: false }
-      this.enabled(param).then(res => {
+      enabled(param).then(res => {
         if (res.code === 10000) {
           this.$message.info(res.msg)
           this.refresh()
@@ -359,7 +353,7 @@ export default {
     // 启用
     handleEnabled (record) {
       const param = { id: record.id, enabled: true }
-      this.enabled(param).then(res => {
+      enabled(param).then(res => {
         if (res.code === 10000) {
           this.$message.info(res.msg)
           this.refresh()
@@ -369,7 +363,7 @@ export default {
     // 重置密码
     handleRestPassword (record) {
       const param = { id: record.id }
-      this.resetPassword(param).then(res => {
+      resetPassword(param).then(res => {
         if (res.code === 10000) {
           this.$message.info(res.msg)
         }

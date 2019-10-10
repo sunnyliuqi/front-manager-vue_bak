@@ -47,6 +47,29 @@
         <keep-alive>
           <a-col :span="24" v-if="hasPage ==='1'">
             <a-form-item
+              label="接口服务配置"
+              :labelCol="{ span: 4 }"
+              :wrapperCol="{ span: 10 }">
+              <a-select
+                :options="getServiceNames"
+                v-decorator="['serviceName',{
+                  initialValue: `${Object.keys(serviceName)[0]}: \'${serviceName[Object.keys(serviceName)[0]]}\'`
+                }]"
+              >
+                <div slot="dropdownRender" slot-scope="menu">
+                  <v-nodes :vnodes="menu"/>
+                  <a-divider style="margin: 4px 0;" />
+                  <div style="padding: 8px; cursor: pointer;" @mousedown="addService">
+                    <a-icon type="plus" /> 增加服务
+                  </div>
+                </div>
+              </a-select>
+            </a-form-item>
+          </a-col>
+        </keep-alive>
+        <keep-alive>
+          <a-col :span="24" v-if="hasPage ==='1'">
+            <a-form-item
               label="数据库表"
               :labelCol="{ span: 4 }"
               :wrapperCol="{ span: 10 }">
@@ -136,6 +159,10 @@
         :selected-tree-node-key="selectedTreeNodeKey"
         :router-list="routerList"
         @setRouter="setRouter"
+      />
+      <add-service
+        ref="serviceAdd"
+        @setService="setService"
       />
       <keep-alive>
         <s-table
@@ -279,12 +306,19 @@
 
 <script>
 import AddRouter from './RouterAdd'
+import AddService from './ServiceAdd'
 import { STable } from '@/components'
 
 export default {
   name: 'AutoAdd',
   props: {
     record: {
+      type: Object,
+      default: function () {
+        return {}
+      }
+    },
+    serviceName: {
       type: Object,
       default: function () {
         return {}
@@ -325,7 +359,13 @@ export default {
       default: undefined
     }
   },
-  components: { AddRouter, STable },
+  components: { AddRouter,
+    AddService,
+    STable,
+    VNodes: {
+      functional: true,
+      render: (h, ctx) => ctx.props.vnodes
+    } },
   data () {
     return {
       addVisible: false,
@@ -466,6 +506,13 @@ export default {
         return this.routerList
       }
       return []
+    },
+    getServiceNames: function () {
+      const servicePro = this.serviceName
+      const sp = ':'
+      return Object.keys(servicePro).map(item => {
+        return { label: `${item}${sp} '${servicePro[item]}'`, value: `${item}${sp} '${servicePro[item]}'` }
+      })
     }
   },
   methods: {
@@ -563,6 +610,11 @@ export default {
       this.newRouterList = JSON.parse(JSON.stringify(this.routerList))
       this.updateRouterList(this.newRouterList, routerNode)
     },
+    // 设置服务
+    setService (serviceContent) {
+      const serviceContents = Object.keys(serviceContent)
+      this.$set(this.serviceName, serviceContents[0], serviceContent[serviceContents[0]])
+    },
     // 将新增的路由节点放到父级下面
     updateRouterList (routerList, routerNode) {
       let existRouter = false
@@ -587,6 +639,10 @@ export default {
           break
         }
       }
+    },
+    // 新增服务
+    addService () {
+      this.$refs.serviceAdd.show()
     },
     handleSubmit () {
       this.formLoading = true

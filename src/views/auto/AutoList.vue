@@ -59,12 +59,14 @@
       :is-empty="isEmpty"
       :create-code="createCode"
       :refresh="refresh"
+      :service-name="serviceName"
     />
   </a-card>
 </template>
 
 <script>
 import { asyncRouterMap } from '@/config/router.config'
+import path from '@/api/index'
 import {
   queryList,
   tableDel,
@@ -98,6 +100,7 @@ export default {
       // 路由配置信息
       routerList: [asyncRouterMap[0]],
       isEmpty: isEmpty,
+      serviceName: path,
       // 查询参数
       queryParam: {},
       // 列表表头
