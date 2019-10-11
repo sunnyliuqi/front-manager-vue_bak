@@ -54,7 +54,10 @@ let DETAIL_CONTENT
 /** 新增内容 **/
 let ADD_CONTENT
 
+// 返回 {"code":10000,"msg":"处理成功","result":"处理成功"}
 const generateCodeHandle = param => {
+  const code = 20000
+  const msg = '不支持的生成方式'
   console.info('代码生成-前端-项目根路径为：' + bashPath)
   console.info('代码生成-前端-请求数据为：' + JSON.stringify(param))
   // 1.路由配置文件更新 D:\workspace\framework\front-manager-vue\src\config\router.config.js
@@ -64,6 +67,14 @@ const generateCodeHandle = param => {
   // 5.详情页面 文件新增 D:\workspace\framework\front-manager-vue\src\views\sys\user\components\Detail.vue
   // 6.新增页面 文件新增D:\workspace\framework\front-manager-vue\src\views\sys\user\components\Add.vue
   // 7.更新页面 文件新增D:\workspace\framework\front-manager-vue\src\views\sys\user\components\Edit.vue
+  if (param.hasPage === '2') {
+  //  只生成路由
+
+  } else if (param.hasPage === '1') {
+  //  生成页面
+  }
+  const responseMsg = `{"code":${code},"msg":"${msg}","result":"${msg}"}`
+  return responseMsg
 }
 
 module.exports = {

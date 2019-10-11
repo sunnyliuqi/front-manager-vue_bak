@@ -665,28 +665,26 @@ export default {
             }
           }
           console.log(values)
-          debugger
           if (this.hasPage === '1') {
-            // 生成页面
+            // 生成页面 后端代码生成
             this.save(values).then(res => {
               if (res.code === 10000) {
-                this.$message.info(res.result)
-                this.refresh()
+                this.$message.info(`生成后端代码结果：${res.result}`)
               }
             }).finally(() => {
-              this.formLoading = false
               this.$refs.columnInfoTable.refresh()
-              this.onClose()
-            })
-          } else {
-          // 只生成路由
-            this.createCode(values).then(res => {
-              console.info(res)
-            }).finally(() => {
-              this.formLoading = false
-              this.onClose()
             })
           }
+          // 前端代码生成
+          this.createCode(values).then(res => {
+            if (res.code === 10000) {
+              this.$message.info(`生成前端代码结果：${res.result}`)
+            }
+          }).finally(() => {
+            this.formLoading = false
+            this.refresh()
+            this.onClose()
+          })
         } else {
           setTimeout(() => {
             this.formLoading = false

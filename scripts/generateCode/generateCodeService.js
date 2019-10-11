@@ -1,3 +1,4 @@
+/* eslint-disable node/no-deprecated-api */
 const http = require('http')
 const url = require('url')
 const generate = require('./modules/index.js')
@@ -7,14 +8,12 @@ const server = http
     try {
       const pathName = url.parse(request.url).pathname
       if (pathName === '/createFile') {
-        debugger
         let data = ''
         request.on('data', chunk => {
           data += chunk
           console.info('代码生成-前端-请求信息：' + data)
-          generate.generateCodeHandle(JSON.parse(data))
           response.writeHead(200, { 'Content-Type': 'text/plain' })
-          response.write('successful')
+          response.write(generate.generateCodeHandle(JSON.parse(data)))
           response.end()
         })
       }
