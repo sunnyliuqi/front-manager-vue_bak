@@ -115,22 +115,6 @@ export const dynRouterMap = [{
         static: true
       }
     }]
-  }, {
-    path: '/test',
-    component: PageView,
-    meta: {
-      title: '调通',
-      static: true
-    },
-    children: [{
-      path: '/test/aa',
-      component: PageView,
-      meta: {
-        title: '啊啊',
-        static: true
-      },
-      children: []
-    }]
   }]
 }, {
   path: '*',
