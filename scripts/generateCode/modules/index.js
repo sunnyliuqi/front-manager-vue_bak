@@ -163,9 +163,14 @@ function updateRouterConfig (param, number) {
     const routerObj = eval('(' + replaceError(router) + ')')
     // 将当前路由添加到路由配置里面
     setRouterToConfig(dnyRouterObj, routerObj)
-    const newRouterConfig = reReplaceError(JSON.stringify(dnyRouterObj))
-    fs.writeFile(`${routerPath}/dynRouter.config.js`, dnyRouterArr[0] + split + '\n' + newRouterConfig, 'utf8', (err) => {
+    const dnyRouterJson = JSON.stringify(dnyRouterObj)
+    const newRouterConfig = dnyRouterArr[0] + split + '\n' + reReplaceError(dnyRouterJson)
+    fs.writeFile(`${routerPath}/dynRouter.config.js`, newRouterConfig, 'utf8', (err) => {
       if (err) throw err
+      //  格式化代码
+      formatJsonCode(`${routerPath}/dynRouter.config.js`)
+      // 代码规范修复
+      formatCode(`${routerPath}/dynRouter.config.js`)
     })
   })
 }
@@ -247,6 +252,27 @@ function reReplaceError (string) {
     .replace(/"\(\) =>.*?\)"/g, ($1) => {
       return $1.substring(1, ($1.length - 1))
     })
+}
+
+/**
+ * 代码格式化 Json 代码
+ * @param command 命令
+ */
+const formatJsonCode = path => {
+  const execCommand = `js-beautify -s 2 -f  ${path} -r ${path}`
+  exec(execCommand, function (err, stdout, stderr) {
+    if (err) throw err
+  })
+}
+/**
+ * 代码规范修复
+ * @param command 命令
+ */
+const formatCode = fullpath => {
+  const execCommand = `eslint --fix ${fullpath}`
+  exec(execCommand, function (err, stdout, stderr) {
+    if (err) throw err
+  })
 }
 module.exports = {
   generateCodeHandle
