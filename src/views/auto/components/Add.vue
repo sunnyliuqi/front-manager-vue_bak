@@ -262,7 +262,6 @@
               style="min-width: 80px"
               :value="text"
               @change=" value => handleChange({'componentType':value}, recordChildren)">
-              <a-select-option value="">请选择</a-select-option>
               <a-select-option value="Input">Input</a-select-option>
               <a-select-option value="InputNumber">InputNumber</a-select-option>
               <a-select-option value="Select">Select</a-select-option>
@@ -271,11 +270,14 @@
             </a-select>
           </span>
           <span slot="componentData" slot-scope="text, recordChildren">
-            <a-input
-              class="editTable"
-              :value="text"
-              @change="e => handleChange({'componentData': e.target.value}, recordChildren)"
-            />
+             <a-tooltip title="数据字典填入字典类型，自定义填入格式1:one;2:two" placement="left">
+              <a-input
+                class="editTable"
+                :value="text"
+                @change="e => handleChange({'componentData': e.target.value}, recordChildren)"
+                placeholder="数据字典填入字典类型，自定义填入格式1:one;2:two"
+              />
+             </a-tooltip>
           </span>
         </s-table>
       </keep-alive>
@@ -475,7 +477,7 @@ export default {
               this.columnInfos = res.result
               this.columnInfos.forEach(item => {
                 item.queryMode = this.getChecked(item.queryFlag) ? '=' : ''
-                item.componentType = ''
+                item.componentType = 'Input'
                 item.componentData = ''
               })
               return this.columnInfos
@@ -649,6 +651,12 @@ export default {
       this.form.validateFields((err, values) => {
         if (!err) {
           values.tableInfo = this.columnInfos
+          values.tableComment = values.chinaValue
+          if (this.isEmpty(values.fileUrl) || this.isEmpty(values.parentRouter) || this.isEmpty(values.router) || this.isEmpty(values.chinaValue) || this.isEmpty(values.engValue)) {
+            this.$message.info('路由信息不能为空')
+            this.formLoading = false
+            return
+          }
           if (this.hasPage === '1') {
             for (let i = 0; i < this.columnInfos.length; i++) {
               const item = this.columnInfos[i]
@@ -663,22 +671,27 @@ export default {
                 return
               }
             }
+            if (this.isEmpty(values.tableInfo)) {
+              this.$message.info('生成方式为页面时,表信息不能为空')
+              this.formLoading = false
+              return
+            }
           }
           console.log(values)
-          if (this.hasPage === '1') {
-            // 生成页面 后端代码生成
-            this.save(values).then(res => {
-              if (res.code === 10000) {
-                this.$message.info(`生成后端代码结果：${res.result}`)
-              }
-            }).finally(() => {
-              this.$refs.columnInfoTable.refresh()
-            })
-          }
+
           // 前端代码生成
           this.createCode(values).then(res => {
             if (res.code === 10000) {
+              debugger
               this.$message.info(`生成前端代码结果：${res.result}`)
+              if (this.hasPage === '1') {
+                // 生成页面 后端代码生成
+                this.save(values).then(res => {
+                  if (res.code === 10000) {
+                    this.$message.info(`生成后端代码结果：${res.result}`)
+                  }
+                })
+              }
             }
           }).finally(() => {
             this.formLoading = false

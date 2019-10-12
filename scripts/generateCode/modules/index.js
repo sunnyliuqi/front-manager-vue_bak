@@ -153,7 +153,7 @@ function updateRouterConfig (param, number) {
     }`
   }
   fs.readFile(`${routerPath}/dynRouter.config.js`, 'utf8', (err, data) => {
-    if (err) throw err
+    if (err) console.error(JSON.stringify(err))
     const split = 'dynRouterMap ='
     // 拿到动态路由配置
     const dnyRouterArr = data.split(split)
@@ -166,7 +166,7 @@ function updateRouterConfig (param, number) {
     const dnyRouterJson = JSON.stringify(dnyRouterObj)
     const newRouterConfig = dnyRouterArr[0] + split + '\n' + reReplaceError(dnyRouterJson)
     fs.writeFile(`${routerPath}/dynRouter.config.js`, newRouterConfig, 'utf8', (err) => {
-      if (err) throw err
+      if (err) console.error(JSON.stringify(err))
       //  格式化代码
       formatJsonCode(`${routerPath}/dynRouter.config.js`)
       // 代码规范修复
@@ -261,7 +261,7 @@ function reReplaceError (string) {
 const formatJsonCode = path => {
   const execCommand = `js-beautify -s 2 -f  ${path} -r ${path}`
   exec(execCommand, function (err, stdout, stderr) {
-    if (err) throw err
+    if (err) console.error(JSON.stringify(err))
   })
 }
 /**
@@ -271,7 +271,7 @@ const formatJsonCode = path => {
 const formatCode = fullpath => {
   const execCommand = `eslint --fix ${fullpath}`
   exec(execCommand, function (err, stdout, stderr) {
-    if (err) throw err
+    if (err) console.error(JSON.stringify(err))
   })
 }
 module.exports = {
