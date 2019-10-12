@@ -58,7 +58,8 @@
     "vue-svg-icon-loader": "^2.1.1",
     "vue-template-compiler": "^2.5.22",
     "webpack-theme-color-replacer": "^1.2.15",
-    "concurrently": "^4.1.0"
+    "concurrently": "^4.1.0",
+    "js-beautify": "^1.10.0"
   },
   "eslintConfig": {
     "root": true,
