@@ -113,6 +113,22 @@ const generateCodeHandle = param => {
   return responseMsg
 }
 
+function setRouterToConfig (dnyRouterObj, router) {
+  dnyRouterObj.forEach(item => {
+    if (item.path === PARENT_ROUTER) {
+      if (!item.children) {
+        item.children = []
+      }
+      item.children.push(router)
+    } else {
+      if (item.children && item.children.length) {
+        setRouterToConfig(item.children, router)
+      }
+    }
+  })
+  return dnyRouterObj
+}
+
 /**
  * 更新路由配置
  * @param param
@@ -125,7 +141,7 @@ function updateRouterConfig (param, number) {
     router = `{
       path: '${param.fileUrl}',
       component: PageView,
-      meta: { title: '${param.chinaValue}' },
+      meta: { title: '${param.chinaValue}', static: true },
       children: []
       }`
   } else {
@@ -133,18 +149,22 @@ function updateRouterConfig (param, number) {
       path: '${param.fileUrl}',
       name: '${param.engValue}',
       component: () => import('@/views${param.fileUrl}/${FUNCTION_NAME_FIRST_UPPER}List'),
-      meta: { title: '${param.chinaValue}', keepAlive: true }
+      meta: { title: '${param.chinaValue}', keepAlive: true, static: true }
     }`
   }
   fs.readFile(`${routerPath}/dynRouter.config.js`, 'utf8', (err, data) => {
     if (err) throw err
-    debugger
     const split = 'dynRouterMap ='
     // 拿到动态路由配置
     const dnyRouterArr = data.split(split)
-    console.info(dnyRouterArr[1])
-    const dnyRouter = dnyRouterArr[1].replace(/BasicLayout/g, '\'BasicLayout\'').replace(/PageView/g, '\'PageView\'').replace(/\(\) =>.+/g)
-    fs.writeFile(`${routerPath}/dynRouter.config.js`, dnyRouter, 'utf8', (err) => {
+    const dnyRouter = replaceError(dnyRouterArr[1])
+    console.info(dnyRouter)
+    const dnyRouterObj = eval('(' + dnyRouter + ')')
+    const routerObj = eval('(' + replaceError(router) + ')')
+    // 将当前路由添加到路由配置里面
+    setRouterToConfig(dnyRouterObj, routerObj)
+    const newRouterConfig = reReplaceError(JSON.stringify(dnyRouterObj))
+    fs.writeFile(`${routerPath}/dynRouter.config.js`, dnyRouterArr[0] + split + '\n' + newRouterConfig, 'utf8', (err) => {
       if (err) throw err
     })
   })
@@ -195,6 +215,38 @@ function createAdd (param) {
  */
 function createEdit (param) {
 
+}
+
+function replaceError (string) {
+  return string
+    .replace(/BasicLayout/g, '\'BasicLayout\'')
+    .replace(/PageView/g, '\'PageView\'')
+    .replace(/RouteView/g, '\'RouteView\'')
+    .replace(/PagUserLayouteView/g, '\'UserLayout\'')
+    .replace(/BlankLayout/g, '\'BlankLayout\'')
+    .replace(/\(\) =>.+?\)/g, ($1) => {
+      return '"' + $1 + '"'
+    })
+}
+function reReplaceError (string) {
+  return string
+    .replace(/"BasicLayout"/g, 'BasicLayout')
+    .replace(/"PageView"/g, 'PageView')
+    .replace(/"RouteView"/g, 'RouteView')
+    .replace(/"UserLayout"/g, 'UserLayout')
+    .replace(/"BlankLayout"/g, 'BlankLayout')
+    .replace(/"path":/g, 'path:')
+    .replace(/"component":/g, 'component:')
+    .replace(/"meta":/g, 'meta:')
+    .replace(/"title":/g, 'title:')
+    .replace(/"static":/g, 'static:')
+    .replace(/"redirect":/g, 'redirect:')
+    .replace(/"children":/g, 'children:')
+    .replace(/"keepAlive":/g, 'keepAlive:')
+    .replace(/"hidden":/g, 'hidden:')
+    .replace(/"\(\) =>.*?\)"/g, ($1) => {
+      return $1.substring(1, ($1.length - 1))
+    })
 }
 module.exports = {
   generateCodeHandle
