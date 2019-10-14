@@ -275,7 +275,6 @@
                 class="editTable"
                 :value="text"
                 @change="e => handleChange({'componentData': e.target.value}, recordChildren)"
-                placeholder="数据字典填入字典类型，自定义填入格式1:one;2:two"
               />
              </a-tooltip>
           </span>
@@ -683,12 +682,12 @@ export default {
           this.createCode(values).then(res => {
             if (res.code === 10000) {
               debugger
-              this.$message.info(`生成前端代码结果：${res.result}`)
+              this.$message.info(`生成前端代码结果：${res.msg}`)
               if (this.hasPage === '1') {
                 // 生成页面 后端代码生成
                 this.save(values).then(res => {
                   if (res.code === 10000) {
-                    this.$message.info(`生成后端代码结果：${res.result}`)
+                    this.$message.info(`生成后端代码结果：${res.msg}`)
                   }
                 })
               }

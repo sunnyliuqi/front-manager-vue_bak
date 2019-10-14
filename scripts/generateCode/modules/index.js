@@ -77,13 +77,14 @@ const generateCodeHandle = param => {
   PARENT_ROUTER = param.parentRouter
   // /sys/user
   ROUTER_PARENT = param.fileUrl
-  // 1.路由配置文件更新 D:\workspace\framework\front-manager-vue\src\config\dynRouter.config.js
-  // 2.api服务更新 D:\workspace\framework\front-manager-vue\src\api\service.js
-  // 3.api 文件新增 D:\workspace\framework\front-manager-vue\src\api\sys\user.js
-  // 4.列表页面 文件新增 D:\workspace\framework\front-manager-vue\src\views\sys\user\UserList.vue
-  // 5.详情页面 文件新增 D:\workspace\framework\front-manager-vue\src\views\sys\user\components\Detail.vue
-  // 6.新增页面 文件新增D:\workspace\framework\front-manager-vue\src\views\sys\user\components\Add.vue
-  // 7.更新页面 文件新增D:\workspace\framework\front-manager-vue\src\views\sys\user\components\Edit.vue
+  /* 1.路由配置文件更新 D:\workspace\framework\front-manager-vue\src\config\dynRouter.config.js
+  2.api服务更新 D:\workspace\framework\front-manager-vue\src\api\service.js
+  3.api 文件新增 D:\workspace\framework\front-manager-vue\src\api\sys\user.js
+  4.列表页面 文件新增 D:\workspace\framework\front-manager-vue\src\views\sys\user\UserList.vue
+  5.详情页面 文件新增 D:\workspace\framework\front-manager-vue\src\views\sys\user\components\Detail.vue
+  6.新增页面 文件新增D:\workspace\framework\front-manager-vue\src\views\sys\user\components\Add.vue
+  7.更新页面 文件新增D:\workspace\framework\front-manager-vue\src\views\sys\user\components\Edit.vue
+  */
   if (param.hasPage === '2') {
   //  只生成路由
     updateRouterConfig(param, 2)
@@ -107,7 +108,7 @@ const generateCodeHandle = param => {
     createAdd(param)
     createEdit(param)
     code = 10000
-    msg = '生成成页面成功'
+    msg = '生成页面成功'
   }
   const responseMsg = `{"code":${code},"msg":"${msg}","result":"${msg}"}`
   return responseMsg
@@ -179,7 +180,24 @@ function updateRouterConfig (param, number) {
  * @param param
  */
 function updateApiService (param) {
-
+  fs.readFile(`${serverPath}/service.js`, 'utf8', (err, data) => {
+    if (err) console.error(JSON.stringify(err))
+    // 拿到服务配置
+    const serviceConfigObj = eval('(' + data.replace('export const service =', '') + ')')
+    const serviceInfo = param.serviceName.split(':')
+    const servicePro = { }
+    servicePro[serviceInfo[0]] = serviceInfo[1].replace(/'/g, '').trim()
+    const newData = 'export const service = ' + JSON.stringify(Object.assign(serviceConfigObj, servicePro)).replace(/"[A-Za-z].+?"/g, ($1) => {
+      return $1.substring(1, ($1.length - 1))
+    })
+    fs.writeFile(`${serverPath}/service.js`, newData, 'utf8', (err) => {
+      if (err) console.error(JSON.stringify(err))
+      //  格式化代码
+      formatJsonCode(`${serverPath}/service.js`)
+      // 代码规范修复
+      formatCode(`${serverPath}/service.js`)
+    })
+  })
 }
 
 /**
@@ -243,6 +261,7 @@ function reReplaceError (string) {
     .replace(/"path":/g, 'path:')
     .replace(/"component":/g, 'component:')
     .replace(/"meta":/g, 'meta:')
+    .replace(/"name":/g, 'name:')
     .replace(/"title":/g, 'title:')
     .replace(/"static":/g, 'static:')
     .replace(/"redirect":/g, 'redirect:')
