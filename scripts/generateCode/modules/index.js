@@ -185,6 +185,9 @@ function updateApiService (param) {
     // 拿到服务配置
     const serviceConfigObj = eval('(' + data.replace('export const service =', '') + ')')
     const serviceInfo = param.serviceName.split(':')
+    if (serviceInfo && serviceInfo.length > 1) {
+      console.error('服务格式错误：' + param.serviceName)
+    }
     const servicePro = { }
     servicePro[serviceInfo[0]] = serviceInfo[1].replace(/'/g, '').trim()
     const newData = 'export const service = ' + JSON.stringify(Object.assign(serviceConfigObj, servicePro)).replace(/"[A-Za-z].+?"/g, ($1) => {
