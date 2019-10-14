@@ -114,22 +114,6 @@ const generateCodeHandle = param => {
   return responseMsg
 }
 
-function setRouterToConfig (dnyRouterObj, router) {
-  dnyRouterObj.forEach(item => {
-    if (item.path === PARENT_ROUTER) {
-      if (!item.children) {
-        item.children = []
-      }
-      item.children.push(router)
-    } else {
-      if (item.children && item.children.length) {
-        setRouterToConfig(item.children, router)
-      }
-    }
-  })
-  return dnyRouterObj
-}
-
 /**
  * 更新路由配置
  * @param param
@@ -175,6 +159,22 @@ function updateRouterConfig (param, number) {
     })
   })
 }
+function setRouterToConfig (dnyRouterObj, router) {
+  dnyRouterObj.forEach(item => {
+    if (item.path === PARENT_ROUTER) {
+      if (!item.children) {
+        item.children = []
+      }
+      item.children.push(router)
+    } else {
+      if (item.children && item.children.length) {
+        setRouterToConfig(item.children, router)
+      }
+    }
+  })
+  return dnyRouterObj
+}
+
 /**
  * 更新api服务
  * @param param
