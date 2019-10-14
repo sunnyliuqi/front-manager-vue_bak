@@ -185,7 +185,7 @@ function updateApiService (param) {
     // 拿到服务配置
     const serviceConfigObj = eval('(' + data.replace('export const service =', '') + ')')
     const serviceInfo = param.serviceName.split(':')
-    if (serviceInfo && serviceInfo.length > 1) {
+    if (!serviceInfo || serviceInfo.length < 2) {
       console.error('服务格式错误：' + param.serviceName)
     }
     const servicePro = { }
@@ -208,7 +208,21 @@ function updateApiService (param) {
  * @param param
  */
 function createApi (param) {
-
+  fs.readFile(apiTemp, 'utf8', (err, data) => {
+    if (err) console.error(JSON.stringify(err))
+    const dir = `${serverPath}${PARENT_ROUTER}`.replace(/\\/g, '/')
+    fs.mkdir(dir, { recursive: true }, (err) => {
+      if (err) console.error(JSON.stringify(err))
+      // TODO 替换占位符
+      fs.writeFile(`${dir}/${FUNCTION_NAME_LOWER}.js`, data, 'utf8', (err) => {
+        if (err) console.error(JSON.stringify(err))
+        //  格式化代码
+        formatJsonCode(`${dir}/${FUNCTION_NAME_LOWER}.js`)
+        // 代码规范修复
+        formatCode(`${dir}/${FUNCTION_NAME_LOWER}.js`)
+      })
+    })
+  })
 }
 
 /**
