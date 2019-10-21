@@ -50,8 +50,8 @@ let FUNCTION_NAME_FIRST_UPPER
 let PARENT_ROUTER
 /** 服务路径 sys **/
 let SERVICE_PATH
-/** 路由 /sys/user**/
-let ROUTER_PARENT
+/** 全路由 /sys/user**/
+let FULL_ROUTER
 
 /** 编辑内容 **/
 let EDIT_CONTENT
@@ -70,13 +70,13 @@ const generateCodeHandle = param => {
   console.info('代码生成-前端-项目根路径为：' + bashPath)
   console.info('代码生成-前端-请求数据为：' + JSON.stringify(param))
   // user
-  FUNCTION_NAME_LOWER = param.engValue
+  FUNCTION_NAME_LOWER = param.router.substring(1)
   // User
-  FUNCTION_NAME_FIRST_UPPER = param.engValue.replace(param.engValue[0], param.engValue[0].toUpperCase())
+  FUNCTION_NAME_FIRST_UPPER = FUNCTION_NAME_LOWER.replace(FUNCTION_NAME_LOWER[0], FUNCTION_NAME_LOWER[0].toUpperCase())
   // /sys
   PARENT_ROUTER = param.parentRouter
   // /sys/user
-  ROUTER_PARENT = param.fileUrl
+  FULL_ROUTER = param.fileUrl
   /* 1.路由配置文件更新 D:\workspace\framework\front-manager-vue\src\config\dynRouter.config.js
   2.api服务更新 D:\workspace\framework\front-manager-vue\src\api\service.js
   3.api 文件新增 D:\workspace\framework\front-manager-vue\src\api\sys\user.js
@@ -91,7 +91,7 @@ const generateCodeHandle = param => {
     code = 10000
     msg = '生成路由成功'
   } else if (param.hasPage === '1') {
-    SERVICE_PATH = param.serviceName
+    SERVICE_PATH = param.serviceName.match(/(.*):/)[1]
     LIST_QUERY_CONDITION = ''
     LIST_QUERY_TIME_PARAMS = ''
     LIST_QUERY_TIME_SETPARAMS = ''
@@ -213,7 +213,9 @@ function createApi (param) {
     const dir = `${serverPath}${PARENT_ROUTER}`.replace(/\\/g, '/')
     fs.mkdir(dir, { recursive: true }, (err) => {
       if (err) console.error(JSON.stringify(err))
-      // TODO 替换占位符
+      data = data
+        .replace(/#{SERVICE_PATH}/g, SERVICE_PATH)
+        .replace(/#{FULL_ROUTER}/g, FULL_ROUTER)
       fs.writeFile(`${dir}/${FUNCTION_NAME_LOWER}.js`, data, 'utf8', (err) => {
         if (err) console.error(JSON.stringify(err))
         //  格式化代码
