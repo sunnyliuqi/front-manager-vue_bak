@@ -9,6 +9,9 @@ const { exec } = require('child_process')
 // 项目根路径 D:\workspace\framework\front-manager-vue
 const bashPath = process.cwd()
 
+// 字符编码
+const character = 'utf8'
+
 // 组件页面位置
 const pagesPath = `${bashPath}/src/views`
 // api文件位置
@@ -137,7 +140,8 @@ function updateRouterConfig (param, number) {
       meta: { title: '${param.chinaValue}', keepAlive: true, static: true }
     }`
   }
-  fs.readFile(`${routerPath}/dynRouter.config.js`, 'utf8', (err, data) => {
+  const filePath = `${routerPath}/dynRouter.config.js`
+  fs.readFile(filePath, character, (err, data) => {
     if (err) console.error(JSON.stringify(err))
     const split = 'dynRouterMap ='
     // 拿到动态路由配置
@@ -150,12 +154,12 @@ function updateRouterConfig (param, number) {
     setRouterToConfig(dnyRouterObj, routerObj)
     const dnyRouterJson = JSON.stringify(dnyRouterObj)
     const newRouterConfig = dnyRouterArr[0] + split + '\n' + reReplaceError(dnyRouterJson)
-    fs.writeFile(`${routerPath}/dynRouter.config.js`, newRouterConfig, 'utf8', (err) => {
+    fs.writeFile(filePath, newRouterConfig, character, (err) => {
       if (err) console.error(JSON.stringify(err))
       //  格式化代码
-      formatJsonCode(`${routerPath}/dynRouter.config.js`)
+      formatJsonCode(filePath)
       // 代码规范修复
-      formatCode(`${routerPath}/dynRouter.config.js`)
+      formatCode(filePath)
     })
   })
 }
@@ -180,7 +184,8 @@ function setRouterToConfig (dnyRouterObj, router) {
  * @param param
  */
 function updateApiService (param) {
-  fs.readFile(`${serverPath}/service.js`, 'utf8', (err, data) => {
+  const filePath = `${serverPath}/service.js`
+  fs.readFile(filePath, character, (err, data) => {
     if (err) console.error(JSON.stringify(err))
     // 拿到服务配置
     const serviceConfigObj = eval('(' + data.replace('export const service =', '') + ')')
@@ -193,12 +198,12 @@ function updateApiService (param) {
     const newData = 'export const service = ' + JSON.stringify(Object.assign(serviceConfigObj, servicePro)).replace(/"[A-Za-z].+?"/g, ($1) => {
       return $1.substring(1, ($1.length - 1))
     })
-    fs.writeFile(`${serverPath}/service.js`, newData, 'utf8', (err) => {
+    fs.writeFile(filePath, newData, character, (err) => {
       if (err) console.error(JSON.stringify(err))
       //  格式化代码
-      formatJsonCode(`${serverPath}/service.js`)
+      formatJsonCode(filePath)
       // 代码规范修复
-      formatCode(`${serverPath}/service.js`)
+      formatCode(filePath)
     })
   })
 }
@@ -208,7 +213,7 @@ function updateApiService (param) {
  * @param param
  */
 function createApi (param) {
-  fs.readFile(apiTemp, 'utf8', (err, data) => {
+  fs.readFile(apiTemp, character, (err, data) => {
     if (err) console.error(JSON.stringify(err))
     const dir = `${serverPath}${PARENT_ROUTER}`.replace(/\\/g, '/')
     fs.mkdir(dir, { recursive: true }, (err) => {
@@ -216,12 +221,13 @@ function createApi (param) {
       data = data
         .replace(/#{SERVICE_PATH}/g, SERVICE_PATH)
         .replace(/#{FULL_ROUTER}/g, FULL_ROUTER)
-      fs.writeFile(`${dir}/${FUNCTION_NAME_LOWER}.js`, data, 'utf8', (err) => {
+      const filePath = `${dir}/${FUNCTION_NAME_LOWER}.js`
+      fs.writeFile(filePath, data, character, (err) => {
         if (err) console.error(JSON.stringify(err))
         //  格式化代码
-        formatJsonCode(`${dir}/${FUNCTION_NAME_LOWER}.js`)
+        formatJsonCode(filePath)
         // 代码规范修复
-        formatCode(`${dir}/${FUNCTION_NAME_LOWER}.js`)
+        formatCode(filePath)
       })
     })
   })
@@ -232,7 +238,23 @@ function createApi (param) {
  * @param param
  */
 function createList (param) {
-
+  fs.readFile(listTemp, character, (err, data) => {
+    if (err) console.error(JSON.stringify(err))
+    const dir = `${pagesPath}${FULL_ROUTER}`.replace(/\\/g, '/')
+    fs.mkdir(dir, { recursive: true }, (err) => {
+      if (err) console.error(JSON.stringify(err))
+      /*  data = data
+        .replace(/#{FULL_ROUTER}/g, FULL_ROUTER) */
+      const filePath = `${dir}/${FUNCTION_NAME_LOWER}List.vue`
+      fs.writeFile(filePath, data, character, (err) => {
+        if (err) console.error(JSON.stringify(err))
+        //  格式化代码
+        formatJsonCode(filePath)
+        // 代码规范修复
+        formatCode(filePath)
+      })
+    })
+  })
 }
 
 /**
@@ -240,7 +262,23 @@ function createList (param) {
  * @param param
  */
 function createDetail (param) {
-
+  fs.readFile(listTemp, character, (err, data) => {
+    if (err) console.error(JSON.stringify(err))
+    const dir = `${pagesPath}${FULL_ROUTER}`.replace(/\\/g, '/')
+    fs.mkdir(dir, { recursive: true }, (err) => {
+      if (err) console.error(JSON.stringify(err))
+      /*  data = data
+        .replace(/#{FULL_ROUTER}/g, FULL_ROUTER) */
+      const filePath = `${dir}/components/Detail.vue`
+      fs.writeFile(filePath, data, character, (err) => {
+        if (err) console.error(JSON.stringify(err))
+        //  格式化代码
+        formatJsonCode(filePath)
+        // 代码规范修复
+        formatCode(filePath)
+      })
+    })
+  })
 }
 
 /**
@@ -248,7 +286,23 @@ function createDetail (param) {
  * @param param
  */
 function createAdd (param) {
-
+  fs.readFile(listTemp, character, (err, data) => {
+    if (err) console.error(JSON.stringify(err))
+    const dir = `${pagesPath}${FULL_ROUTER}`.replace(/\\/g, '/')
+    fs.mkdir(dir, { recursive: true }, (err) => {
+      if (err) console.error(JSON.stringify(err))
+      /*  data = data
+        .replace(/#{FULL_ROUTER}/g, FULL_ROUTER) */
+      const filePath = `${dir}/components/Add.vue`
+      fs.writeFile(filePath, data, character, (err) => {
+        if (err) console.error(JSON.stringify(err))
+        //  格式化代码
+        formatJsonCode(filePath)
+        // 代码规范修复
+        formatCode(filePath)
+      })
+    })
+  })
 }
 
 /**
@@ -256,7 +310,23 @@ function createAdd (param) {
  * @param param
  */
 function createEdit (param) {
-
+  fs.readFile(listTemp, character, (err, data) => {
+    if (err) console.error(JSON.stringify(err))
+    const dir = `${pagesPath}${FULL_ROUTER}`.replace(/\\/g, '/')
+    fs.mkdir(dir, { recursive: true }, (err) => {
+      if (err) console.error(JSON.stringify(err))
+      /*  data = data
+        .replace(/#{FULL_ROUTER}/g, FULL_ROUTER) */
+      const filePath = `${dir}/components/Edit.vue`
+      fs.writeFile(filePath, data, character, (err) => {
+        if (err) console.error(JSON.stringify(err))
+        //  格式化代码
+        formatJsonCode(filePath)
+        // 代码规范修复
+        formatCode(filePath)
+      })
+    })
+  })
 }
 
 function replaceError (string) {
