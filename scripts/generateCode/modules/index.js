@@ -325,8 +325,8 @@ function createEdit (param) {
  * @returns {string}
  */
 function getQueryCondition (param) {
-  let temp = ''
-  return temp
+  const temp = {}
+  return temp.join('')
 }
 
 /**
@@ -336,8 +336,8 @@ function getQueryCondition (param) {
  * @returns {string}
  */
 function getQueryTime (param) {
-  let temp = ''
-  return temp
+  const temp = {}
+  return temp.join('')
 }
 
 /**
@@ -352,8 +352,8 @@ function getQueryTime (param) {
  * @returns {string}
  */
 function getQuerySetTime (param) {
-  let temp = ''
-  return temp
+  const temp = {}
+  return temp.join('')
 }
 
 /**
@@ -378,8 +378,8 @@ function getQuerySetTime (param) {
  * @returns {string}
  */
 function getColumns (param) {
-  let temp = ''
-  return temp
+  const temp = {}
+  return temp.join('')
 }
 
 /**
@@ -403,8 +403,8 @@ function getColumns (param) {
  * @returns {string}
  */
 function getEdit (param) {
-  let temp = ''
-  return temp
+  const temp = {}
+  return temp.join('')
 }
 
 /**
@@ -415,8 +415,8 @@ function getEdit (param) {
  * @returns {string}
  */
 function getDetail (param) {
-  let temp = ''
-  return temp
+  const temp = {}
+  return temp.join('')
 }
 
 /**
@@ -437,8 +437,8 @@ function getDetail (param) {
  * @returns {string}
  */
 function getAdd (param) {
-  let temp = ''
-  return temp
+  const temp = {}
+  return temp.join('')
 }
 /**
  * 业务模板内容替换
