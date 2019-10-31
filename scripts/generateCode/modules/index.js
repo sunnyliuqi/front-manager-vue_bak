@@ -44,7 +44,7 @@ let LIST_QUERY_TIME_PARAMS
         } */
 let LIST_QUERY_TIME_SETPARAMS
 /** 列表表头**/
-let LIST_COLLUMNS
+let LIST_COLUMNS
 /** 功能名称小写user**/
 let FUNCTION_NAME_LOWER
 /** 功能名称首字母大写User**/
@@ -80,6 +80,7 @@ const generateCodeHandle = param => {
   PARENT_ROUTER = param.parentRouter
   // /sys/user
   FULL_ROUTER = param.fileUrl
+
   /* 1.路由配置文件更新 D:\workspace\framework\front-manager-vue\src\config\dynRouter.config.js
   2.api服务更新 D:\workspace\framework\front-manager-vue\src\api\service.js
   3.api 文件新增 D:\workspace\framework\front-manager-vue\src\api\sys\user.js
@@ -89,19 +90,19 @@ const generateCodeHandle = param => {
   7.更新页面 文件新增D:\workspace\framework\front-manager-vue\src\views\sys\user\components\Edit.vue
   */
   if (param.hasPage === '2') {
-  //  只生成路由
+    //  只生成路由
     updateRouterConfig(param, 2)
     code = 10000
     msg = '生成路由成功'
   } else if (param.hasPage === '1') {
     SERVICE_PATH = param.serviceName.match(/(.*):/)[1]
-    LIST_QUERY_CONDITION = ''
-    LIST_QUERY_TIME_PARAMS = ''
-    LIST_QUERY_TIME_SETPARAMS = ''
-    LIST_COLLUMNS = ''
-    EDIT_CONTENT = ''
-    DETAIL_CONTENT = ''
-    ADD_CONTENT = ''
+    LIST_QUERY_CONDITION = getQueryCondition(param)
+    LIST_QUERY_TIME_PARAMS = getQueryTime(param)
+    LIST_QUERY_TIME_SETPARAMS = getQuerySetTime(param)
+    LIST_COLUMNS = getColumns(param)
+    EDIT_CONTENT = getEdit(param)
+    DETAIL_CONTENT = getDetail(param)
+    ADD_CONTENT = getAdd(param)
     //  生成页面
     updateRouterConfig(param, 1)
     updateApiService(param)
@@ -163,6 +164,7 @@ function updateRouterConfig (param, number) {
     })
   })
 }
+
 function setRouterToConfig (dnyRouterObj, router) {
   dnyRouterObj.forEach(item => {
     if (item.path === PARENT_ROUTER) {
@@ -193,7 +195,7 @@ function updateApiService (param) {
     if (!serviceInfo || serviceInfo.length < 2) {
       console.error('服务格式错误：' + param.serviceName)
     }
-    const servicePro = { }
+    const servicePro = {}
     servicePro[serviceInfo[0]] = serviceInfo[1].replace(/'/g, '').trim()
     const newData = 'export const service = ' + JSON.stringify(Object.assign(serviceConfigObj, servicePro)).replace(/"[A-Za-z].+?"/g, ($1) => {
       return $1.substring(1, ($1.length - 1))
@@ -243,13 +245,9 @@ function createList (param) {
     const dir = `${pagesPath}${FULL_ROUTER}`.replace(/\\/g, '/')
     fs.mkdir(dir, { recursive: true }, (err) => {
       if (err) console.error(JSON.stringify(err))
-      /*  data = data
-        .replace(/#{FULL_ROUTER}/g, FULL_ROUTER) */
-      const filePath = `${dir}/${FUNCTION_NAME_LOWER}List.vue`
-      fs.writeFile(filePath, data, character, (err) => {
+      const filePath = `${dir}/${FUNCTION_NAME_FIRST_UPPER}List.vue`
+      fs.writeFile(filePath, replaceContent(data), character, (err) => {
         if (err) console.error(JSON.stringify(err))
-        //  格式化代码
-        formatJsonCode(filePath)
         // 代码规范修复
         formatCode(filePath)
       })
@@ -262,18 +260,14 @@ function createList (param) {
  * @param param
  */
 function createDetail (param) {
-  fs.readFile(listTemp, character, (err, data) => {
+  fs.readFile(detailsTemp, character, (err, data) => {
     if (err) console.error(JSON.stringify(err))
-    const dir = `${pagesPath}${FULL_ROUTER}`.replace(/\\/g, '/')
+    const dir = `${pagesPath}${FULL_ROUTER}/components`.replace(/\\/g, '/')
     fs.mkdir(dir, { recursive: true }, (err) => {
       if (err) console.error(JSON.stringify(err))
-      /*  data = data
-        .replace(/#{FULL_ROUTER}/g, FULL_ROUTER) */
-      const filePath = `${dir}/components/Detail.vue`
-      fs.writeFile(filePath, data, character, (err) => {
+      const filePath = `${dir}/Detail.vue`
+      fs.writeFile(filePath, replaceContent(data), character, (err) => {
         if (err) console.error(JSON.stringify(err))
-        //  格式化代码
-        formatJsonCode(filePath)
         // 代码规范修复
         formatCode(filePath)
       })
@@ -286,18 +280,14 @@ function createDetail (param) {
  * @param param
  */
 function createAdd (param) {
-  fs.readFile(listTemp, character, (err, data) => {
+  fs.readFile(addTemp, character, (err, data) => {
     if (err) console.error(JSON.stringify(err))
-    const dir = `${pagesPath}${FULL_ROUTER}`.replace(/\\/g, '/')
+    const dir = `${pagesPath}${FULL_ROUTER}/components`.replace(/\\/g, '/')
     fs.mkdir(dir, { recursive: true }, (err) => {
       if (err) console.error(JSON.stringify(err))
-      /*  data = data
-        .replace(/#{FULL_ROUTER}/g, FULL_ROUTER) */
-      const filePath = `${dir}/components/Add.vue`
-      fs.writeFile(filePath, data, character, (err) => {
+      const filePath = `${dir}/Add.vue`
+      fs.writeFile(filePath, replaceContent(data), character, (err) => {
         if (err) console.error(JSON.stringify(err))
-        //  格式化代码
-        formatJsonCode(filePath)
         // 代码规范修复
         formatCode(filePath)
       })
@@ -310,18 +300,14 @@ function createAdd (param) {
  * @param param
  */
 function createEdit (param) {
-  fs.readFile(listTemp, character, (err, data) => {
+  fs.readFile(editTemp, character, (err, data) => {
     if (err) console.error(JSON.stringify(err))
-    const dir = `${pagesPath}${FULL_ROUTER}`.replace(/\\/g, '/')
+    const dir = `${pagesPath}${FULL_ROUTER}/components`.replace(/\\/g, '/')
     fs.mkdir(dir, { recursive: true }, (err) => {
       if (err) console.error(JSON.stringify(err))
-      /*  data = data
-        .replace(/#{FULL_ROUTER}/g, FULL_ROUTER) */
-      const filePath = `${dir}/components/Edit.vue`
-      fs.writeFile(filePath, data, character, (err) => {
+      const filePath = `${dir}/Edit.vue`
+      fs.writeFile(filePath, replaceContent(data), character, (err) => {
         if (err) console.error(JSON.stringify(err))
-        //  格式化代码
-        formatJsonCode(filePath)
         // 代码规范修复
         formatCode(filePath)
       })
@@ -329,6 +315,150 @@ function createEdit (param) {
   })
 }
 
+/**
+ *<a-col :md="8" :sm="12" :xs="24">
+ <a-form-item label="用户名">
+ <a-input v-model="queryParam.userName" placeholder="请输入用户名"/>
+ </a-form-item>
+ </a-col>
+ * @param param
+ * @returns {string}
+ */
+function getQueryCondition (param) {
+  let temp = ''
+  return temp
+}
+
+/**
+ *searchBeginTime: '',
+ searchEndTime: ''
+ * @param param
+ * @returns {string}
+ */
+function getQueryTime (param) {
+  let temp = ''
+  return temp
+}
+
+/**
+ *if (!isEmpty(this.queryParam.enterDate) && Object.keys(this.queryParam.enterDate).length === 2) {
+          this.queryParam.searchBeginTime = moment(this.queryParam.enterDate[0]).format('YYYY-MM-DD')
+         this.queryParam.searchEndTime = moment(this.queryParam.enterDate[1]).format('YYYY-MM-DD')
+        } else {
+          this.queryParam.searchBeginTime = ''
+          this.queryParam.searchEndTime = ''
+        }
+ * @param param
+ * @returns {string}
+ */
+function getQuerySetTime (param) {
+  let temp = ''
+  return temp
+}
+
+/**
+ * [
+ {
+          title: '编码',
+          dataIndex: 'userCode',
+          key: 'userCode'
+        }, {
+          title: '用户名',
+          dataIndex: 'userName',
+          key: 'userName'
+        },
+ {
+          title: '操作',
+          dataIndex: 'action',
+          width: '320px',
+          scopedSlots: { customRender: 'action' }
+        }
+ ]
+ * @param param
+ * @returns {string}
+ */
+function getColumns (param) {
+  let temp = ''
+  return temp
+}
+
+/**
+ * <a-col :span="12">
+ <a-form-item
+ label="工号"
+ :labelCol="{ span: 8 }"
+ :wrapperCol="{ span: 16 }">
+ <a-input
+ v-decorator="[
+ 'workNum',
+ {
+                  initialValue: record.workNum,
+                  rules: [ { required: true, message: '工号不能为空' }]
+                }
+ ]"
+ placeholder="请输入工号"/>
+ </a-form-item>
+ </a-col>
+ * @param param
+ * @returns {string}
+ */
+function getEdit (param) {
+  let temp = ''
+  return temp
+}
+
+/**
+ * <a-col :sm="12" :xs="24">
+ <span class="detail-label">编码:</span>{{ record.userCode }}
+ </a-col>
+ * @param param
+ * @returns {string}
+ */
+function getDetail (param) {
+  let temp = ''
+  return temp
+}
+
+/**
+ * <a-col :span="12">
+ <a-form-item
+ label="工号"
+ :labelCol="{ span: 8 }"
+ :wrapperCol="{ span: 16 }">
+ <a-input
+ v-decorator="[
+ 'workNum',
+ {rules: [ { required: true, message: '工号不能为空' }]}
+ ]"
+ placeholder="请输入工号"/>
+ </a-form-item>
+ </a-col>
+ * @param param
+ * @returns {string}
+ */
+function getAdd (param) {
+  let temp = ''
+  return temp
+}
+/**
+ * 业务模板内容替换
+ * @param data
+ * @returns {*}
+ */
+function replaceContent (data) {
+  return data
+    .replace(/#{LIST_QUERY_CONDITION}/g, LIST_QUERY_CONDITION)
+    .replace(/#{LIST_QUERY_TIME_PARAMS}/g, LIST_QUERY_TIME_PARAMS)
+    .replace(/#{LIST_QUERY_TIME_SETPARAMS}/g, LIST_QUERY_TIME_SETPARAMS)
+    .replace(/#{LIST_COLUMNS}/g, LIST_COLUMNS)
+    .replace(/#{FUNCTION_NAME_LOWER}/g, FUNCTION_NAME_LOWER)
+    .replace(/#{FUNCTION_NAME_FIRST_UPPER}/g, FUNCTION_NAME_FIRST_UPPER)
+    .replace(/#{PARENT_ROUTER}/g, PARENT_ROUTER)
+    .replace(/#{SERVICE_PATH}/g, SERVICE_PATH)
+    .replace(/#{EDIT_CONTENT}/g, EDIT_CONTENT)
+    .replace(/#{DETAIL_CONTENT}/g, DETAIL_CONTENT)
+    .replace(/#{ADD_CONTENT}/g, ADD_CONTENT)
+}
 function replaceError (string) {
   return string
     .replace(/BasicLayout/g, '\'BasicLayout\'')
@@ -340,6 +470,7 @@ function replaceError (string) {
       return '"' + $1 + '"'
     })
 }
+
 function reReplaceError (string) {
   return string
     .replace(/"BasicLayout"/g, 'BasicLayout')

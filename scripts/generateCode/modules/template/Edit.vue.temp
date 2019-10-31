@@ -57,9 +57,6 @@ export default {
     update: {
       type: Function,
       default: undefined
-    moment: {
-      type: Function,
-      default: undefined
     }
   },
   data () {

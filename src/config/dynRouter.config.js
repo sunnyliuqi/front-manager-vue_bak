@@ -7,7 +7,7 @@ import {
 } from '@/layouts'
 export const dynRouterMap = [{
   path: '/',
-  'name': 'index',
+  name: 'index',
   component: BasicLayout,
   meta: {
     title: '首页',
@@ -16,7 +16,7 @@ export const dynRouterMap = [{
   redirect: '/auto/completeList',
   children: [{
     path: '/auto',
-    'name': 'auto',
+    name: 'auto',
     redirect: '/auto/completeList',
     component: PageView,
     meta: {
@@ -25,7 +25,7 @@ export const dynRouterMap = [{
     },
     children: [{
       path: '/auto/completeList',
-      'name': 'frame',
+      name: 'frame',
       component: () => import('@/views/auto/AutoList'),
       meta: {
         title: '代码生成',
@@ -41,7 +41,7 @@ export const dynRouterMap = [{
     },
     children: [{
       path: '/sys/user',
-      'name': 'user',
+      name: 'user',
       component: () => import('@/views/sys/user/UserList'),
       meta: {
         title: '用户管理',
@@ -49,7 +49,7 @@ export const dynRouterMap = [{
       }
     }, {
       path: '/sys/role',
-      'name': 'role',
+      name: 'role',
       component: () => import('@/views/form/stepForm/StepForm'),
       meta: {
         title: '角色管理',
@@ -57,7 +57,7 @@ export const dynRouterMap = [{
       }
     }, {
       path: '/sys/menu',
-      'name': 'menu',
+      name: 'menu',
       component: () => import('@/views/form/advancedForm/AdvancedForm'),
       meta: {
         title: '菜单管理',
@@ -65,7 +65,7 @@ export const dynRouterMap = [{
       }
     }, {
       path: '/sys/api',
-      'name': 'api',
+      name: 'api',
       component: () => import('@/views/form/advancedForm/AdvancedForm'),
       meta: {
         title: '接口管理',
@@ -73,7 +73,7 @@ export const dynRouterMap = [{
       }
     }, {
       path: '/sys/organization',
-      'name': 'organization',
+      name: 'organization',
       component: () => import('@/views/form/advancedForm/AdvancedForm'),
       meta: {
         title: '组织机构',
@@ -81,7 +81,7 @@ export const dynRouterMap = [{
       }
     }, {
       path: '/sys/log',
-      'name': 'log',
+      name: 'log',
       component: () => import('@/views/form/advancedForm/AdvancedForm'),
       meta: {
         title: '操作日志',
@@ -89,7 +89,7 @@ export const dynRouterMap = [{
       }
     }, {
       path: '/sys/dict',
-      'name': 'dict',
+      name: 'dict',
       component: () => import('@/views/form/advancedForm/AdvancedForm'),
       meta: {
         title: '数据字典',
@@ -97,7 +97,7 @@ export const dynRouterMap = [{
       }
     }, {
       path: '/sys/area',
-      'name': 'area',
+      name: 'area',
       component: () => import('@/views/form/advancedForm/AdvancedForm'),
       meta: {
         title: '区域管理',
@@ -105,7 +105,7 @@ export const dynRouterMap = [{
       }
     }, {
       path: '/sys/personal',
-      'name': 'personal',
+      name: 'personal',
       hidden: true,
       component: () => import('@/views/user/UserInfo'),
       meta: {

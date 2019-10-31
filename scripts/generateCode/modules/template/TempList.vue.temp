@@ -90,7 +90,7 @@ export default {
         #{LIST_QUERY_TIME_PARAMS}
       },
       // 列表表头
-      columns: #{LIST_COLLUMNS},
+      columns: #{LIST_COLUMNS},
       // 单个记录行
       recordActive: {},
       // 列表加载数据方法
