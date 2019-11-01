@@ -554,7 +554,7 @@ export default {
     handleChange (valueObj, recordChildren) {
       const target = this.columnInfos.filter(item => item.tableColumn === recordChildren.tableColumn)[0]
       if (!this.isEmpty(target)) {
-        Object.assign(target, replaceBlooean(valueObj))
+        Object.assign(target, valueObj)
         const tempColumnInfos = JSON.parse(JSON.stringify(this.columnInfos))
         this.columnInfos.splice(0, this.columnInfos.length, ...tempColumnInfos)
       }
@@ -676,16 +676,15 @@ export default {
               return
             }
           }
-          console.log(values)
-
+          const params = replaceBlooean(values)
+          console.log(JSON.stringify(params))
           // 前端代码生成
-          this.createCode(values).then(res => {
+          this.createCode(params).then(res => {
             if (res.code === 10000) {
-              debugger
               this.$message.info(`生成前端代码结果：${res.msg}`)
               if (this.hasPage === '1') {
                 // 生成页面 后端代码生成
-                this.save(values).then(res => {
+                this.save(params).then(res => {
                   if (res.code === 10000) {
                     this.$message.info(`生成后端代码结果：${res.msg}`)
                   }
@@ -713,7 +712,7 @@ export default {
  * @returns {any}
  */
 function replaceBlooean (obj) {
-  return JSON.parse(JSON.stringify(obj).replace(':true', ':"1"').replace(':flase', ':"0"'))
+  return JSON.parse(JSON.stringify(obj).replace(/:true/g, ':"1"').replace(/:false/g, ':"0"').replace(/ :true/g, ':"1"').replace(/ :false/g, ':"0"'))
 }
 </script>
 
