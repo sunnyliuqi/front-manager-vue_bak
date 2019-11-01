@@ -97,6 +97,12 @@ module.exports = {
     // development server port 8000
     port: 8001,
     proxy: {
+      // demo服务
+      '/api/demo': {
+        target: 'http://127.0.0.1:67',
+        changeOrigin: true,
+        pathRewrite: { '^/api': '' }
+      },
       // 系统服务
       '/api/sys': {
         target: 'http://127.0.0.1:68',

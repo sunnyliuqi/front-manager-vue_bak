@@ -1,11 +1,11 @@
-import path from './index'
+import path from '@/api/index'
 import { axios } from '@/utils/request'
 import parsePageParams from '@/utils/page'
 
 // 列表
 export function queryList (data) {
   return axios({
-    url: path.default + '/auto/completeList',
+    url: path.sys + '/auto/completeList',
     method: 'POST',
     data: data,
     params: parsePageParams(data)
@@ -15,7 +15,7 @@ export function queryList (data) {
 // 删除
 export function tableDel (params) {
   return axios({
-    url: path.default + '/auto/del/' + params.id,
+    url: path.sys + '/auto/del/' + params.id,
     method: 'GET'
   })
 }
@@ -23,7 +23,7 @@ export function tableDel (params) {
 // 数据库表信息
 export function tableInfo () {
   return axios({
-    url: path.default + '/auto/tableList/',
+    url: path.sys + '/auto/tableList/',
     method: 'GET'
   })
 }
@@ -31,7 +31,7 @@ export function tableInfo () {
 // 表列 列表
 export function tableColumnInfo (data) {
   return axios({
-    url: path.default + '/auto/tableColumnList',
+    url: path.sys + '/auto/tableColumnList',
     method: 'POST',
     data: data
   })
@@ -40,7 +40,7 @@ export function tableColumnInfo (data) {
 // 保存
 export function save (data) {
   return axios({
-    url: path.default + '/auto/tableInfoSave',
+    url: path.sys + '/auto/tableInfoSave',
     method: 'POST',
     data: data
   })
@@ -49,7 +49,7 @@ export function save (data) {
 // 检查路由唯一性
 export function checkRouter (params) {
   return axios({
-    url: path.default + '/auto/user/checkRouter',
+    url: path.sys + '/auto/user/checkRouter',
     method: 'POST',
     // 设置后，业务错误时不会调用弹出全局错误信息
     headers: { 'check': true },

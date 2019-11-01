@@ -325,7 +325,56 @@ function createEdit (param) {
  * @returns {string}
  */
 function getQueryCondition (param) {
-  const temp = {}
+  const tableInfo = param.tableInfo
+  const temp = []
+  tableInfo.forEach(column => {
+    if (column.queryFlag) {
+      let aFromItem = ''
+      if (column.componentType === 'InputNumber') {
+        aFromItem = `<a-form-item label="${column.columnName}">
+          <a-input-number v-model="queryParam.${column.tableColumn}" placeholder="请输入${column.columnName}"/>
+        </a-form-item>`
+      } else if (column.componentType === 'Select') {
+        const selectOptions = column.componentData.split(';')
+        if (selectOptions.length < 1) {
+          // 数据字典
+          aFromItem = ``
+        } else {
+          const selectOpt = []
+          selectOptions.forEach(opt => {
+            const opts = opt.split(':')
+            selectOpt.push(`<a-select-option value="${opts[0]}">${opts[1]}</a-select-option>`)
+          })
+          // 自定义
+          aFromItem = `<a-form-item label="${column.columnName}">
+                <a-select v-model="queryParam.${column.tableColumn}" placeholder="请选择${column.columnName}">
+                  <a-select-option value="">全部</a-select-option>
+                  ${selectOpt.join('')}
+                </a-select>
+              </a-form-item>`
+        }
+      } else if (column.componentType === 'DatePicker_date') {
+        aFromItem = `<a-form-item
+                label="${column.columnName}">
+                <a-range-picker v-model="queryParam.${column.tableColumn}"/>
+              </a-form-item>`
+      } else if (column.componentType === 'DatePicker_datetime') {
+        aFromItem = `<a-form-item
+                label="${column.columnName}">
+                <a-range-picker showTime format="YYYY/MM/DD HH:mm:ss" v-model="queryParam.${column.tableColumn}"/>
+              </a-form-item>`
+      } else {
+        // Input
+        aFromItem = `<a-form-item label="${column.columnName}">
+          <a-input v-model="queryParam.${column.tableColumn}" placeholder="请输入${column.columnName}"/>
+        </a-form-item>`
+      }
+      temp.push(`<a-col :md="8" :sm="12" :xs="24">
+ ${aFromItem}
+ </a-col>
+`)
+    }
+  })
   return temp.join('')
 }
 
@@ -336,7 +385,7 @@ function getQueryCondition (param) {
  * @returns {string}
  */
 function getQueryTime (param) {
-  const temp = {}
+  const temp = []
   return temp.join('')
 }
 
@@ -352,7 +401,7 @@ function getQueryTime (param) {
  * @returns {string}
  */
 function getQuerySetTime (param) {
-  const temp = {}
+  const temp = []
   return temp.join('')
 }
 
@@ -378,7 +427,7 @@ function getQuerySetTime (param) {
  * @returns {string}
  */
 function getColumns (param) {
-  const temp = {}
+  const temp = []
   return temp.join('')
 }
 
@@ -403,7 +452,7 @@ function getColumns (param) {
  * @returns {string}
  */
 function getEdit (param) {
-  const temp = {}
+  const temp = []
   return temp.join('')
 }
 
@@ -415,7 +464,7 @@ function getEdit (param) {
  * @returns {string}
  */
 function getDetail (param) {
-  const temp = {}
+  const temp = []
   return temp.join('')
 }
 
@@ -437,7 +486,7 @@ function getDetail (param) {
  * @returns {string}
  */
 function getAdd (param) {
-  const temp = {}
+  const temp = []
   return temp.join('')
 }
 /**

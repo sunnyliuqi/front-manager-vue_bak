@@ -1,11 +1,11 @@
-import path from '../index'
+import path from '@/api/index'
 import { axios } from '@/utils/request'
 import parsePageParams from '@/utils/page'
 
 // 分页
 export function queryList (data) {
   return axios({
-    url: path.default + '/operation',
+    url: path.sys + '/operation',
     method: 'POST',
     data: data,
     params: parsePageParams(data)
@@ -15,7 +15,7 @@ export function queryList (data) {
 // 保存
 export function save (data) {
   return axios({
-    url: path.default + '/operation/add',
+    url: path.sys + '/operation/add',
     method: 'PUT',
     data: data
   })
@@ -24,7 +24,7 @@ export function save (data) {
 // 修改
 export function update (data) {
   return axios({
-    url: path.default + '/operation/update',
+    url: path.sys + '/operation/update',
     method: 'PUT',
     data: data
   })
@@ -33,7 +33,7 @@ export function update (data) {
 // 删除
 export function del (data) {
   return axios({
-    url: path.default + '/operation',
+    url: path.sys + '/operation',
     method: 'DELETE',
     data: data
   })
@@ -42,7 +42,7 @@ export function del (data) {
 // 获取详情
 export function get (params) {
   return axios({
-    url: path.default + '/operation/' + params.id,
+    url: path.sys + '/operation/' + params.id,
     method: 'GET'
   })
 }

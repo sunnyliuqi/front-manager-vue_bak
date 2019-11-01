@@ -1,10 +1,10 @@
-import path from '../index'
+import path from '@/api/index'
 import { axios } from '@/utils/request'
 
 // 菜单树
 export function queryList () {
   return axios({
-    url: path.default + '/menu/listTree',
+    url: path.sys + '/menu/listTree',
     method: 'GET'
   })
 }
@@ -12,7 +12,7 @@ export function queryList () {
 // 保存
 export function save (data) {
   return axios({
-    url: path.default + '/menu/add',
+    url: path.sys + '/menu/add',
     method: 'PUT',
     data: data
   })
@@ -21,7 +21,7 @@ export function save (data) {
 // 修改
 export function update (data) {
   return axios({
-    url: path.default + '/menu/update',
+    url: path.sys + '/menu/update',
     method: 'PUT',
     data: data
   })
@@ -30,7 +30,7 @@ export function update (data) {
 // 删除
 export function del (data) {
   return axios({
-    url: path.default + '/menu',
+    url: path.sys + '/menu',
     method: 'DELETE',
     data: data
   })
@@ -39,7 +39,7 @@ export function del (data) {
 // 获取详情
 export function get (params) {
   return axios({
-    url: path.default + '/menu/' + params.id,
+    url: path.sys + '/menu/' + params.id,
     method: 'GET'
   })
 }
@@ -47,7 +47,7 @@ export function get (params) {
 // 验证code
 export function checkCode (params) {
   return axios({
-    url: path.default + '/menu/checkCode',
+    url: path.sys + '/menu/checkCode',
     method: 'GET',
     // id=params.id&code=params.code
     params: params
@@ -57,7 +57,7 @@ export function checkCode (params) {
 // 验证url
 export function checkUrl (params) {
   return axios({
-    url: path.default + '/menu/checkUrl',
+    url: path.sys + '/menu/checkUrl',
     method: 'GET',
     // id=params.id&url=params.url
     params: params
@@ -67,7 +67,7 @@ export function checkUrl (params) {
 // 获取菜单和操作
 export function getMenuAndOrganization () {
   return axios({
-    url: path.default + '/menu/getMenuAndOrganization',
+    url: path.sys + '/menu/getMenuAndOrganization',
     method: 'GET'
   })
 }

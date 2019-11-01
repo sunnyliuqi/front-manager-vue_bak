@@ -1,6 +1,7 @@
 export const service = {
-  default: '/sys',
   upload: '/upload',
   uploads: '/uploads',
-  createCode: '/createFile'
+  createCode: '/createFile',
+  sys: '/sys',
+  default: '/demo'
 }

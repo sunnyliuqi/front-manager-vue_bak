@@ -1,11 +1,11 @@
-import path from '../index'
+import path from '@/api/index'
 import { axios } from '@/utils/request'
 import parsePageParams from '@/utils/page'
 
 // 分页
 export function queryList (data) {
   return axios({
-    url: path.default + '/area',
+    url: path.sys + '/area',
     method: 'POST',
     data: data,
     params: parsePageParams(data)
@@ -15,7 +15,7 @@ export function queryList (data) {
 // 保存
 export function save (data) {
   return axios({
-    url: path.default + '/area/add',
+    url: path.sys + '/area/add',
     method: 'PUT',
     data: data
   })
@@ -24,7 +24,7 @@ export function save (data) {
 // 修改
 export function update (data) {
   return axios({
-    url: path.default + '/area/update',
+    url: path.sys + '/area/update',
     method: 'PUT',
     data: data
   })
@@ -33,7 +33,7 @@ export function update (data) {
 // 删除
 export function del (data) {
   return axios({
-    url: path.default + '/area',
+    url: path.sys + '/area',
     method: 'DELETE',
     data: data
   })
@@ -42,21 +42,21 @@ export function del (data) {
 // 获取详情
 export function get (params) {
   return axios({
-    url: path.default + '/area/' + params.id,
+    url: path.sys + '/area/' + params.id,
     method: 'GET'
   })
 }
 
 export function listTree () {
   return axios({
-    url: path.default + '/area/listTree',
+    url: path.sys + '/area/listTree',
     method: 'GET'
   })
 }
 
 export function listTreeHasCounty () {
   return axios({
-    url: path.default + '/area/listTreeHasCounty',
+    url: path.sys + '/area/listTreeHasCounty',
     method: 'GET'
   })
 }
@@ -64,7 +64,7 @@ export function listTreeHasCounty () {
 // 获取详情
 export function checkCode (params) {
   return axios({
-    url: path.default + '/area/checkCode',
+    url: path.sys + '/area/checkCode',
     method: 'GET',
     // id=params.id&code=params.code
     params: params
@@ -74,7 +74,7 @@ export function checkCode (params) {
 // 根据类别获取区域
 export function getAreaByType (params) {
   return axios({
-    url: path.default + '/area/getAreaByType',
+    url: path.sys + '/area/getAreaByType',
     method: 'GET',
     // type=params.type&code=params.code
     params: params

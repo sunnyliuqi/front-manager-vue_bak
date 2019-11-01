@@ -1,10 +1,10 @@
-import path from '../index'
+import path from '@/api/index'
 import { axios } from '@/utils/request'
 
 // 分页
 export function queryList () {
   return axios({
-    url: path.default + '/organization/list',
+    url: path.sys + '/organization/list',
     method: 'POST'
   })
 }
@@ -12,7 +12,7 @@ export function queryList () {
 // 保存
 export function save (data) {
   return axios({
-    url: path.default + '/organization/add',
+    url: path.sys + '/organization/add',
     method: 'PUT',
     data: data
   })
@@ -21,7 +21,7 @@ export function save (data) {
 // 修改
 export function update (data) {
   return axios({
-    url: path.default + '/organization/update',
+    url: path.sys + '/organization/update',
     method: 'PUT',
     data: data
   })
@@ -30,7 +30,7 @@ export function update (data) {
 // 删除
 export function del (data) {
   return axios({
-    url: path.default + '/organization',
+    url: path.sys + '/organization',
     method: 'DELETE',
     data: data
   })
@@ -39,7 +39,7 @@ export function del (data) {
 // 获取详情
 export function get (params) {
   return axios({
-    url: path.default + '/organization/' + params.id,
+    url: path.sys + '/organization/' + params.id,
     method: 'GET'
   })
 }
@@ -47,7 +47,7 @@ export function get (params) {
 // 验证编码
 export function checkCode (params) {
   return axios({
-    url: path.default + '/organization/checkCode',
+    url: path.sys + '/organization/checkCode',
     method: 'GET',
     // id=params.id&code=params.code
     params: params
@@ -57,7 +57,7 @@ export function checkCode (params) {
 // 组织机构树
 export function treeList () {
   return axios({
-    url: path.default + '/organization/treeList',
+    url: path.sys + '/organization/treeList',
     method: 'GET'
   })
 }
