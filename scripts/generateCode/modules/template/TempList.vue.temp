@@ -68,7 +68,7 @@ import {
   queryList,
   save,
   update
-} from '@/api#{PARENT_ROUTER}#{FUNCTION_NAME_LOWER}'
+} from '@/api#{PARENT_ROUTER}/#{FUNCTION_NAME_LOWER}'
 import { STable } from '@/components'
 import Detail from './components/Detail'
 import Add from './components/Add'

@@ -107,10 +107,10 @@ const generateCodeHandle = param => {
     updateRouterConfig(param, 1)
     updateApiService(param)
     createApi(param)
-    createList(param)
-    createDetail(param)
-    createAdd(param)
-    createEdit(param)
+    // createList(param)
+    // createDetail(param)
+    // createAdd(param)
+    // createEdit(param)
     code = 10000
     msg = '生成页面成功'
   }

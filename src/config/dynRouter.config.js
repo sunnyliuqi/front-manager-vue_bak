@@ -122,7 +122,16 @@ export const dynRouterMap = [{
       title: '示例',
       static: true
     },
-    children: []
+    children: [{
+      path: '/example/temp',
+      name: 'temp',
+      component: () => import('@/views/example/temp/TempList'),
+      meta: {
+        title: '模板',
+        keepAlive: true,
+        static: true
+      }
+    }]
   }]
 }, {
   path: '*',
