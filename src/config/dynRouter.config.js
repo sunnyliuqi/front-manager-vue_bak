@@ -115,6 +115,14 @@ export const dynRouterMap = [{
         static: true
       }
     }]
+  }, {
+    path: '/example',
+    component: PageView,
+    meta: {
+      title: '示例',
+      static: true
+    },
+    children: []
   }]
 }, {
   path: '*',

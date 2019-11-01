@@ -540,9 +540,9 @@ export default {
         if (!this.isEmpty(modeObj)) {
           let queryFlag = {}
           if (modeObj.queryMode === '') {
-            queryFlag = { 'queryFlag': false }
+            queryFlag = { 'queryFlag': '0' }
           } else {
-            queryFlag = { 'queryFlag': true }
+            queryFlag = { 'queryFlag': '1' }
           }
           Object.assign(target, modeObj, queryFlag)
         }
@@ -554,7 +554,7 @@ export default {
     handleChange (valueObj, recordChildren) {
       const target = this.columnInfos.filter(item => item.tableColumn === recordChildren.tableColumn)[0]
       if (!this.isEmpty(target)) {
-        Object.assign(target, valueObj)
+        Object.assign(target, replaceBlooean(valueObj))
         const tempColumnInfos = JSON.parse(JSON.stringify(this.columnInfos))
         this.columnInfos.splice(0, this.columnInfos.length, ...tempColumnInfos)
       }
@@ -705,6 +705,15 @@ export default {
       })
     }
   }
+}
+
+/**
+ * boolean 转 字符串类型 配合后台类型，否则不用转
+ * @param obj
+ * @returns {any}
+ */
+function replaceBlooean (obj) {
+  return JSON.parse(JSON.stringify(obj).replace(':true', ':"1"').replace(':flase', ':"0"'))
 }
 </script>
 
