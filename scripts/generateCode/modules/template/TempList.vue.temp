@@ -26,8 +26,7 @@
       size="default"
       :rowKey="(recordActive) => recordActive.id"
       :columns="columns"
-      :rowSelection="options.rowSelection"
-      :alert="options.alert"
+#{LIST_ROW_SELECT}
       :data="loadData"
       showPagination="auto"
     >

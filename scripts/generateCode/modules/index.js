@@ -34,6 +34,8 @@ const apiTemp = './scripts/generateCode/modules/template/functionName.js.temp'
 let LIST_QUERY_CONDITION
 /** 列表操作批量删除**/
 let LIST_OPERATE_BATCH_DEL
+/****/
+let LIST_ROW_SELECT
 /** 列表查询时间区间参数searchBeginTime: '',searchEndTime: ''**/
 let LIST_QUERY_TIME_PARAMS
 /* 列表查询时间区间参数赋值
@@ -100,6 +102,8 @@ const generateCodeHandle = param => {
     SERVICE_PATH = param.serviceName.match(/(.*):/)[1]
     LIST_QUERY_CONDITION = getQueryCondition(param)
     LIST_OPERATE_BATCH_DEL = getBatchDel(param)
+    LIST_ROW_SELECT = getRowSelect(param)
+
     // LIST_QUERY_TIME_PARAMS = getQueryTime(param)
     // LIST_QUERY_TIME_SETPARAMS = getQuerySetTime(param)
     // LIST_COLUMNS = getColumns(param)
@@ -418,6 +422,21 @@ function getBatchDel (param) {
 
   return temp.join('')
 }
+
+/**
+ * 列表多选项
+ * @param param
+ * @returns {string}
+ */
+function getRowSelect (param) {
+  const temp = []
+  if (param.tableType === '2') {
+    temp.push(`      :rowSelection="options.rowSelection"
+      :alert="options.alert"`)
+  }
+
+  return temp.join('')
+}
 /**
  *searchBeginTime: '',
  searchEndTime: ''
@@ -538,6 +557,7 @@ function replaceContent (data) {
   return data
     .replace(/#{LIST_QUERY_CONDITION}/g, LIST_QUERY_CONDITION)
     .replace(/#{LIST_OPERATE_BATCH_DEL}/g, LIST_OPERATE_BATCH_DEL)
+    .replace(/#{LIST_ROW_SELECT}/g, LIST_ROW_SELECT)
     .replace(/#{LIST_QUERY_TIME_PARAMS}/g, LIST_QUERY_TIME_PARAMS)
     .replace(/#{LIST_QUERY_TIME_SETPARAMS}/g, LIST_QUERY_TIME_SETPARAMS)
     .replace(/#{LIST_COLUMNS}/g, LIST_COLUMNS)
