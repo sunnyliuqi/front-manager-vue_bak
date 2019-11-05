@@ -89,6 +89,9 @@
       <span slot="selectCustom" slot-scope="text">
         {{ getCustomName(text) }}
       </span>
+      <span slot="selectDict" slot-scope="text">
+        {{ getDictName(text) }}
+      </span>
       <span slot="action" slot-scope="text, record">
         <template>
           <a @click="handleDetail(record)">详情</a>
@@ -106,6 +109,7 @@
       :formatDate="formatDate"
       :getStatusName="getStatusName"
       :get-custom-name="getCustomName"
+      :get-dict-name="getDictName"
       :record="recordActive"/>
     <add
       ref="tempAdd"
@@ -191,7 +195,8 @@ export default {
         }, {
           title: '数据字典',
           dataIndex: 'selectDict',
-          key: 'selectDict'
+          key: 'selectDict',
+          scopedSlots: { customRender: 'selectDict' }
         },
         {
           title: '操作',
@@ -284,6 +289,16 @@ export default {
           value = '有'
           break
       }
+      return value
+    },
+    // 数据字典键值转换
+    getDictName (key) {
+      let value = ''
+      this.selectOrgType.forEach(item => {
+        if (item.value === key) {
+          value = item.label
+        }
+      })
       return value
     },
     // 重置查询

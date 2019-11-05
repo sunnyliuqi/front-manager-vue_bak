@@ -23,7 +23,7 @@
         <span class="detail-label">自定义:</span>{{ getCustomName(record.selectCustom) }}
       </a-col>
       <a-col :sm="12" :xs="24">
-        <span class="detail-label">数据字典:</span>{{ record.selectDict }}
+        <span class="detail-label">数据字典:</span>{{ getDictName(record.selectDict) }}
       </a-col>
       <a-col :sm="12" :xs="24">
         <span class="detail-label">新建日期:</span>{{ formatDate(record.addTime,'YYYY-MM-DD') }}
@@ -75,6 +75,10 @@ export default {
       default: undefined
     },
     getCustomName: {
+      type: Function,
+      default: undefined
+    },
+    getDictName: {
       type: Function,
       default: undefined
     }

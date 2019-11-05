@@ -39,8 +39,7 @@
             label="状态"
             :labelCol="{ span: 8 }"
             :wrapperCol="{ span: 16 }">
-            <a-select v-decorator="['status',{initialValue:''} ]">
-              <a-select-option value="">请选择</a-select-option>
+            <a-select v-decorator="['status',{} ]" placeholder="请选择状态">
               <a-select-option value="0">不启用</a-select-option>
               <a-select-option value="1">启用</a-select-option>
             </a-select>
@@ -74,7 +73,7 @@
             label="数据字典"
             :labelCol="{ span: 8 }"
             :wrapperCol="{ span: 16 }">
-            <a-select :options="orgType" v-decorator="['selectDict',{initialValue:''}]" placeholder="请选择数据字典下拉框"/>
+            <a-select :options="orgType" v-decorator="['selectDict',{}]" placeholder="请选择数据字典下拉框"/>
           </a-form-item>
         </a-col>
         <a-col :span="12">

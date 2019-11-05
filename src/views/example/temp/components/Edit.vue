@@ -45,8 +45,7 @@
             label="状态"
             :labelCol="{ span: 8 }"
             :wrapperCol="{ span: 16 }">
-            <a-select v-decorator="['status',{initialValue: record.status ? record.status : ''} ]">
-              <a-select-option value="">请选择</a-select-option>
+            <a-select v-decorator="['status',{initialValue: record.status ? record.status : undefined} ]"  placeholder="请选择状态">
               <a-select-option value="0">不启用</a-select-option>
               <a-select-option value="1">启用</a-select-option>
             </a-select>
