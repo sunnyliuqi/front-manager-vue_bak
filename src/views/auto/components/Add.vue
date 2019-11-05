@@ -270,13 +270,13 @@
             </a-select>
           </span>
           <span slot="componentData" slot-scope="text, recordChildren">
-             <a-tooltip title="数据字典填入字典类型，自定义填入格式1:one;2:two" placement="left">
+            <a-tooltip title="数据字典填入字典类型，自定义填入格式1:one;2:two" placement="left">
               <a-input
                 class="editTable"
                 :value="text"
                 @change="e => handleChange({'componentData': e.target.value}, recordChildren)"
               />
-             </a-tooltip>
+            </a-tooltip>
           </span>
         </s-table>
       </keep-alive>
