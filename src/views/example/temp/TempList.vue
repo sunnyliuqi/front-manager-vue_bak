@@ -23,7 +23,7 @@
             <a-col :md="8" :sm="12" :xs="24">
               <a-form-item
                 label="更新时间">
-                <a-range-picker showTime format="YYYY/MM/DD HH:mm:ss" v-model="queryParam.updTimeSearch"/>
+                <a-range-picker showTime format="YYYY-MM-DD HH:mm:ss" v-model="queryParam.updTimeSearch"/>
               </a-form-item>
             </a-col>
             <a-col :md="8" :sm="12" :xs="24">
@@ -51,8 +51,7 @@
             </a-col>
             <a-col :md="8" :sm="12" :xs="24">
               <a-form-item label="下拉框">
-                <a-select :options="orgType" v-model="queryParam.selectDict" placeholder="请选择数据字典下拉框">
-                </a-select>
+                <a-select :options="orgType" v-model="queryParam.selectDict" placeholder="请选择数据字典下拉框"/>
               </a-form-item>
             </a-col>
 
@@ -102,25 +101,35 @@
         </template>
       </span>
     </s-table>
-    <detail ref="tempDetail" :record="recordActive"/>
+    <detail
+      ref="tempDetail"
+      :formatDate="formatDate"
+      :getStatusName="getStatusName"
+      :get-custom-name="getCustomName"
+      :record="recordActive"/>
     <add
       ref="tempAdd"
       :record="recordActive"
+      :org-type="selectOrgType"
+      :formatDate="formatDate"
       :save="save"
       :refresh="refresh"
     />
     <edit
       ref="tempEdit"
       :record="recordActive"
+      :org-type="selectOrgType"
       :update="update"
       :refresh="refresh"
-      :moment="moment"/>
+      :formatDate="formatDate"
+      :get-moment="getMoment"
+    />
   </a-card>
 </template>
 
 <script>
-import moment from 'moment'
-import { isEmpty } from '@/utils/common'
+
+import { formatDate, getMoment, isEmpty } from '@/utils/common'
 import { del, get, queryList, save, update } from '@/api/example/temp'
 import { getDictByType } from '@/api/common'
 import { STable } from '@/components'
@@ -143,7 +152,8 @@ export default {
       // 修改方法
       update: update,
       // 日期工具类
-      moment: moment,
+      formatDate: formatDate,
+      getMoment: getMoment,
       // 查询参数
       queryParam: {},
       // 列表表头
@@ -211,6 +221,7 @@ export default {
       },
       // 数据字典-组织类型
       orgType: [{ label: '全部', value: '' }],
+      selectOrgType: [],
       // 列表选择
       options: {
         alert: {
@@ -237,12 +248,14 @@ export default {
             return { label: `${item.dictKey}`, value: `${item.dictValue}` }
           })
           this.orgType = [...this.orgType, ...dnyOrgType]
+          this.selectOrgType = dnyOrgType
         }
       }
     )
   },
   computed: {},
   methods: {
+
     onSelectChange (selectedRowKeys, selectedRows) {
       this.selectedRowKeys = selectedRowKeys
       this.selectedRows = selectedRows

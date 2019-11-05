@@ -10,6 +10,27 @@
       <a-col :sm="12" :xs="24">
         <span class="detail-label">编码:</span>{{ record.code }}
       </a-col>
+      <a-col :sm="12" :xs="24">
+        <span class="detail-label">name:</span>{{ record.name }}
+      </a-col>
+      <a-col :sm="12" :xs="24">
+        <span class="detail-label">状态:</span>{{ getStatusName(record.status) }}
+      </a-col>
+      <a-col :sm="12" :xs="24">
+        <span class="detail-label">年龄:</span>{{ record.age }}
+      </a-col>
+      <a-col :sm="12" :xs="24">
+        <span class="detail-label">自定义:</span>{{ getCustomName(record.selectCustom) }}
+      </a-col>
+      <a-col :sm="12" :xs="24">
+        <span class="detail-label">数据字典:</span>{{ record.selectDict }}
+      </a-col>
+      <a-col :sm="12" :xs="24">
+        <span class="detail-label">新建日期:</span>{{ formatDate(record.addTime,'YYYY-MM-DD') }}
+      </a-col>
+      <a-col :sm="12" :xs="24">
+        <span class="detail-label">更新时间:</span>{{ formatDate(record.updTime,'YYYY-MM-DD HH:mm:ss') }}
+      </a-col>
     </a-row>
     <div
       :style="{
@@ -44,6 +65,18 @@ export default {
     customWidth: {
       type: Number,
       default: 720
+    },
+    formatDate: {
+      type: Function,
+      default: undefined
+    },
+    getStatusName: {
+      type: Function,
+      default: undefined
+    },
+    getCustomName: {
+      type: Function,
+      default: undefined
     }
   },
   data () {

@@ -374,7 +374,7 @@ export default {
           values.id = this.record.id
           this.update(values).then(res => {
             if (res.code === 10000) {
-              this.$message.info(res.result)
+              this.$message.info(res.msg)
               this.refresh()
             }
           }).finally(() => {

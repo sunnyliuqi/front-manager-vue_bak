@@ -380,7 +380,7 @@ export default {
           values.userHeader = this.record.userHeader
           this.save(values).then(res => {
             if (res.code === 10000) {
-              this.$message.info(res.result)
+              this.$message.info(res.msg)
               this.refresh()
             }
           }).finally(() => {
