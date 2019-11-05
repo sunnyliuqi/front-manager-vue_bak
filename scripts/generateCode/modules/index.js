@@ -343,7 +343,9 @@ function getQueryCondition (param) {
           const selectOpt = []
           selectOptions.forEach(opt => {
             const opts = opt.split(':')
-            selectOpt.push(`<a-select-option value="${opts[0]}">${opts[1]}</a-select-option>`)
+            if (typeof (opts) === 'object' && opts.length === 2) {
+              selectOpt.push(`<a-select-option value="${opts[0]}">${opts[1]}</a-select-option>`)
+            }
           })
           // 自定义
           aFromItem = `<a-form-item label="${column.columnName}">
