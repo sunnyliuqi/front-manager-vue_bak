@@ -41,7 +41,7 @@
               </a-form-item>
             </a-col>
             <a-col :md="8" :sm="12" :xs="24">
-              <a-form-item label="下拉框">
+              <a-form-item label="自定义">
                 <a-select v-model="queryParam.selectCustom" placeholder="请选择自定义下拉框0:无;1:有;">
                   <a-select-option value="">全部</a-select-option>
                   <a-select-option value="0">无</a-select-option>
@@ -50,7 +50,7 @@
               </a-form-item>
             </a-col>
             <a-col :md="8" :sm="12" :xs="24">
-              <a-form-item label="下拉框">
+              <a-form-item label="数据字典">
                 <a-select :options="orgType" v-model="queryParam.selectDict" placeholder="请选择数据字典下拉框"/>
               </a-form-item>
             </a-col>
