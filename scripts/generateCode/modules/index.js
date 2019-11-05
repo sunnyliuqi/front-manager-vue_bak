@@ -328,53 +328,71 @@ function getQueryCondition (param) {
   const tableInfo = param.tableInfo
   const temp = []
   tableInfo.forEach(column => {
-    if (column.queryFlag) {
-      let aFromItem = ''
+    if (column.queryFlag === '1') {
       if (column.componentType === 'InputNumber') {
-        aFromItem = `<a-form-item label="${column.columnName}">
-          <a-input-number v-model="queryParam.${column.tableColumn}" placeholder="请输入${column.columnName}"/>
-        </a-form-item>`
+        temp.push(`
+            <a-col :md="8" :sm="12" :xs="24">
+              <a-form-item label="${column.columnName}">
+                <a-input-number v-model="queryParam.${column.javaName}" placeholder="请输入${column.columnName}"/>
+              </a-form-item>
+            </a-col>`)
       } else if (column.componentType === 'Select') {
         const selectOptions = column.componentData.split(';')
-        if (selectOptions.length < 1) {
+        if (selectOptions.length < 2) {
           // 数据字典
-          aFromItem = ``
+          temp.push(`
+            <a-col :md="8" :sm="12" :xs="24">
+              <a-form-item label="${column.columnName}">
+                <a-select :options="${underLineToCamelbak(column.componentData)}" v-model="queryParam.${column.javaName}" placeholder="请选择${column.columnName}"/>
+              </a-form-item>
+            </a-col>
+            `)
         } else {
+          // 自定义
           const selectOpt = []
           selectOptions.forEach(opt => {
             const opts = opt.split(':')
             if (typeof (opts) === 'object' && opts.length === 2) {
-              selectOpt.push(`<a-select-option value="${opts[0]}">${opts[1]}</a-select-option>`)
+              selectOpt.push(`\n                  <a-select-option value="${opts[0]}">${opts[1]}</a-select-option>`)
             }
           })
-          // 自定义
-          aFromItem = `<a-form-item label="${column.columnName}">
-                <a-select v-model="queryParam.${column.tableColumn}" placeholder="请选择${column.columnName}">
-                  <a-select-option value="">全部</a-select-option>
-                  ${selectOpt.join('')}
+          temp.push(`
+            <a-col :md="8" :sm="12" :xs="24">
+              <a-form-item label="${column.columnName}">
+                <a-select v-model="queryParam.${column.javaName}" placeholder="请选择${column.columnName}">
+                  <a-select-option value="">全部</a-select-option>${selectOpt.join('')}
                 </a-select>
-              </a-form-item>`
+              </a-form-item>
+            </a-col>
+            `)
         }
       } else if (column.componentType === 'DatePicker_date') {
-        aFromItem = `<a-form-item
+        temp.push(`
+            <a-col :md="8" :sm="12" :xs="24">
+              <a-form-item
                 label="${column.columnName}">
-                <a-range-picker v-model="queryParam.${column.tableColumn}"/>
-              </a-form-item>`
+                <a-range-picker v-model="queryParam.${column.javaName}Search"/>
+              </a-form-item>
+            </a-col>
+            `)
       } else if (column.componentType === 'DatePicker_datetime') {
-        aFromItem = `<a-form-item
+        temp.push(`
+            <a-col :md="8" :sm="12" :xs="24">
+              <a-form-item
                 label="${column.columnName}">
-                <a-range-picker showTime format="YYYY/MM/DD HH:mm:ss" v-model="queryParam.${column.tableColumn}"/>
-              </a-form-item>`
+                <a-range-picker showTime format="YYYY-MM-DD HH:mm:ss" v-model="queryParam.${column.javaName}Search"/>
+              </a-form-item>
+            </a-col>
+            `)
       } else {
-        // Input
-        aFromItem = `<a-form-item label="${column.columnName}">
-          <a-input v-model="queryParam.${column.tableColumn}" placeholder="请输入${column.columnName}"/>
-        </a-form-item>`
+        temp.push(`
+            <a-col :md="8" :sm="12" :xs="24">
+              <a-form-item label="${column.columnName}">
+                <a-input v-model="queryParam.${column.javaName}" placeholder="请输入${column.columnName}"/>
+              </a-form-item>
+            </a-col>
+            `)
       }
-      temp.push(`<a-col :md="8" :sm="12" :xs="24">
- ${aFromItem}
- </a-col>
-`)
     }
   })
   return temp.join('')
@@ -562,6 +580,16 @@ const formatCode = fullpath => {
   const execCommand = `eslint --fix ${fullpath}`
   exec(execCommand, function (err, stdout, stderr) {
     if (err) console.error(JSON.stringify(err))
+  })
+}
+/**
+ * 下划线转驼峰标识
+ * @param str
+ * @returns {*}
+ */
+const underLineToCamelbak = str => {
+  return str.replace(/_./g, ($1) => {
+    return $1.substring(1, ($1.length)).toUpperCase()
   })
 }
 module.exports = {
