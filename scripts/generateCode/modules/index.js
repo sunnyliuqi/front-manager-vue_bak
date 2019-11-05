@@ -32,6 +32,8 @@ const apiTemp = './scripts/generateCode/modules/template/functionName.js.temp'
 
 /** 列表查询条件**/
 let LIST_QUERY_CONDITION
+/** 列表操作批量删除**/
+let LIST_OPERATE_BATCH_DEL
 /** 列表查询时间区间参数searchBeginTime: '',searchEndTime: ''**/
 let LIST_QUERY_TIME_PARAMS
 /* 列表查询时间区间参数赋值
@@ -97,12 +99,13 @@ const generateCodeHandle = param => {
   } else if (param.hasPage === '1') {
     SERVICE_PATH = param.serviceName.match(/(.*):/)[1]
     LIST_QUERY_CONDITION = getQueryCondition(param)
-    LIST_QUERY_TIME_PARAMS = getQueryTime(param)
-    LIST_QUERY_TIME_SETPARAMS = getQuerySetTime(param)
-    LIST_COLUMNS = getColumns(param)
-    EDIT_CONTENT = getEdit(param)
-    DETAIL_CONTENT = getDetail(param)
-    ADD_CONTENT = getAdd(param)
+    LIST_OPERATE_BATCH_DEL = getBatchDel(param)
+    // LIST_QUERY_TIME_PARAMS = getQueryTime(param)
+    // LIST_QUERY_TIME_SETPARAMS = getQuerySetTime(param)
+    // LIST_COLUMNS = getColumns(param)
+    // EDIT_CONTENT = getEdit(param)
+    // DETAIL_CONTENT = getDetail(param)
+    // ADD_CONTENT = getAdd(param)
     //  生成页面
     // updateRouterConfig(param, 1)
     // updateApiService(param)
@@ -399,6 +402,23 @@ function getQueryCondition (param) {
 }
 
 /**
+ * 批量删除操作
+ * @param param
+ * @returns {string}
+ */
+function getBatchDel (param) {
+  const temp = []
+  if (param.tableType === '2') {
+    temp.push(`
+        <a-popconfirm title="您确认批量删除吗?" @confirm="handleDelete(selectedRows)" okText="确认" cancelText="取消">
+          <a-button style="margin-left: 8px">批量删除</a-button>
+        </a-popconfirm>
+  `)
+  }
+
+  return temp.join('')
+}
+/**
  *searchBeginTime: '',
  searchEndTime: ''
  * @param param
@@ -517,6 +537,7 @@ function getAdd (param) {
 function replaceContent (data) {
   return data
     .replace(/#{LIST_QUERY_CONDITION}/g, LIST_QUERY_CONDITION)
+    .replace(/#{LIST_OPERATE_BATCH_DEL}/g, LIST_OPERATE_BATCH_DEL)
     .replace(/#{LIST_QUERY_TIME_PARAMS}/g, LIST_QUERY_TIME_PARAMS)
     .replace(/#{LIST_QUERY_TIME_SETPARAMS}/g, LIST_QUERY_TIME_SETPARAMS)
     .replace(/#{LIST_COLUMNS}/g, LIST_COLUMNS)

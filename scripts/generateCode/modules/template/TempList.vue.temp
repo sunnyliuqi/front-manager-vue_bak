@@ -18,9 +18,7 @@
 
       <div class="table-operator">
         <a-button type="primary" icon="plus" @click="handleAdd()">新建</a-button>
-        <a-popconfirm title="您确认批量删除吗?" @confirm="handleDelete(selectedRows)" okText="确认" cancelText="取消">
-          <a-button style="margin-left: 8px">批量删除</a-button>
-        </a-popconfirm>
+#{LIST_OPERATE_BATCH_DEL}
       </div>
     </div>
     <s-table
