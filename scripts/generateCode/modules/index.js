@@ -104,9 +104,9 @@ const generateCodeHandle = param => {
     DETAIL_CONTENT = getDetail(param)
     ADD_CONTENT = getAdd(param)
     //  生成页面
-    updateRouterConfig(param, 1)
-    updateApiService(param)
-    createApi(param)
+    // updateRouterConfig(param, 1)
+    // updateApiService(param)
+    // createApi(param)
     // createList(param)
     // createDetail(param)
     // createAdd(param)
