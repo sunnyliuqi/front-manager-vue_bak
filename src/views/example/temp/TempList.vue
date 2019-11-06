@@ -157,8 +157,6 @@ export default {
       update: update,
       // 查询参数
       queryParam: {},
-      // 单个记录行
-      recordActive: {},
       // 列表表头
       columns: [
         {
@@ -248,7 +246,9 @@ export default {
         }
       },
       selectedRowKeys: [],
-      selectedRows: []
+      selectedRows: [],
+      // 单个记录行
+      recordActive: {}
     }
   },
   created () {

@@ -599,9 +599,46 @@ function getListImport (param) {
  */
 function getListData (param) {
   const temp = []
+  let isDate = false
+  let isDict = false
   temp.push(`      columns: [\n`)
   const tableInfo = param.tableInfo
+  const queryTime = []
+  const dicts = []
   tableInfo.forEach(column => {
+    // column.publicFlag === '0' &&
+    if (!isDate && (column.componentType === 'DatePicker_datetime' || column.componentType === 'DatePicker_date')) {
+      isDate = true
+    }
+    if (column.componentType === 'DatePicker_datetime') {
+      queryTime.push(`
+        if (this.queryParam.${column.javaName}Search) {
+        this.queryParam.${column.javaName}Search[0] = this.queryParam.${column.javaName}Search[0].format('YYYY-MM-DD HH:mm:ss')
+        this.queryParam.${column.javaName}Search[1] = this.queryParam.${column.javaName}Search[1].format('YYYY-MM-DD HH:mm:ss')
+        }`)
+    }
+    if (column.componentType === 'DatePicker_date') {
+      queryTime.push(`
+        if (this.queryParam.${column.javaName}Search) {
+        this.queryParam.${column.javaName}Search[0] = this.queryParam.${column.javaName}Search[0].format('YYYY-MM-DD')
+        this.queryParam.${column.javaName}Search[1] = this.queryParam.${column.javaName}Search[1].format('YYYY-MM-DD')
+        }`)
+    }
+    if (!isDict && column.componentType === 'Select') {
+      const selectOptions = column.componentData.split(';')
+      if (selectOptions.length < 2) {
+        isDict = true
+      }
+    }
+    if (column.componentType === 'Select') {
+      const selectOptions = column.componentData.split(';')
+      if (selectOptions.length < 2) {
+        const selectName = `select_${column.componentData}`
+        dicts.push(`
+      ${underLineToCamelbak(column.componentData)}: [{ label: '全部', value: '' }],
+      ${underLineToCamelbak(selectName)}: [],`)
+      }
+    }
     if (column.listFlag === '1') {
       if (column.componentType === 'Select') {
         temp.push(`        {
@@ -626,6 +663,53 @@ function getListData (param) {
           scopedSlots: { customRender: 'action' }
         }
       ],`)
+  if (isDate) {
+    temp.push(`
+      // 日期工具类
+      formatDate: formatDate,
+      getMoment: getMoment,`)
+    temp.push(`
+      // 列表加载数据方法
+      loadData: parameter => {
+${queryTime.join('')}
+        return queryList(Object.assign(parameter, this.queryParam))
+          .then(res => {
+            if (res.code === 10000) {
+              return res.result
+            }
+          })
+      },`)
+  } else {
+    temp.push(`
+        loadData: parameter => {
+        return queryList(Object.assign(parameter, this.queryParam))
+          .then(res => {
+            if (res.code === 10000) {
+              return res.result
+            }
+          })
+      },`)
+  }
+  if (isDict) {
+    temp.push(`${dicts}`)
+  }
+  if (param.tableType === '2') {
+    temp.push(`\n      // 列表选择
+      options: {
+        alert: {
+          show: true,
+          clear: () => {
+            this.selectedRowKeys = []
+          }
+        },
+        rowSelection: {
+          selectedRowKeys: this.selectedRowKeys,
+          onChange: this.onSelectChange
+        }
+      },
+      selectedRowKeys: [],
+      selectedRows: [],`)
+  }
   return temp.join('')
 }
 
