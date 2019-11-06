@@ -154,19 +154,19 @@ export default {
         return {}
       }
     },
-    formatDate: {
-      type: Function,
-      default: undefined
-    },
-    getMoment: {
-      type: Function,
-      default: undefined
-    },
     refresh: {
       type: Function,
       default: undefined
     },
     update: {
+      type: Function,
+      default: undefined
+    },
+    formatDate: {
+      type: Function,
+      default: undefined
+    },
+    getMoment: {
       type: Function,
       default: undefined
     }

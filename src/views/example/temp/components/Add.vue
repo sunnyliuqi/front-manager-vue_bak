@@ -145,6 +145,10 @@ export default {
       type: Function,
       default: undefined
     },
+    save: {
+      type: Function,
+      default: undefined
+    },
     formatDate: {
       type: Function,
       default: undefined
@@ -155,10 +159,6 @@ export default {
         return {}
       }
     },
-    save: {
-      type: Function,
-      default: undefined
-    }
   },
   data () {
     return {
