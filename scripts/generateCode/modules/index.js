@@ -40,6 +40,10 @@ let LIST_ROW_SELECT
 let LIST_CONTENT_SELECT
 /** 列表 详情**/
 let LIST_DETAIL
+/** 列表 新增**/
+let LIST_ADD
+/** 列表 编辑**/
+let LIST_EDIT
 /** 列表查询时间区间参数searchBeginTime: '',searchEndTime: ''**/
 let LIST_QUERY_TIME_PARAMS
 /* 列表查询时间区间参数赋值
@@ -109,6 +113,8 @@ const generateCodeHandle = param => {
     LIST_ROW_SELECT = getRowSelect(param)
     LIST_CONTENT_SELECT = getContentSelect(param)
     LIST_DETAIL = getListDetail(param)
+    LIST_ADD = getListAdd(param)
+    LIST_EDIT = getListEdit(param)
     // LIST_QUERY_TIME_PARAMS = getQueryTime(param)
     // LIST_QUERY_TIME_SETPARAMS = getQuerySetTime(param)
     // LIST_COLUMNS = getColumns(param)
@@ -457,7 +463,6 @@ function getContentSelect (param) {
   })
   return temp.join('')
 }
-
 /** 列表详情**/
 function getListDetail (param) {
   const temp = []
@@ -467,7 +472,39 @@ function getListDetail (param) {
   selectFun(tableInfo, temp)
   return temp.join('')
 }
-
+/** 列表新增**/
+function getListAdd (param) {
+  const temp = []
+  const tableInfo = param.tableInfo
+  temp.push(`      ref="${FUNCTION_NAME_LOWER}Add"`)
+  dictFun(tableInfo, temp)
+  formatDate(tableInfo, temp)
+  return temp.join('')
+}
+/** 列表编辑**/
+function getListEdit (param) {
+  const temp = []
+  const tableInfo = param.tableInfo
+  temp.push(`      ref="${FUNCTION_NAME_LOWER}Edit"`)
+  dictFun(tableInfo, temp)
+  formatDate(tableInfo, temp)
+  getMoment(tableInfo, temp)
+  return temp.join('')
+}
+/** 数据字典函数**/
+function dictFun (tableInfo, temp) {
+  tableInfo.forEach(column => {
+    if (column.componentType === 'Select') {
+      const selectOptions = column.componentData.split(';')
+      if (selectOptions.length < 2) {
+        // 数据字典
+        const selectName = `select_${column.componentData}`
+        temp.push(`
+      :${underLineToMidcourtLine(column.componentData)}="${underLineToCamelbak(selectName)}"`)
+      }
+    }
+  })
+}
 /** 下拉框函数**/
 function selectFun (tableInfo, temp) {
   tableInfo.forEach(column => {
@@ -477,18 +514,30 @@ function selectFun (tableInfo, temp) {
       :${underLineToMidcourtLine(selectName)}-name="${underLineToCamelbak(selectName)}Name"`)
     }
   })
-}/** 日期函数**/
+}
+/** 日期函数**/
 function formatDate (tableInfo, temp) {
   let isDate = false
   tableInfo.forEach(column => {
-    if (column.publicFlag === '0' && !isDate && (column.componentType === 'DatePicker_datetime' || column.componentType === 'DatePicker_date')) {
+    // column.publicFlag === '0' &&
+    if (!isDate && (column.componentType === 'DatePicker_datetime' || column.componentType === 'DatePicker_date')) {
       temp.push(`
       :format-date="formatDate"`)
       isDate = true
     }
   })
 }
-
+function getMoment (tableInfo, temp) {
+  let isDate = false
+  tableInfo.forEach(column => {
+    // column.publicFlag === '0' &&
+    if (!isDate && (column.componentType === 'DatePicker_datetime' || column.componentType === 'DatePicker_date')) {
+      temp.push(`
+      :get-moment="getMoment"`)
+      isDate = true
+    }
+  })
+}
 /**
  *searchBeginTime: '',
  searchEndTime: ''
@@ -608,6 +657,8 @@ function getAdd (param) {
  */
 function replaceContent (data) {
   return data
+    .replace(/#{LIST_EDIT}/g, LIST_EDIT)
+    .replace(/#{LIST_ADD}/g, LIST_ADD)
     .replace(/#{LIST_DETAIL}/g, LIST_DETAIL)
     .replace(/#{LIST_CONTENT_SELECT}/g, LIST_CONTENT_SELECT)
     .replace(/#{LIST_QUERY_CONDITION}/g, LIST_QUERY_CONDITION)

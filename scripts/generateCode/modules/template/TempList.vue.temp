@@ -47,18 +47,13 @@
 #{LIST_DETAIL}
       :record="recordActive"/>
     <add
-      ref="tempAdd"
-      :org-type="selectOrgType"
-      :format-date="formatDate"
+#{LIST_ADD}
       :record="recordActive"
       :save="save"
       :refresh="refresh"
     />
     <edit
-      ref="tempEdit"
-      :org-type="selectOrgType"
-      :format-date="formatDate"
-      :get-moment="getMoment"
+#{LIST_EDIT}
       :record="recordActive"
       :update="update"
       :refresh="refresh"
