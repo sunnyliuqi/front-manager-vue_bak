@@ -155,44 +155,50 @@ export default {
       save: save,
       // 修改方法
       update: update,
-      // 日期工具类
-      formatDate: formatDate,
-      getMoment: getMoment,
       // 查询参数
       queryParam: {},
+      // 单个记录行
+      recordActive: {},
       // 列表表头
       columns: [
         {
           title: '编码',
           dataIndex: 'code',
           key: 'code '
-        }, {
+        },
+        {
           title: 'name',
           dataIndex: 'name',
           key: 'name'
-        }, {
+        },
+        {
           title: '新建日期',
           dataIndex: 'addTime',
           key: 'addTime'
-        }, {
+        },
+        {
           title: '更新时间',
           dataIndex: 'updTime',
           key: 'updTime'
-        }, {
+        },
+        {
           title: '状态',
           dataIndex: 'status',
           key: 'status',
           scopedSlots: { customRender: 'status' }
-        }, {
+        },
+        {
           title: '年龄',
           dataIndex: 'age',
           key: 'age'
-        }, {
+        },
+        {
           title: '自定义',
           dataIndex: 'selectCustom',
           key: 'selectCustom',
           scopedSlots: { customRender: 'selectCustom' }
-        }, {
+        },
+        {
           title: '数据字典',
           dataIndex: 'selectDict',
           key: 'selectDict',
@@ -205,8 +211,9 @@ export default {
           scopedSlots: { customRender: 'action' }
         }
       ],
-      // 单个记录行
-      recordActive: {},
+      // 日期工具类
+      formatDate: formatDate,
+      getMoment: getMoment,
       // 列表加载数据方法
       loadData: parameter => {
         if (this.queryParam.addTimeSearch) {

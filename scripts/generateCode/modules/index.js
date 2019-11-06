@@ -44,6 +44,11 @@ let LIST_DETAIL
 let LIST_ADD
 /** 列表 编辑**/
 let LIST_EDIT
+/** 列表 导入包**/
+let LIST_IMPORT
+/** 列表 Data**/
+let LIST_DATA
+
 /** 列表查询时间区间参数searchBeginTime: '',searchEndTime: ''**/
 let LIST_QUERY_TIME_PARAMS
 /* 列表查询时间区间参数赋值
@@ -115,6 +120,8 @@ const generateCodeHandle = param => {
     LIST_DETAIL = getListDetail(param)
     LIST_ADD = getListAdd(param)
     LIST_EDIT = getListEdit(param)
+    LIST_IMPORT = getListImport(param)
+    LIST_DATA = getListData(param)
     // LIST_QUERY_TIME_PARAMS = getQueryTime(param)
     // LIST_QUERY_TIME_SETPARAMS = getQuerySetTime(param)
     // LIST_COLUMNS = getColumns(param)
@@ -463,6 +470,7 @@ function getContentSelect (param) {
   })
   return temp.join('')
 }
+
 /** 列表详情**/
 function getListDetail (param) {
   const temp = []
@@ -472,6 +480,7 @@ function getListDetail (param) {
   selectFun(tableInfo, temp)
   return temp.join('')
 }
+
 /** 列表新增**/
 function getListAdd (param) {
   const temp = []
@@ -481,6 +490,7 @@ function getListAdd (param) {
   formatDate(tableInfo, temp)
   return temp.join('')
 }
+
 /** 列表编辑**/
 function getListEdit (param) {
   const temp = []
@@ -491,6 +501,7 @@ function getListEdit (param) {
   getMoment(tableInfo, temp)
   return temp.join('')
 }
+
 /** 数据字典函数**/
 function dictFun (tableInfo, temp) {
   tableInfo.forEach(column => {
@@ -505,6 +516,7 @@ function dictFun (tableInfo, temp) {
     }
   })
 }
+
 /** 下拉框函数**/
 function selectFun (tableInfo, temp) {
   tableInfo.forEach(column => {
@@ -515,6 +527,7 @@ function selectFun (tableInfo, temp) {
     }
   })
 }
+
 /** 日期函数**/
 function formatDate (tableInfo, temp) {
   let isDate = false
@@ -527,6 +540,12 @@ function formatDate (tableInfo, temp) {
     }
   })
 }
+
+/**
+ * 时间格式化函数
+ * @param tableInfo
+ * @param temp
+ */
 function getMoment (tableInfo, temp) {
   let isDate = false
   tableInfo.forEach(column => {
@@ -538,6 +557,78 @@ function getMoment (tableInfo, temp) {
     }
   })
 }
+
+/**
+ * list import
+ * @param param
+ * @returns {string}
+ */
+function getListImport (param) {
+  const temp = []
+  const tableInfo = param.tableInfo
+  let isDate = false
+  let isDict = false
+  tableInfo.forEach(column => {
+    // column.publicFlag === '0' &&
+    if (!isDate && (column.componentType === 'DatePicker_datetime' || column.componentType === 'DatePicker_date')) {
+      isDate = true
+    }
+    if (!isDict && column.componentType === 'Select') {
+      const selectOptions = column.componentData.split(';')
+      if (selectOptions.length < 2) {
+        isDict = true
+      }
+    }
+  })
+  if (isDate) {
+    temp.push(`import { formatDate, getMoment, isEmpty } from '@/utils/common'\n`)
+  } else {
+    temp.push(`import { isEmpty } from '@/utils/common'\n`)
+  }
+  temp.push(`import { del, get, queryList, save, update } from '@/api${FULL_ROUTER}'\n`)
+  if (isDict) {
+    temp.push(`import { getDictByType } from '@/api/common'\n`)
+  }
+  return temp.join('')
+}
+
+/**
+ * 列表 data
+ * @param param
+ * @returns {string}
+ */
+function getListData (param) {
+  const temp = []
+  temp.push(`      columns: [\n`)
+  const tableInfo = param.tableInfo
+  tableInfo.forEach(column => {
+    if (column.listFlag === '1') {
+      if (column.componentType === 'Select') {
+        temp.push(`        {
+          title: '${column.columnName}',
+          dataIndex: '${column.javaName}',
+          key: '${column.javaName} ',
+          scopedSlots: { customRender: '${column.javaName}' }
+        },\n`)
+      } else {
+        temp.push(`        {
+          title: '${column.columnName}',
+          dataIndex: '${column.javaName}',
+          key: '${column.javaName} '
+        },\n`)
+      }
+    }
+  })
+  temp.push(`        {
+          title: '操作',
+          dataIndex: 'action',
+          width: '320px',
+          scopedSlots: { customRender: 'action' }
+        }
+      ],`)
+  return temp.join('')
+}
+
 /**
  *searchBeginTime: '',
  searchEndTime: ''
@@ -657,6 +748,8 @@ function getAdd (param) {
  */
 function replaceContent (data) {
   return data
+    .replace(/#{LIST_DATA}/g, LIST_DATA)
+    .replace(/#{LIST_IMPORT}/g, LIST_IMPORT)
     .replace(/#{LIST_EDIT}/g, LIST_EDIT)
     .replace(/#{LIST_ADD}/g, LIST_ADD)
     .replace(/#{LIST_DETAIL}/g, LIST_DETAIL)
