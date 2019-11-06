@@ -106,8 +106,8 @@
     </s-table>
     <detail
       ref="tempDetail"
-      :formatDate="formatDate"
-      :getStatusName="getStatusName"
+      :format-date="formatDate"
+      :get-status-name="getStatusName"
       :get-custom-name="getCustomName"
       :get-dict-name="getDictName"
       :record="recordActive"/>
@@ -115,7 +115,7 @@
       ref="tempAdd"
       :record="recordActive"
       :org-type="selectOrgType"
-      :formatDate="formatDate"
+      :format-date="formatDate"
       :save="save"
       :refresh="refresh"
     />
@@ -125,7 +125,7 @@
       :org-type="selectOrgType"
       :update="update"
       :refresh="refresh"
-      :formatDate="formatDate"
+      :format-date="formatDate"
       :get-moment="getMoment"
     />
   </a-card>

@@ -34,8 +34,12 @@ const apiTemp = './scripts/generateCode/modules/template/functionName.js.temp'
 let LIST_QUERY_CONDITION
 /** 列表操作批量删除**/
 let LIST_OPERATE_BATCH_DEL
-/****/
+/** 列表多选框**/
 let LIST_ROW_SELECT
+/** 列表内容下拉框**/
+let LIST_CONTENT_SELECT
+/** 列表 详情**/
+let LIST_DETAIL
 /** 列表查询时间区间参数searchBeginTime: '',searchEndTime: ''**/
 let LIST_QUERY_TIME_PARAMS
 /* 列表查询时间区间参数赋值
@@ -103,7 +107,8 @@ const generateCodeHandle = param => {
     LIST_QUERY_CONDITION = getQueryCondition(param)
     LIST_OPERATE_BATCH_DEL = getBatchDel(param)
     LIST_ROW_SELECT = getRowSelect(param)
-
+    LIST_CONTENT_SELECT = getContentSelect(param)
+    LIST_DETAIL = getListDetail(param)
     // LIST_QUERY_TIME_PARAMS = getQueryTime(param)
     // LIST_QUERY_TIME_SETPARAMS = getQuerySetTime(param)
     // LIST_COLUMNS = getColumns(param)
@@ -437,6 +442,53 @@ function getRowSelect (param) {
 
   return temp.join('')
 }
+
+function getContentSelect (param) {
+  const temp = []
+  const tableInfo = param.tableInfo
+  tableInfo.forEach(column => {
+    if (column.componentType === 'Select') {
+      const selectName = `get_${column.tableColumn}`
+      temp.push(`
+      <span slot="${column.javaName}" slot-scope="text">
+        {{ ${underLineToCamelbak(selectName)}Name(text) }}
+      </span>`)
+    }
+  })
+  return temp.join('')
+}
+
+/** 列表详情**/
+function getListDetail (param) {
+  const temp = []
+  const tableInfo = param.tableInfo
+  temp.push(`      ref="${FUNCTION_NAME_LOWER}Detail"`)
+  formatDate(tableInfo, temp)
+  selectFun(tableInfo, temp)
+  return temp.join('')
+}
+
+/** 下拉框函数**/
+function selectFun (tableInfo, temp) {
+  tableInfo.forEach(column => {
+    if (column.componentType === 'Select') {
+      const selectName = `get_${column.tableColumn}`
+      temp.push(`
+      :${underLineToMidcourtLine(selectName)}-name="${underLineToCamelbak(selectName)}Name"`)
+    }
+  })
+}/** 日期函数**/
+function formatDate (tableInfo, temp) {
+  let isDate = false
+  tableInfo.forEach(column => {
+    if (column.publicFlag === '0' && !isDate && (column.componentType === 'DatePicker_datetime' || column.componentType === 'DatePicker_date')) {
+      temp.push(`
+      :format-date="formatDate"`)
+      isDate = true
+    }
+  })
+}
+
 /**
  *searchBeginTime: '',
  searchEndTime: ''
@@ -548,6 +600,7 @@ function getAdd (param) {
   const temp = []
   return temp.join('')
 }
+
 /**
  * 业务模板内容替换
  * @param data
@@ -555,6 +608,8 @@ function getAdd (param) {
  */
 function replaceContent (data) {
   return data
+    .replace(/#{LIST_DETAIL}/g, LIST_DETAIL)
+    .replace(/#{LIST_CONTENT_SELECT}/g, LIST_CONTENT_SELECT)
     .replace(/#{LIST_QUERY_CONDITION}/g, LIST_QUERY_CONDITION)
     .replace(/#{LIST_OPERATE_BATCH_DEL}/g, LIST_OPERATE_BATCH_DEL)
     .replace(/#{LIST_ROW_SELECT}/g, LIST_ROW_SELECT)
@@ -569,6 +624,7 @@ function replaceContent (data) {
     .replace(/#{DETAIL_CONTENT}/g, DETAIL_CONTENT)
     .replace(/#{ADD_CONTENT}/g, ADD_CONTENT)
 }
+
 function replaceError (string) {
   return string
     .replace(/BasicLayout/g, '\'BasicLayout\'')
@@ -632,6 +688,14 @@ const underLineToCamelbak = str => {
   return str.replace(/_./g, ($1) => {
     return $1.substring(1, ($1.length)).toUpperCase()
   })
+}
+/**
+ * 下划线转中线
+ * @param str
+ * @returns {*}
+ */
+const underLineToMidcourtLine = str => {
+  return str.replace(/_/g, '-')
 }
 module.exports = {
   generateCodeHandle
