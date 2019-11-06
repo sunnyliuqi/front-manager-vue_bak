@@ -113,20 +113,20 @@
       :record="recordActive"/>
     <add
       ref="tempAdd"
-      :record="recordActive"
       :org-type="selectOrgType"
       :format-date="formatDate"
+      :record="recordActive"
       :save="save"
       :refresh="refresh"
     />
     <edit
       ref="tempEdit"
-      :record="recordActive"
       :org-type="selectOrgType"
-      :update="update"
-      :refresh="refresh"
       :format-date="formatDate"
       :get-moment="getMoment"
+      :record="recordActive"
+      :update="update"
+      :refresh="refresh"
     />
   </a-card>
 </template>
