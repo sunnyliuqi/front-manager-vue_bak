@@ -613,15 +613,15 @@ function getListData (param) {
     if (column.componentType === 'DatePicker_datetime') {
       queryTime.push(`
         if (this.queryParam.${column.javaName}Search) {
-        this.queryParam.${column.javaName}Search[0] = this.queryParam.${column.javaName}Search[0].format('YYYY-MM-DD HH:mm:ss')
-        this.queryParam.${column.javaName}Search[1] = this.queryParam.${column.javaName}Search[1].format('YYYY-MM-DD HH:mm:ss')
+          this.queryParam.${column.javaName}Search[0] = this.queryParam.${column.javaName}Search[0].format('YYYY-MM-DD HH:mm:ss')
+          this.queryParam.${column.javaName}Search[1] = this.queryParam.${column.javaName}Search[1].format('YYYY-MM-DD HH:mm:ss')
         }`)
     }
     if (column.componentType === 'DatePicker_date') {
       queryTime.push(`
         if (this.queryParam.${column.javaName}Search) {
-        this.queryParam.${column.javaName}Search[0] = this.queryParam.${column.javaName}Search[0].format('YYYY-MM-DD')
-        this.queryParam.${column.javaName}Search[1] = this.queryParam.${column.javaName}Search[1].format('YYYY-MM-DD')
+          this.queryParam.${column.javaName}Search[0] = this.queryParam.${column.javaName}Search[0].format('YYYY-MM-DD')
+          this.queryParam.${column.javaName}Search[1] = this.queryParam.${column.javaName}Search[1].format('YYYY-MM-DD')
         }`)
     }
     if (!isDict && column.componentType === 'Select') {
@@ -670,8 +670,7 @@ function getListData (param) {
       getMoment: getMoment,`)
     temp.push(`
       // 列表加载数据方法
-      loadData: parameter => {
-${queryTime.join('')}
+      loadData: parameter => {${queryTime.join('')}
         return queryList(Object.assign(parameter, this.queryParam))
           .then(res => {
             if (res.code === 10000) {
