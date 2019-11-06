@@ -607,14 +607,14 @@ function getListData (param) {
         temp.push(`        {
           title: '${column.columnName}',
           dataIndex: '${column.javaName}',
-          key: '${column.javaName} ',
+          key: '${column.javaName}',
           scopedSlots: { customRender: '${column.javaName}' }
         },\n`)
       } else {
         temp.push(`        {
           title: '${column.columnName}',
           dataIndex: '${column.javaName}',
-          key: '${column.javaName} '
+          key: '${column.javaName}'
         },\n`)
       }
     }

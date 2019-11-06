@@ -164,7 +164,7 @@ export default {
         {
           title: '编码',
           dataIndex: 'code',
-          key: 'code '
+          key: 'code'
         },
         {
           title: 'name',
