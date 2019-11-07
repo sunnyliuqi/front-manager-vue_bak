@@ -48,20 +48,11 @@ let LIST_EDIT
 let LIST_IMPORT
 /** 列表 Data**/
 let LIST_DATA
+/** 列表 数据字典**/
+let LIST_DICT
+/** 列表 方法**/
+let LIST_METHOD
 
-/** 列表查询时间区间参数searchBeginTime: '',searchEndTime: ''**/
-let LIST_QUERY_TIME_PARAMS
-/* 列表查询时间区间参数赋值
-		if (!isEmpty(this.queryParam.enterDate) && Object.keys(this.queryParam.enterDate).length === 2) {
-          this.queryParam.searchBeginTime = moment(this.queryParam.enterDate[0]).format('YYYY-MM-DD')
-          this.queryParam.searchEndTime = moment(this.queryParam.enterDate[1]).format('YYYY-MM-DD')
-        } else {
-          this.queryParam.searchBeginTime = ''
-          this.queryParam.searchEndTime = ''
-        } */
-let LIST_QUERY_TIME_SETPARAMS
-/** 列表表头**/
-let LIST_COLUMNS
 /** 功能名称小写user**/
 let FUNCTION_NAME_LOWER
 /** 功能名称首字母大写User**/
@@ -72,6 +63,10 @@ let PARENT_ROUTER
 let SERVICE_PATH
 /** 全路由 /sys/user**/
 let FULL_ROUTER
+/** 是否存在数据字典**/
+let isDict = false
+/** 是否存在日期**/
+let isDate = false
 
 /** 编辑内容 **/
 let EDIT_CONTENT
@@ -87,6 +82,7 @@ let ADD_CONTENT
 const generateCodeHandle = param => {
   let code = 20000
   let msg = '不支持的生成方式'
+
   console.info('代码生成-前端-项目根路径为：' + bashPath)
   console.info('代码生成-前端-请求数据为：' + JSON.stringify(param))
   // user
@@ -112,6 +108,7 @@ const generateCodeHandle = param => {
     code = 10000
     msg = '生成路由成功'
   } else if (param.hasPage === '1') {
+    setDictAndDate(param.tableInfo)
     SERVICE_PATH = param.serviceName.match(/(.*):/)[1]
     LIST_QUERY_CONDITION = getQueryCondition(param)
     LIST_OPERATE_BATCH_DEL = getBatchDel(param)
@@ -122,12 +119,12 @@ const generateCodeHandle = param => {
     LIST_EDIT = getListEdit(param)
     LIST_IMPORT = getListImport(param)
     LIST_DATA = getListData(param)
-    // LIST_QUERY_TIME_PARAMS = getQueryTime(param)
-    // LIST_QUERY_TIME_SETPARAMS = getQuerySetTime(param)
-    // LIST_COLUMNS = getColumns(param)
-    // EDIT_CONTENT = getEdit(param)
-    // DETAIL_CONTENT = getDetail(param)
-    // ADD_CONTENT = getAdd(param)
+    LIST_DICT = getListDict(param)
+    LIST_METHOD = getListMethod(param)
+
+    EDIT_CONTENT = getEdit(param)
+    DETAIL_CONTENT = getDetail(param)
+    ADD_CONTENT = getAdd(param)
     //  生成页面
     // updateRouterConfig(param, 1)
     // updateApiService(param)
@@ -362,17 +359,16 @@ function getQueryCondition (param) {
               </a-form-item>
             </a-col>`)
       } else if (column.componentType === 'Select') {
-        const selectOptions = column.componentData.split(';')
-        if (selectOptions.length < 2) {
+        if (dictFlag(column)) {
           // 数据字典
           temp.push(`
             <a-col :md="8" :sm="12" :xs="24">
               <a-form-item label="${column.columnName}">
                 <a-select :options="${underLineToCamelbak(column.componentData)}" v-model="queryParam.${column.javaName}" placeholder="请选择${column.columnName}"/>
               </a-form-item>
-            </a-col>
-            `)
+            </a-col>`)
         } else {
+          const selectOptions = column.componentData.split(';')
           // 自定义
           const selectOpt = []
           selectOptions.forEach(opt => {
@@ -388,8 +384,7 @@ function getQueryCondition (param) {
                   <a-select-option value="">全部</a-select-option>${selectOpt.join('')}
                 </a-select>
               </a-form-item>
-            </a-col>
-            `)
+            </a-col>`)
         }
       } else if (column.componentType === 'DatePicker_date') {
         temp.push(`
@@ -398,8 +393,7 @@ function getQueryCondition (param) {
                 label="${column.columnName}">
                 <a-range-picker v-model="queryParam.${column.javaName}Search"/>
               </a-form-item>
-            </a-col>
-            `)
+            </a-col>`)
       } else if (column.componentType === 'DatePicker_datetime') {
         temp.push(`
             <a-col :md="8" :sm="12" :xs="24">
@@ -407,16 +401,14 @@ function getQueryCondition (param) {
                 label="${column.columnName}">
                 <a-range-picker showTime format="YYYY-MM-DD HH:mm:ss" v-model="queryParam.${column.javaName}Search"/>
               </a-form-item>
-            </a-col>
-            `)
+            </a-col>`)
       } else {
         temp.push(`
             <a-col :md="8" :sm="12" :xs="24">
               <a-form-item label="${column.columnName}">
                 <a-input v-model="queryParam.${column.javaName}" placeholder="请输入${column.columnName}"/>
               </a-form-item>
-            </a-col>
-            `)
+            </a-col>`)
       }
     }
   })
@@ -431,11 +423,9 @@ function getQueryCondition (param) {
 function getBatchDel (param) {
   const temp = []
   if (param.tableType === '2') {
-    temp.push(`
-        <a-popconfirm title="您确认批量删除吗?" @confirm="handleDelete(selectedRows)" okText="确认" cancelText="取消">
+    temp.push(`        <a-popconfirm title="您确认批量删除吗?" @confirm="handleDelete(selectedRows)" okText="确认" cancelText="取消">
           <a-button style="margin-left: 8px">批量删除</a-button>
-        </a-popconfirm>
-  `)
+        </a-popconfirm>`)
   }
 
   return temp.join('')
@@ -462,8 +452,7 @@ function getContentSelect (param) {
   tableInfo.forEach(column => {
     if (column.componentType === 'Select') {
       const selectName = `get_${column.tableColumn}`
-      temp.push(`
-      <span slot="${column.javaName}" slot-scope="text">
+      temp.push(`      <span slot="${column.javaName}" slot-scope="text">
         {{ ${underLineToCamelbak(selectName)}Name(text) }}
       </span>`)
     }
@@ -505,14 +494,11 @@ function getListEdit (param) {
 /** 数据字典函数**/
 function dictFun (tableInfo, temp) {
   tableInfo.forEach(column => {
-    if (column.componentType === 'Select') {
-      const selectOptions = column.componentData.split(';')
-      if (selectOptions.length < 2) {
-        // 数据字典
-        const selectName = `select_${column.componentData}`
-        temp.push(`
+    if (dictFlag(column)) {
+      // 数据字典
+      const selectName = `select_${column.componentData}`
+      temp.push(`
       :${underLineToMidcourtLine(column.componentData)}="${underLineToCamelbak(selectName)}"`)
-      }
     }
   })
 }
@@ -528,17 +514,42 @@ function selectFun (tableInfo, temp) {
   })
 }
 
-/** 日期函数**/
-function formatDate (tableInfo, temp) {
-  let isDate = false
+/**
+ * 是否存在数据字典、日期
+ * @param tableInfo
+ */
+function setDictAndDate (tableInfo) {
   tableInfo.forEach(column => {
     // column.publicFlag === '0' &&
     if (!isDate && (column.componentType === 'DatePicker_datetime' || column.componentType === 'DatePicker_date')) {
-      temp.push(`
-      :format-date="formatDate"`)
       isDate = true
     }
+    if (!isDict) {
+      isDict = dictFlag(column)
+    }
   })
+}
+
+/**
+ * 是否数据字典判断
+ * @param column
+ * @returns {boolean}
+ */
+function dictFlag (column) {
+  if (column.componentType === 'Select') {
+    const selectOptions = column.componentData.split(';')
+    if (selectOptions.length < 2) {
+      return true
+    }
+  }
+  return false
+}
+/** 日期函数**/
+function formatDate (tableInfo, temp) {
+  if (isDate) {
+    temp.push(`
+      :format-date="formatDate"`)
+  }
 }
 
 /**
@@ -547,15 +558,10 @@ function formatDate (tableInfo, temp) {
  * @param temp
  */
 function getMoment (tableInfo, temp) {
-  let isDate = false
-  tableInfo.forEach(column => {
-    // column.publicFlag === '0' &&
-    if (!isDate && (column.componentType === 'DatePicker_datetime' || column.componentType === 'DatePicker_date')) {
-      temp.push(`
+  if (isDate) {
+    temp.push(`
       :get-moment="getMoment"`)
-      isDate = true
-    }
-  })
+  }
 }
 
 /**
@@ -566,20 +572,6 @@ function getMoment (tableInfo, temp) {
 function getListImport (param) {
   const temp = []
   const tableInfo = param.tableInfo
-  let isDate = false
-  let isDict = false
-  tableInfo.forEach(column => {
-    // column.publicFlag === '0' &&
-    if (!isDate && (column.componentType === 'DatePicker_datetime' || column.componentType === 'DatePicker_date')) {
-      isDate = true
-    }
-    if (!isDict && column.componentType === 'Select') {
-      const selectOptions = column.componentData.split(';')
-      if (selectOptions.length < 2) {
-        isDict = true
-      }
-    }
-  })
   if (isDate) {
     temp.push(`import { formatDate, getMoment, isEmpty } from '@/utils/common'\n`)
   } else {
@@ -599,17 +591,11 @@ function getListImport (param) {
  */
 function getListData (param) {
   const temp = []
-  let isDate = false
-  let isDict = false
   temp.push(`      columns: [\n`)
   const tableInfo = param.tableInfo
   const queryTime = []
   const dicts = []
   tableInfo.forEach(column => {
-    // column.publicFlag === '0' &&
-    if (!isDate && (column.componentType === 'DatePicker_datetime' || column.componentType === 'DatePicker_date')) {
-      isDate = true
-    }
     if (column.componentType === 'DatePicker_datetime') {
       queryTime.push(`
         if (this.queryParam.${column.javaName}Search) {
@@ -624,20 +610,11 @@ function getListData (param) {
           this.queryParam.${column.javaName}Search[1] = this.queryParam.${column.javaName}Search[1].format('YYYY-MM-DD')
         }`)
     }
-    if (!isDict && column.componentType === 'Select') {
-      const selectOptions = column.componentData.split(';')
-      if (selectOptions.length < 2) {
-        isDict = true
-      }
-    }
-    if (column.componentType === 'Select') {
-      const selectOptions = column.componentData.split(';')
-      if (selectOptions.length < 2) {
-        const selectName = `select_${column.componentData}`
-        dicts.push(`
+    if (dictFlag(column)) {
+      const selectName = `select_${column.componentData}`
+      dicts.push(`
       ${underLineToCamelbak(column.componentData)}: [{ label: '全部', value: '' }],
       ${underLineToCamelbak(selectName)}: [],`)
-      }
     }
     if (column.listFlag === '1') {
       if (column.componentType === 'Select') {
@@ -713,58 +690,37 @@ function getListData (param) {
 }
 
 /**
- *searchBeginTime: '',
- searchEndTime: ''
+ * 数据字典数据
  * @param param
  * @returns {string}
  */
-function getQueryTime (param) {
+function getListDict (param) {
   const temp = []
-  return temp.join('')
-}
-
-/**
- *if (!isEmpty(this.queryParam.enterDate) && Object.keys(this.queryParam.enterDate).length === 2) {
-          this.queryParam.searchBeginTime = moment(this.queryParam.enterDate[0]).format('YYYY-MM-DD')
-         this.queryParam.searchEndTime = moment(this.queryParam.enterDate[1]).format('YYYY-MM-DD')
-        } else {
-          this.queryParam.searchBeginTime = ''
-          this.queryParam.searchEndTime = ''
+  const tableInfo = param.tableInfo
+  tableInfo.forEach(column => {
+    if (dictFlag(column)) {
+      // 数据字典
+      const dnyName = `dny_${column.componentData}`
+      const selectName = `select_${column.componentData}`
+      temp.push(`    getDictByType('${column.componentData}').then(
+      (res) => {
+        if (res.code === 10000) {
+          const ${underLineToCamelbak(dnyName)} = res.result.map(item => {
+            return { label: \`\${item.dictKey}\`, value: \`\${item.dictValue}\` }
+          })
+          this.${underLineToCamelbak(column.componentData)} = [...this.${underLineToCamelbak(column.componentData)}, ...${underLineToCamelbak(dnyName)}]
+          this.${underLineToCamelbak(selectName)} = ${underLineToCamelbak(dnyName)}
         }
- * @param param
- * @returns {string}
- */
-function getQuerySetTime (param) {
+      }
+    )`)
+    }
+  })
+  return temp.join('')
+}
+function getListMethod (param) {
   const temp = []
   return temp.join('')
 }
-
-/**
- * [
- {
-          title: '编码',
-          dataIndex: 'userCode',
-          key: 'userCode'
-        }, {
-          title: '用户名',
-          dataIndex: 'userName',
-          key: 'userName'
-        },
- {
-          title: '操作',
-          dataIndex: 'action',
-          width: '320px',
-          scopedSlots: { customRender: 'action' }
-        }
- ]
- * @param param
- * @returns {string}
- */
-function getColumns (param) {
-  const temp = []
-  return temp.join('')
-}
-
 /**
  * <a-col :span="12">
  <a-form-item
@@ -831,6 +787,8 @@ function getAdd (param) {
  */
 function replaceContent (data) {
   return data
+    .replace(/#{LIST_METHOD}/g, LIST_METHOD)
+    .replace(/#{LIST_DICT}/g, LIST_DICT)
     .replace(/#{LIST_DATA}/g, LIST_DATA)
     .replace(/#{LIST_IMPORT}/g, LIST_IMPORT)
     .replace(/#{LIST_EDIT}/g, LIST_EDIT)
@@ -840,9 +798,6 @@ function replaceContent (data) {
     .replace(/#{LIST_QUERY_CONDITION}/g, LIST_QUERY_CONDITION)
     .replace(/#{LIST_OPERATE_BATCH_DEL}/g, LIST_OPERATE_BATCH_DEL)
     .replace(/#{LIST_ROW_SELECT}/g, LIST_ROW_SELECT)
-    .replace(/#{LIST_QUERY_TIME_PARAMS}/g, LIST_QUERY_TIME_PARAMS)
-    .replace(/#{LIST_QUERY_TIME_SETPARAMS}/g, LIST_QUERY_TIME_SETPARAMS)
-    .replace(/#{LIST_COLUMNS}/g, LIST_COLUMNS)
     .replace(/#{FUNCTION_NAME_LOWER}/g, FUNCTION_NAME_LOWER)
     .replace(/#{FUNCTION_NAME_FIRST_UPPER}/g, FUNCTION_NAME_FIRST_UPPER)
     .replace(/#{PARENT_ROUTER}/g, PARENT_ROUTER)

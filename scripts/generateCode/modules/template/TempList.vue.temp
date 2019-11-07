@@ -93,17 +93,7 @@ export default {
   },
   created () {
     // 数据字典
-    getDictByType('org_type').then(
-      (res) => {
-        if (res.code === 10000) {
-          const dnyOrgType = res.result.map(item => {
-            return { label: `${item.dictKey}`, value: `${item.dictValue}` }
-          })
-          this.orgType = [...this.orgType, ...dnyOrgType]
-          this.selectOrgType = dnyOrgType
-        }
-      }
-    )
+#{LIST_DICT}
   },
   computed: {},
   methods: {
