@@ -122,14 +122,14 @@ const generateCodeHandle = param => {
     LIST_DICT = getListDict(param)
     LIST_METHOD = getListMethod(param)
 
-    EDIT_CONTENT = getEdit(param)
     DETAIL_CONTENT = getDetail(param)
     ADD_CONTENT = getAdd(param)
+    EDIT_CONTENT = getEdit(param)
     //  生成页面
     // updateRouterConfig(param, 1)
     // updateApiService(param)
     // createApi(param)
-    createList(param)
+    // createList(param)
     // createDetail(param)
     // createAdd(param)
     // createEdit(param)
