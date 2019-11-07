@@ -136,7 +136,7 @@
 
 <script>
 export default {
-  name: 'TempEdit',
+  name: '#{FUNCTION_NAME_FIRST_UPPER}Edit',
   props: {
     record: {
       type: Object,

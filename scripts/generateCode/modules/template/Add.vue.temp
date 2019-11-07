@@ -128,7 +128,7 @@
 import ACol from 'ant-design-vue/es/grid/Col'
 
 export default {
-  name: 'TempAdd',
+  name: '#{FUNCTION_NAME_FIRST_UPPER}Add',
   components: { ACol },
   props: {
     record: {
