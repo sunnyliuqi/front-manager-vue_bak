@@ -128,6 +128,7 @@ const generateCodeHandle = param => {
     LIST_METHOD = getListMethod(param)
 
     DETAIL_CONTENT = getDetail(param)
+    DETAIL_PROPS = getDetailProps(param)
     // ADD_CONTENT = getAdd(param)
     // EDIT_CONTENT = getEdit(param)
     //  生成页面
@@ -507,7 +508,20 @@ function dictFun (tableInfo, temp) {
     }
   })
 }
-
+function dictProps (tableInfo, temp) {
+  tableInfo.forEach(column => {
+    if (dictFlag(column)) {
+      // 数据字典
+      temp.push(`
+    ${underLineToCamelbak(column.componentData)}: {
+      type: Array,
+      default: function () {
+        return {}
+      }
+    },`)
+    }
+  })
+}
 /** 下拉框函数**/
 function selectFun (tableInfo, temp) {
   tableInfo.forEach(column => {
@@ -515,6 +529,18 @@ function selectFun (tableInfo, temp) {
       const getName = `get_${column.tableColumn}`
       temp.push(`
       :${underLineToMidcourtLine(getName)}-name="${underLineToCamelbak(getName)}Name"`)
+    }
+  })
+}
+function selectProps (tableInfo, temp) {
+  tableInfo.forEach(column => {
+    if (column.componentType === 'Select') {
+      const getName = `get_${column.tableColumn}`
+      temp.push(`
+    ${underLineToCamelbak(getName)}Name: {
+      type: Function,
+      default: undefined
+    },`)
     }
   })
 }
@@ -556,7 +582,15 @@ function formatDate (tableInfo, temp) {
       :format-date="formatDate"`)
   }
 }
-
+function formatDateProps (tableInfo, temp) {
+  if (isDate) {
+    temp.push(`
+    formatDate: {
+      type: Function,
+      default: undefined
+    },`)
+  }
+}
 /**
  * 时间格式化函数
  * @param tableInfo
@@ -568,7 +602,15 @@ function getMoment (tableInfo, temp) {
       :get-moment="getMoment"`)
   }
 }
-
+function getMomentProps (tableInfo, temp) {
+  if (isDate) {
+    temp.push(`
+    getMoment: {
+      type: Function,
+      default: undefined
+    },`)
+  }
+}
 /**
  * list import
  * @param param
@@ -835,6 +877,17 @@ function getDetail (param) {
       }
     }
   })
+  return temp.join('')
+}
+
+/**
+ * 详情 props
+ * @param param
+ */
+function getDetailProps (param) {
+  const temp = []
+  formatDateProps(param.tableInfo, temp)
+  selectProps(param.tableInfo, temp)
   return temp.join('')
 }
 

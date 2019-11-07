@@ -37,23 +37,7 @@ export default {
     record: {
       type: [Object, String],
       default: ''
-    },
-    formatDate: {
-      type: Function,
-      default: undefined
-    },
-    getStatusName: {
-      type: Function,
-      default: undefined
-    },
-    getCustomName: {
-      type: Function,
-      default: undefined
-    },
-    getDictName: {
-      type: Function,
-      default: undefined
-    },
+    },#{DETAIL_PROPS}
     customWidth: {
       type: Number,
       default: 720
