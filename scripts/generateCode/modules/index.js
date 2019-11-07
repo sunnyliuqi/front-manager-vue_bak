@@ -451,9 +451,9 @@ function getContentSelect (param) {
   const tableInfo = param.tableInfo
   tableInfo.forEach(column => {
     if (column.componentType === 'Select') {
-      const selectName = `get_${column.tableColumn}`
+      const getName = `get_${column.tableColumn}`
       temp.push(`      <span slot="${column.javaName}" slot-scope="text">
-        {{ ${underLineToCamelbak(selectName)}Name(text) }}
+        {{ ${underLineToCamelbak(getName)}Name(text) }}
       </span>`)
     }
   })
@@ -507,9 +507,9 @@ function dictFun (tableInfo, temp) {
 function selectFun (tableInfo, temp) {
   tableInfo.forEach(column => {
     if (column.componentType === 'Select') {
-      const selectName = `get_${column.tableColumn}`
+      const getName = `get_${column.tableColumn}`
       temp.push(`
-      :${underLineToMidcourtLine(selectName)}-name="${underLineToCamelbak(selectName)}Name"`)
+      :${underLineToMidcourtLine(getName)}-name="${underLineToCamelbak(getName)}Name"`)
     }
   })
 }
@@ -717,8 +717,56 @@ function getListDict (param) {
   })
   return temp.join('')
 }
+
+/**
+ * 列表方法
+ * @param param
+ * @returns {string}
+ */
 function getListMethod (param) {
   const temp = []
+  if (param.tableType === '2') {
+    temp.push(`    onSelectChange (selectedRowKeys, selectedRows) {
+      this.selectedRowKeys = selectedRowKeys
+      this.selectedRows = selectedRows
+    },`)
+  }
+  const tableInfo = param.tableInfo
+  tableInfo.forEach(column => {
+    if (column.componentType === 'Select') {
+      const getName = `get_${column.tableColumn}`
+      if (dictFlag(column)) {
+        const selectName = `select_${column.componentData}`
+        temp.push(`\n    ${underLineToCamelbak(getName)}Name (key) {
+      let value = ''
+      this.${underLineToCamelbak(selectName)}.forEach(item => {
+        if (item.value === key) {
+          value = item.label
+        }
+      })
+      return value
+    },`)
+      } else {
+        const caseOpts = column.componentData.split(';')
+        // 自定义
+        const caseKeys = []
+        caseOpts.forEach(opt => {
+          const opts = opt.split(':')
+          if (typeof (opts) === 'object' && opts.length === 2) {
+            caseKeys.push(`\n        case '${opts[0]}':
+          value = '${opts[1]}'
+          break`)
+          }
+        })
+        temp.push(`\n    ${underLineToCamelbak(getName)}Name (key) {
+      let value = ''
+      switch (key) {${caseKeys.join('')}
+      }
+      return value
+    },`)
+      }
+    }
+  })
   return temp.join('')
 }
 /**
