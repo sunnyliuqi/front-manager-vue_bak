@@ -129,7 +129,7 @@ const generateCodeHandle = param => {
     // updateRouterConfig(param, 1)
     // updateApiService(param)
     // createApi(param)
-    // createList(param)
+    createList(param)
     // createDetail(param)
     // createAdd(param)
     // createEdit(param)
@@ -452,7 +452,7 @@ function getContentSelect (param) {
   tableInfo.forEach(column => {
     if (column.componentType === 'Select') {
       const getName = `get_${column.tableColumn}`
-      temp.push(`      <span slot="${column.javaName}" slot-scope="text">
+      temp.push(`\n      <span slot="${column.javaName}" slot-scope="text">
         {{ ${underLineToCamelbak(getName)}Name(text) }}
       </span>`)
     }
@@ -573,13 +573,13 @@ function getListImport (param) {
   const temp = []
   const tableInfo = param.tableInfo
   if (isDate) {
-    temp.push(`import { formatDate, getMoment, isEmpty } from '@/utils/common'\n`)
+    temp.push(`\nimport { formatDate, getMoment, isEmpty } from '@/utils/common'`)
   } else {
-    temp.push(`import { isEmpty } from '@/utils/common'\n`)
+    temp.push(`\nimport { isEmpty } from '@/utils/common'`)
   }
-  temp.push(`import { del, get, queryList, save, update } from '@/api${FULL_ROUTER}'\n`)
+  temp.push(`\nimport { del, get, queryList, save, update } from '@/api${FULL_ROUTER}'`)
   if (isDict) {
-    temp.push(`import { getDictByType } from '@/api/common'\n`)
+    temp.push(`\nimport { getDictByType } from '@/api/common'`)
   }
   return temp.join('')
 }
