@@ -32,15 +32,11 @@
 
 <script>
 export default {
-  name: 'TempDetail',
+  name: '#{FUNCTION_NAME_FIRST_UPPER}Detail',
   props: {
     record: {
       type: [Object, String],
       default: ''
-    },
-    customWidth: {
-      type: Number,
-      default: 720
     },
     formatDate: {
       type: Function,
@@ -57,6 +53,10 @@ export default {
     getDictName: {
       type: Function,
       default: undefined
+    },
+    customWidth: {
+      type: Number,
+      default: 720
     }
   },
   data () {

@@ -137,10 +137,6 @@ export default {
         return {}
       }
     },
-    customWidth: {
-      type: Number,
-      default: 720
-    },
     refresh: {
       type: Function,
       default: undefined
@@ -159,6 +155,10 @@ export default {
         return {}
       }
     },
+    customWidth: {
+      type: Number,
+      default: 720
+    }
   },
   data () {
     return {

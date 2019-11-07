@@ -144,10 +144,6 @@ export default {
         return {}
       }
     },
-    customWidth: {
-      type: Number,
-      default: 720
-    },
     orgType: {
       type: Array,
       default: function () {
@@ -169,6 +165,10 @@ export default {
     getMoment: {
       type: Function,
       default: undefined
+    },
+    customWidth: {
+      type: Number,
+      default: 720
     }
   },
   data () {

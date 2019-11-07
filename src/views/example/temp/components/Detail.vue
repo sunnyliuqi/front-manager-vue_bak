@@ -62,10 +62,6 @@ export default {
       type: [Object, String],
       default: ''
     },
-    customWidth: {
-      type: Number,
-      default: 720
-    },
     formatDate: {
       type: Function,
       default: undefined
@@ -81,6 +77,10 @@ export default {
     getDictName: {
       type: Function,
       default: undefined
+    },
+    customWidth: {
+      type: Number,
+      default: 720
     }
   },
   data () {
