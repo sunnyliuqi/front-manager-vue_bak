@@ -123,14 +123,14 @@ const generateCodeHandle = param => {
     LIST_METHOD = getListMethod(param)
 
     DETAIL_CONTENT = getDetail(param)
-    ADD_CONTENT = getAdd(param)
-    EDIT_CONTENT = getEdit(param)
+    // ADD_CONTENT = getAdd(param)
+    // EDIT_CONTENT = getEdit(param)
     //  生成页面
     // updateRouterConfig(param, 1)
     // updateApiService(param)
     // createApi(param)
     // createList(param)
-    // createDetail(param)
+    createDetail(param)
     // createAdd(param)
     // createEdit(param)
     code = 10000
@@ -803,6 +803,33 @@ function getEdit (param) {
  */
 function getDetail (param) {
   const temp = []
+  const tableInfo = param.tableInfo
+  tableInfo.forEach(column => {
+    if (column.publicFlag === '0') {
+      if (column.componentType === 'Select') {
+        const getName = `get_${column.tableColumn}`
+        temp.push(`
+      <a-col :sm="12" :xs="24">
+        <span class="detail-label">${column.columnName}:</span>{{ ${underLineToCamelbak(getName)}Name(record.${column.javaName}) }}
+      </a-col>`)
+      } else if (column.componentType === 'DatePicker_date') {
+        temp.push(`
+      <a-col :sm="12" :xs="24">
+        <span class="detail-label">${column.columnName}:</span>{{ formatDate(record.${column.javaName},'YYYY-MM-DD') }}
+      </a-col>`)
+      } else if (column.componentType === 'DatePicker_datetime') {
+        temp.push(`
+      <a-col :sm="12" :xs="24">
+        <span class="detail-label">${column.columnName}:</span>{{ formatDate(record.${column.javaName},'YYYY-MM-DD HH:mm:ss') }}
+      </a-col>`)
+      } else {
+        temp.push(`
+      <a-col :sm="12" :xs="24">
+        <span class="detail-label">${column.columnName}:</span>{{ record.${column.javaName} }}
+      </a-col>`)
+      }
+    }
+  })
   return temp.join('')
 }
 
