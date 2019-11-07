@@ -8,7 +8,7 @@
             <a-col :md="8" :sm="12" :xs="24">
               <span
                 class="table-page-search-submitButtons">
-                <a-button type="primary" @click="$refs.tempTable.refresh(true)">查询</a-button>
+                <a-button type="primary" @click="$refs.#{FUNCTION_NAME_LOWER}Table.refresh(true)">查询</a-button>
                 <a-button style="margin-left: 8px" @click="restQuery()">重置</a-button>
               </span>
             </a-col>
@@ -22,7 +22,7 @@
       </div>
     </div>
     <s-table
-      ref="tempTable"
+      ref="#{FUNCTION_NAME_LOWER}Table"
       size="default"
       :rowKey="(recordActive) => recordActive.id"
       :columns="columns"
@@ -97,76 +97,36 @@ export default {
   },
   computed: {},
   methods: {
-
-    onSelectChange (selectedRowKeys, selectedRows) {
-      this.selectedRowKeys = selectedRowKeys
-      this.selectedRows = selectedRows
-    },
-    //  状态键值转换
-    getStatusName (key) {
-      let value = ''
-      switch (key) {
-        case '0':
-          value = '不启用'
-          break
-        case '1':
-          value = '启用'
-          break
-      }
-      return value
-    },
-    //  自定义键值转换
-    getCustomName (key) {
-      let value = ''
-      switch (key) {
-        case '0':
-          value = '无'
-          break
-        case '1':
-          value = '有'
-          break
-      }
-      return value
-    },
-    // 数据字典键值转换
-    getDictName (key) {
-      let value = ''
-      this.selectOrgType.forEach(item => {
-        if (item.value === key) {
-          value = item.label
-        }
-      })
-      return value
-    },
+#{LIST_METHOD}
     // 重置查询
     restQuery () {
       this.queryParam = {}
-      this.$refs.tempTable.refresh(true)
+      this.$refs.#{FUNCTION_NAME_LOWER}Table.refresh(true)
     },
     // 刷新列表
     refresh () {
-      this.$refs.tempTable.refresh()
+      this.$refs.#{FUNCTION_NAME_LOWER}Table.refresh()
     },
     // 打开详情
     handleDetail (record) {
       get(record).then(res => {
         if (res.code === 10000) {
           this.recordActive = res.result
-          this.$refs.tempDetail.show()
+          this.$refs.#{FUNCTION_NAME_LOWER}Detail.show()
         }
       })
     },
     // 打开新增
     handleAdd () {
       this.recordActive = {}
-      this.$refs.tempAdd.show()
+      this.$refs.#{FUNCTION_NAME_LOWER}Add.show()
     },
     // 打开更新
     handleUpdate (record) {
       get(record).then(res => {
         if (res.code === 10000) {
           this.recordActive = res.result
-          this.$refs.tempEdit.show()
+          this.$refs.#{FUNCTION_NAME_LOWER}Edit.show()
         }
       })
     },
