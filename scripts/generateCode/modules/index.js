@@ -70,10 +70,15 @@ let isDate = false
 
 /** 编辑内容 **/
 let EDIT_CONTENT
+let EDIT_PROPS
+let EDIT_SUBMIT
 /** 详情内容 **/
 let DETAIL_CONTENT
+let DETAIL_PROPS
 /** 新增内容 **/
 let ADD_CONTENT
+let ADD_PROPS
+let ADD_SUBMIT
 /**
  *  前端代码生成
  * @param param
@@ -878,8 +883,13 @@ function replaceContent (data) {
     .replace(/#{PARENT_ROUTER}/g, PARENT_ROUTER)
     .replace(/#{SERVICE_PATH}/g, SERVICE_PATH)
     .replace(/#{EDIT_CONTENT}/g, EDIT_CONTENT)
+    .replace(/#{EDIT_PROPS}/g, EDIT_PROPS)
+    .replace(/#{EDIT_SUBMIT}/g, EDIT_SUBMIT)
     .replace(/#{DETAIL_CONTENT}/g, DETAIL_CONTENT)
+    .replace(/#{DETAIL_PROPS}/g, DETAIL_PROPS)
     .replace(/#{ADD_CONTENT}/g, ADD_CONTENT)
+    .replace(/#{ADD_PROPS}/g, ADD_PROPS)
+    .replace(/#{ADD_SUBMIT}/g, ADD_SUBMIT)
 }
 
 function replaceError (string) {
