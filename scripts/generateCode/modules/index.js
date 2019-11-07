@@ -129,7 +129,7 @@ const generateCodeHandle = param => {
 
     DETAIL_CONTENT = getDetail(param)
     DETAIL_PROPS = getDetailProps(param)
-    // ADD_CONTENT = getAdd(param)
+    ADD_CONTENT = getAdd(param)
     // EDIT_CONTENT = getEdit(param)
     //  生成页面
     // updateRouterConfig(param, 1)
@@ -838,6 +838,31 @@ function getListMethod (param) {
  */
 function getEdit (param) {
   const temp = []
+  const tableInfo = param.tableInfo
+  tableInfo.forEach(column => {
+    if (column.publicFlag === '0') {
+      if (column.componentType === 'Select') {
+        if (dictFlag(column)) {
+          //  数据字典
+        } else {
+          //  自定义
+          const selectOptions = column.componentData.split(';')
+          const selectOpt = []
+          selectOptions.forEach(opt => {
+            const opts = opt.split(':')
+            if (typeof (opts) === 'object' && opts.length === 2) {
+              selectOpt.push(``)
+            }
+          })
+          temp.push(``)
+        }
+      } else if (column.componentType === 'DatePicker_date') {
+      } else if (column.componentType === 'DatePicker_datetime') {
+      } else if (column.componentType === 'InputNumber') {
+      } else {
+      }
+    }
+  })
   return temp.join('')
 }
 
@@ -910,6 +935,31 @@ function getDetailProps (param) {
  */
 function getAdd (param) {
   const temp = []
+  const tableInfo = param.tableInfo
+  tableInfo.forEach(column => {
+    if (column.publicFlag === '0') {
+      if (column.componentType === 'Select') {
+        if (dictFlag(column)) {
+        //  数据字典
+        } else {
+          //  自定义
+          const selectOptions = column.componentData.split(';')
+          const selectOpt = []
+          selectOptions.forEach(opt => {
+            const opts = opt.split(':')
+            if (typeof (opts) === 'object' && opts.length === 2) {
+              selectOpt.push(``)
+            }
+          })
+          temp.push(``)
+        }
+      } else if (column.componentType === 'DatePicker_date') {
+      } else if (column.componentType === 'DatePicker_datetime') {
+      } else if (column.componentType === 'InputNumber') {
+      } else {
+      }
+    }
+  })
   return temp.join('')
 }
 
