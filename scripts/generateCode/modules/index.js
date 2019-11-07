@@ -136,7 +136,7 @@ const generateCodeHandle = param => {
     // updateApiService(param)
     // createApi(param)
     // createList(param)
-    createDetail(param)
+    // createDetail(param)
     // createAdd(param)
     // createEdit(param)
     code = 10000
