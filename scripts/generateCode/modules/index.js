@@ -847,6 +847,10 @@ function getEdit (param) {
     if (column.publicFlag === '0') {
       if (column.componentType === 'Select') {
         if (dictFlag(column)) {
+          let allowClear = ''
+          if (column.notNullFlag === '0') {
+            allowClear = ' allowClear'
+          }
           //  数据字典
           temp.push(`\n        <a-col :span="12">
           <a-form-item
@@ -855,7 +859,7 @@ function getEdit (param) {
             :wrapperCol="{ span: 16 }">
             <a-select
               :options="${underLineToCamelbak(column.componentData)}"
-             ${getEditDecorator(column)}
+             ${getEditDecorator(column)}${allowClear}
               placeholder="请选择${column.columnName}"/>
           </a-form-item>
         </a-col>`)
@@ -1009,13 +1013,17 @@ function getAdd (param) {
     if (column.publicFlag === '0') {
       if (column.componentType === 'Select') {
         if (dictFlag(column)) {
-        //  数据字典
+          let allowClear = ''
+          if (column.notNullFlag === '0') {
+            allowClear = ' allowClear'
+          }
+          //  数据字典
           temp.push(`\n        <a-col :span="12">
           <a-form-item
             label="${column.columnName}"
             :labelCol="{ span: 8 }"
             :wrapperCol="{ span: 16 }">
-            <a-select :options="${underLineToCamelbak(column.componentData)}" ${getAddDecorator(column)} placeholder="请选择${column.columnName}"/>
+            <a-select :options="${underLineToCamelbak(column.componentData)}" ${getAddDecorator(column)}${allowClear} placeholder="请选择${column.columnName}"/>
           </a-form-item>
         </a-col>`)
         } else {
