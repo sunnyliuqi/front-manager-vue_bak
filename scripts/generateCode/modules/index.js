@@ -650,15 +650,15 @@ function getListData (param) {
     if (column.componentType === 'DatePicker_datetime') {
       queryTime.push(`
         if (this.queryParam.${column.javaName}Search) {
-          this.queryParam.${column.javaName}Search[0] = this.queryParam.${column.javaName}Search[0].format('YYYY-MM-DD HH:mm:ss')
-          this.queryParam.${column.javaName}Search[1] = this.queryParam.${column.javaName}Search[1].format('YYYY-MM-DD HH:mm:ss')
+          this.queryParam.${column.javaName}Search[0] = getMoment(this.queryParam.${column.javaName}Search[0], 'YYYY-MM-DD HH:mm:ss')
+          this.queryParam.${column.javaName}Search[1] = getMoment(this.queryParam.${column.javaName}Search[1], 'YYYY-MM-DD HH:mm:ss')
         }`)
     }
     if (column.componentType === 'DatePicker_date') {
       queryTime.push(`
         if (this.queryParam.${column.javaName}Search) {
-          this.queryParam.${column.javaName}Search[0] = this.queryParam.${column.javaName}Search[0].format('YYYY-MM-DD')
-          this.queryParam.${column.javaName}Search[1] = this.queryParam.${column.javaName}Search[1].format('YYYY-MM-DD')
+          this.queryParam.${column.javaName}Search[0] = getMoment(this.queryParam.${column.javaName}Search[0], 'YYYY-MM-DD')
+          this.queryParam.${column.javaName}Search[1] = getMoment(this.queryParam.${column.javaName}Search[1], 'YYYY-MM-DD')
         }`)
     }
     if (dictFlag(column)) {
