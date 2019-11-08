@@ -132,15 +132,17 @@ const generateCodeHandle = param => {
     ADD_CONTENT = getAdd(param)
     ADD_PROPS = getAddProps(param)
     ADD_SUBMIT = getAddOrEditSubmit(param)
-    // EDIT_CONTENT = getEdit(param)
+    EDIT_CONTENT = getEdit(param)
+    EDIT_PROPS = getEditProps(param)
+    EDIT_SUBMIT = getAddOrEditSubmit(param)
     //  生成页面
     // updateRouterConfig(param, 1)
     // updateApiService(param)
     // createApi(param)
     // createList(param)
     // createDetail(param)
-    createAdd(param)
-    // createEdit(param)
+    // createAdd(param)
+    createEdit(param)
     code = 10000
     msg = '生成页面成功'
   }
@@ -846,6 +848,17 @@ function getEdit (param) {
       if (column.componentType === 'Select') {
         if (dictFlag(column)) {
           //  数据字典
+          temp.push(`\n        <a-col :span="12">
+          <a-form-item
+            label="${column.columnName}"
+            :labelCol="{ span: 8 }"
+            :wrapperCol="{ span: 16 }">
+            <a-select
+              :options="${underLineToCamelbak(column.componentData)}"
+             ${getEditDecorator(column)}
+              placeholder="请选择${column.columnName}"/>
+          </a-form-item>
+        </a-col>`)
         } else {
           //  自定义
           const selectOptions = column.componentData.split(';')
@@ -853,15 +866,66 @@ function getEdit (param) {
           selectOptions.forEach(opt => {
             const opts = opt.split(':')
             if (typeof (opts) === 'object' && opts.length === 2) {
-              selectOpt.push(``)
+              selectOpt.push(`\n              <a-select-option value="${opts[0]}">${opts[1]}</a-select-option>`)
             }
           })
-          temp.push(``)
+          temp.push(`\n        <a-col :span="12">
+          <a-form-item
+            label="${column.columnName}"
+            :labelCol="{ span: 8 }"
+            :wrapperCol="{ span: 16 }">
+            <a-select
+              ${getEditDecorator(column)}>${selectOpt.join('')}
+            </a-select>
+          </a-form-item>
+        </a-col>`)
         }
       } else if (column.componentType === 'DatePicker_date') {
+        temp.push(`\n        <a-col :span="12">
+          <a-form-item
+            label="${column.columnName}"
+            :labelCol="{ span: 8 }"
+            :wrapperCol="{ span: 16 }">
+            <a-date-picker
+              ${getEditDecorator(column)}
+              placeholder="请选择${column.columnName}"/>
+          </a-form-item>
+        </a-col>`)
       } else if (column.componentType === 'DatePicker_datetime') {
+        temp.push(`\n        <a-col :span="12">
+          <a-form-item
+            label="${column.columnName}"
+            :labelCol="{ span: 8 }"
+            :wrapperCol="{ span: 16 }">
+            <a-date-picker
+              showTime
+              format="YYYY-MM-DD HH:mm:ss"
+              ${getEditDecorator(column)}
+              placeholder="请选择${column.columnName}"/>
+          </a-form-item>
+        </a-col>`)
       } else if (column.componentType === 'InputNumber') {
+        temp.push(`\n        <a-col :span="12">
+          <a-form-item
+            label="${column.columnName}"
+            :labelCol="{ span: 8 }"
+            :wrapperCol="{ span: 16 }">
+            <a-input-number
+              ${getEditDecorator(column)}
+              placeholder="请输入${column.columnName}"/>
+          </a-form-item>
+        </a-col>`)
       } else {
+        temp.push(`\n        <a-col :span="12">
+          <a-form-item
+            label="${column.columnName}"
+            :labelCol="{ span: 8 }"
+            :wrapperCol="{ span: 16 }">
+            <a-input
+              ${getEditDecorator(column)}
+              placeholder="请输入${column.columnName}"/>
+          </a-form-item>
+        </a-col>`)
       }
     }
   })
@@ -1050,6 +1114,19 @@ function getAddProps (param) {
   dictProps(param.tableInfo, temp)
   return temp.join('')
 }
+
+/**
+ * 编辑 props
+ * @param param
+ * @returns {string}
+ */
+function getEditProps (param) {
+  const temp = []
+  dictProps(param.tableInfo, temp)
+  formatDateProps(param.tableInfo, temp)
+  getMomentProps(param.tableInfo, temp)
+  return temp.join('')
+}
 /**
  * Add页面
  * 装饰绑定
@@ -1066,6 +1143,26 @@ function getAddDecorator (column) {
     rule.push(`rules:[{required: true, message: '${column.columnName}不能为空'}]`)
   }
   decorator.push(`v-decorator="['${column.javaName}',{${initialValue.join('')}${rule.join('')}}]"`)
+  return decorator.join('')
+}
+/**
+ * Edit页面
+ * 装饰绑定
+ * @param column
+ */
+function getEditDecorator (column) {
+  const decorator = []
+  const rule = []
+  if (column.notNullFlag === '1') {
+    rule.push(`,rules:[{required: true, message: '${column.columnName}不能为空'}]`)
+  }
+  if (column.componentType === 'DatePicker_date') {
+    decorator.push(`v-decorator="['${column.javaName}',{initialValue: getMoment(record.${column.javaName},'YYYY-MM-DD')${rule.join('')}}]"`)
+  } else if (column.componentType === 'DatePicker_datetime') {
+    decorator.push(`v-decorator="['${column.javaName}',{initialValue: getMoment(record.${column.javaName},'YYYY-MM-DD HH:mm:ss')${rule.join('')}}]"`)
+  } else {
+    decorator.push(`v-decorator="['${column.javaName}',{initialValue: record.${column.javaName}${rule.join('')}}]"`)
+  }
   return decorator.join('')
 }
 /**

@@ -144,12 +144,6 @@ export default {
         return {}
       }
     },
-    orgType: {
-      type: Array,
-      default: function () {
-        return {}
-      }
-    },
     refresh: {
       type: Function,
       default: undefined
@@ -157,6 +151,12 @@ export default {
     update: {
       type: Function,
       default: undefined
+    },
+    orgType: {
+      type: Array,
+      default: function () {
+        return {}
+      }
     },
     formatDate: {
       type: Function,
