@@ -223,7 +223,7 @@ function updateApiService (param) {
     if (err) console.error(JSON.stringify(err))
     // 拿到服务配置
     const serviceConfigObj = eval('(' + data.replace('export const service =', '') + ')')
-    const serviceInfo = param.serviceName.split(':')
+    const serviceInfo = param.serviceName.split(/:|：/)
     if (!serviceInfo || serviceInfo.length < 2) {
       console.error('服务格式错误：' + param.serviceName)
     }
@@ -378,11 +378,11 @@ function getQueryCondition (param) {
               </a-form-item>
             </a-col>`)
         } else {
-          const selectOptions = column.componentData.split(';')
+          const selectOptions = column.componentData.split(/;|；/)
           // 自定义
           const selectOpt = []
           selectOptions.forEach(opt => {
-            const opts = opt.split(':')
+            const opts = opt.split(/:|：/)
             if (typeof (opts) === 'object' && opts.length === 2) {
               selectOpt.push(`\n                  <a-select-option value="${opts[0]}">${opts[1]}</a-select-option>`)
             }
@@ -572,7 +572,7 @@ function setDictAndDate (tableInfo) {
  */
 function dictFlag (column) {
   if (column.componentType === 'Select') {
-    const selectOptions = column.componentData.split(';')
+    const selectOptions = column.componentData.split(/;|；/)
     if (selectOptions.length < 2) {
       return true
     }
@@ -798,11 +798,11 @@ function getListMethod (param) {
       return value
     },`)
       } else {
-        const caseOpts = column.componentData.split(';')
+        const caseOpts = column.componentData.split(/;|；/)
         // 自定义
         const caseKeys = []
         caseOpts.forEach(opt => {
-          const opts = opt.split(':')
+          const opts = opt.split(/:|：/)
           if (typeof (opts) === 'object' && opts.length === 2) {
             caseKeys.push(`\n        case '${opts[0]}':
           value = '${opts[1]}'
@@ -861,10 +861,13 @@ function getEdit (param) {
         </a-col>`)
         } else {
           //  自定义
-          const selectOptions = column.componentData.split(';')
+          const selectOptions = column.componentData.split(/;|；/)
           const selectOpt = []
+          if (column.notNullFlag === '0') {
+            selectOpt.push(`\n              <a-select-option value="">请选择</a-select-option>`)
+          }
           selectOptions.forEach(opt => {
-            const opts = opt.split(':')
+            const opts = opt.split(/:|：/)
             if (typeof (opts) === 'object' && opts.length === 2) {
               selectOpt.push(`\n              <a-select-option value="${opts[0]}">${opts[1]}</a-select-option>`)
             }
@@ -875,7 +878,7 @@ function getEdit (param) {
             :labelCol="{ span: 8 }"
             :wrapperCol="{ span: 16 }">
             <a-select
-              ${getEditDecorator(column)}>${selectOpt.join('')}
+              ${getEditDecorator(column)} placeholder="请选择${column.columnName}">${selectOpt.join('')}
             </a-select>
           </a-form-item>
         </a-col>`)
@@ -1017,10 +1020,13 @@ function getAdd (param) {
         </a-col>`)
         } else {
           //  自定义
-          const selectOptions = column.componentData.split(';')
+          const selectOptions = column.componentData.split(/;|；/)
           const selectOpt = []
+          if (column.notNullFlag === '0') {
+            selectOpt.push(`\n              <a-select-option value="">请选择</a-select-option>`)
+          }
           selectOptions.forEach(opt => {
-            const opts = opt.split(':')
+            const opts = opt.split(/:|：/)
             if (typeof (opts) === 'object' && opts.length === 2) {
               selectOpt.push(`\n              <a-select-option value="${opts[0]}">${opts[1]}</a-select-option>`)
             }
@@ -1030,7 +1036,7 @@ function getAdd (param) {
             label="${column.columnName}"
             :labelCol="{ span: 8 }"
             :wrapperCol="{ span: 16 }">
-            <a-select ${getAddDecorator(column)}>${selectOpt.join('')}
+            <a-select ${getAddDecorator(column)} placeholder="请选择${column.columnName}">${selectOpt.join('')}
             </a-select>
           </a-form-item>
         </a-col>`)
