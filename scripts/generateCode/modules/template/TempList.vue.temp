@@ -89,8 +89,7 @@ export default {
     }
   },
   created () {
-    // 数据字典
-#{LIST_DICT}
+    // 数据字典#{LIST_DICT}
   },
   computed: {},
   methods: {

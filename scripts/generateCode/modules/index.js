@@ -718,7 +718,7 @@ function getListData (param) {
       },`)
   }
   if (isDict) {
-    temp.push(`${dicts}`)
+    temp.push(`${dicts.join('')}`)
   }
   if (param.tableType === '2') {
     temp.push(`\n      // 列表选择
@@ -753,7 +753,7 @@ function getListDict (param) {
       // 数据字典
       const dnyName = `dny_${column.componentData}`
       const selectName = `select_${column.componentData}`
-      temp.push(`    getDictByType('${column.componentData}').then(
+      temp.push(`\n    getDictByType('${column.componentData}').then(
       (res) => {
         if (res.code === 10000) {
           const ${underLineToCamelbak(dnyName)} = res.result.map(item => {
