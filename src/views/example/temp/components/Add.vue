@@ -15,10 +15,7 @@
             :labelCol="{ span: 8 }"
             :wrapperCol="{ span: 16 }">
             <a-input
-              v-decorator="[
-                'code',
-                {rules: [ { required: true, message: '编码不能为空' }]}
-              ]"
+              v-decorator="['code',{rules: [ { required: true, message: '编码不能为空' }]}]"
               placeholder="请输入编码"/>
           </a-form-item>
         </a-col>
@@ -28,9 +25,7 @@
             :labelCol="{ span: 8 }"
             :wrapperCol="{ span: 16 }">
             <a-input
-              v-decorator="[
-                'name',{}
-              ]"
+              v-decorator="['name',{}]"
               placeholder="请输入name"/>
           </a-form-item>
         </a-col>
@@ -51,9 +46,7 @@
             :labelCol="{ span: 8 }"
             :wrapperCol="{ span: 16 }">
             <a-input-number
-              v-decorator="[
-                'age',{}
-              ]"
+              v-decorator="['age',{}]"
               placeholder="请输入年龄"/>
           </a-form-item>
         </a-col>

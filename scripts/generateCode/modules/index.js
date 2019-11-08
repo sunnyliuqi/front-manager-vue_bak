@@ -941,6 +941,14 @@ function getAdd (param) {
       if (column.componentType === 'Select') {
         if (dictFlag(column)) {
         //  数据字典
+          temp.push(`\n        <a-col :span="12">
+          <a-form-item
+            label="${column.columnName}"
+            :labelCol="{ span: 8 }"
+            :wrapperCol="{ span: 16 }">
+            <a-select :options="${underLineToCamelbak(column.componentData)}" ${getAddDecorator(column)} placeholder="请选择${column.columnName}"/>
+          </a-form-item>
+        </a-col>`)
         } else {
           //  自定义
           const selectOptions = column.componentData.split(';')
@@ -948,15 +956,65 @@ function getAdd (param) {
           selectOptions.forEach(opt => {
             const opts = opt.split(':')
             if (typeof (opts) === 'object' && opts.length === 2) {
-              selectOpt.push(``)
+              selectOpt.push(`\n              <a-select-option value="${opts[0]}">${opts[1]}</a-select-option>`)
             }
           })
-          temp.push(``)
+          temp.push(`\n        <a-col :span="12">
+          <a-form-item
+            label="${column.columnName}"
+            :labelCol="{ span: 8 }"
+            :wrapperCol="{ span: 16 }">
+            <a-select ${getAddDecorator(column)}>${selectOpt.join('')}
+            </a-select>
+          </a-form-item>
+        </a-col>`)
         }
       } else if (column.componentType === 'DatePicker_date') {
+        temp.push(`\n        <a-col :span="12">
+          <a-form-item
+            label="${column.columnName}"
+            :labelCol="{ span: 8 }"
+            :wrapperCol="{ span: 16 }">
+            <a-date-picker
+              ${getAddDecorator(column)}
+              placeholder="请选择${column.columnName}"/>
+          </a-form-item>
+        </a-col>`)
       } else if (column.componentType === 'DatePicker_datetime') {
+        temp.push(`\n        <a-col :span="12">
+          <a-form-item
+            label="${column.columnName}"
+            :labelCol="{ span: 8 }"
+            :wrapperCol="{ span: 16 }">
+            <a-date-picker
+              showTime
+              format="YYYY-MM-DD HH:mm:ss"
+              ${getAddDecorator(column)}
+              placeholder="请选择${column.columnName}"/>
+          </a-form-item>
+        </a-col>`)
       } else if (column.componentType === 'InputNumber') {
+        temp.push(`\n        <a-col :span="12">
+          <a-form-item
+            label="${column.columnName}"
+            :labelCol="{ span: 8 }"
+            :wrapperCol="{ span: 16 }">
+            <a-input-number
+              ${getAddDecorator(column)}
+              placeholder="请输入${column.columnName}"/>
+          </a-form-item>
+        </a-col>`)
       } else {
+        temp.push(`\n        <a-col :span="12">
+          <a-form-item
+            label="${column.columnName}"
+            :labelCol="{ span: 8 }"
+            :wrapperCol="{ span: 16 }">
+            <a-input
+              ${getAddDecorator(column)}
+              placeholder="请输入${column.columnName}"/>
+          </a-form-item>
+        </a-col>`)
       }
     }
   })
@@ -976,9 +1034,9 @@ function getAddDecorator (column) {
     if (column.componentType === 'Select') {
       initialValue.push(`initialValue:'0',`)
     }
-    rule.push(`rules:[{required: true, message: '${column.columnName}不能为空'}]} ]`)
+    rule.push(`rules:[{required: true, message: '${column.columnName}不能为空'}]`)
   }
-  decorator.push(`v-decorator="['${column.javaName}',{${initialValue.join('')}${rule.join('')}`)
+  decorator.push(`v-decorator="['${column.javaName}',{${initialValue.join('')}${rule.join('')}}]"`)
   return decorator.join('')
 }
 /**
