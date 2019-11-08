@@ -29,7 +29,7 @@
             :wrapperCol="{ span: 16 }">
             <a-input
               v-decorator="[
-                'name'
+                'name',{}
               ]"
               placeholder="请输入name"/>
           </a-form-item>
@@ -52,7 +52,7 @@
             :wrapperCol="{ span: 16 }">
             <a-input-number
               v-decorator="[
-                'age'
+                'age',{}
               ]"
               placeholder="请输入年龄"/>
           </a-form-item>

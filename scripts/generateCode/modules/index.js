@@ -964,6 +964,24 @@ function getAdd (param) {
 }
 
 /**
+ * Add页面
+ * 装饰绑定
+ * @param column
+ */
+function getAddDecorator (column) {
+  const decorator = []
+  const rule = []
+  const initialValue = []
+  if (column.notNullFlag === '1') {
+    if (column.componentType === 'Select') {
+      initialValue.push(`initialValue:'0',`)
+    }
+    rule.push(`rules:[{required: true, message: '${column.columnName}不能为空'}]} ]`)
+  }
+  decorator.push(`v-decorator="['${column.javaName}',{${initialValue.join('')}${rule.join('')}`)
+  return decorator.join('')
+}
+/**
  * 业务模板内容替换
  * @param data
  * @returns {*}
