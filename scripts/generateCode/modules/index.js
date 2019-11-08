@@ -136,12 +136,12 @@ const generateCodeHandle = param => {
     EDIT_PROPS = getEditProps(param)
     EDIT_SUBMIT = getAddOrEditSubmit(param)
     //  生成页面
-    // updateRouterConfig(param, 1)
-    // updateApiService(param)
-    // createApi(param)
-    // createList(param)
-    // createDetail(param)
-    // createAdd(param)
+    updateRouterConfig(param, 1)
+    updateApiService(param)
+    createApi(param)
+    createList(param)
+    createDetail(param)
+    createAdd(param)
     createEdit(param)
     code = 10000
     msg = '生成页面成功'
