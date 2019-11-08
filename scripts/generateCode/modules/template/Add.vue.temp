@@ -55,17 +55,7 @@ export default {
     save: {
       type: Function,
       default: undefined
-    },
-    formatDate: {
-      type: Function,
-      default: undefined
-    },
-    orgType: {
-      type: Array,
-      default: function () {
-        return {}
-      }
-    },
+    },#{ADD_PROPS}
     customWidth: {
       type: Number,
       default: 720
@@ -91,9 +81,7 @@ export default {
     handleSubmit () {
       this.formLoading = true
       this.form.validateFields((err, values) => {
-        if (!err) {
-          values.addTime = this.formatDate(values.addTime, 'YYYY-MM-DD 00:00:00')
-          values.updTime = this.formatDate(values.updTime, 'YYYY-MM-DD HH:mm:ss')
+        if (!err) {#{ADD_SUBMIT}
           this.save(values).then(res => {
             if (res.code === 10000) {
               this.$message.info(res.msg)

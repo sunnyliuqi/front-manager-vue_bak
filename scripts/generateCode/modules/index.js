@@ -130,6 +130,8 @@ const generateCodeHandle = param => {
     DETAIL_CONTENT = getDetail(param)
     DETAIL_PROPS = getDetailProps(param)
     ADD_CONTENT = getAdd(param)
+    ADD_PROPS = getAddProps(param)
+    ADD_SUBMIT = getAddOrEditSubmit(param)
     // EDIT_CONTENT = getEdit(param)
     //  生成页面
     // updateRouterConfig(param, 1)
@@ -137,7 +139,7 @@ const generateCodeHandle = param => {
     // createApi(param)
     // createList(param)
     // createDetail(param)
-    // createAdd(param)
+    createAdd(param)
     // createEdit(param)
     code = 10000
     msg = '生成页面成功'
@@ -1021,6 +1023,33 @@ function getAdd (param) {
   return temp.join('')
 }
 
+/**
+ * 新增提交页面
+ * @param param
+ */
+function getAddOrEditSubmit (param) {
+  const temp = []
+  param.tableInfo.forEach(column => {
+    if (column.componentType === 'DatePicker_datetime') {
+      temp.push(`\n          values.${column.javaName} = this.formatDate(values.${column.javaName}, 'YYYY-MM-DD HH:mm:ss')`)
+    }
+    if (column.componentType === 'DatePicker_date') {
+      temp.push(`\n          values.${column.javaName} = this.formatDate(values.${column.javaName}, 'YYYY-MM-DD 00:00:00')`)
+    }
+  })
+  return temp.join('')
+}
+/**
+ * 新增 props
+ * @param param
+ * @returns {string}
+ */
+function getAddProps (param) {
+  const temp = []
+  formatDateProps(param.tableInfo, temp)
+  dictProps(param.tableInfo, temp)
+  return temp.join('')
+}
 /**
  * Add页面
  * 装饰绑定
