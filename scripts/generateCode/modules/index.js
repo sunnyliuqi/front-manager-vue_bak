@@ -401,7 +401,7 @@ function getQueryCondition (param) {
             <a-col :md="8" :sm="12" :xs="24">
               <a-form-item
                 label="${column.columnName}">
-                <a-range-picker v-model="queryParam.${column.javaName}Search"/>
+                <a-range-picker v-model="queryParam.${column.javaName}Condition"/>
               </a-form-item>
             </a-col>`)
       } else if (column.componentType === 'DatePicker_datetime') {
@@ -409,7 +409,7 @@ function getQueryCondition (param) {
             <a-col :md="8" :sm="12" :xs="24">
               <a-form-item
                 label="${column.columnName}">
-                <a-range-picker showTime format="YYYY-MM-DD HH:mm:ss" v-model="queryParam.${column.javaName}Search"/>
+                <a-range-picker showTime format="YYYY-MM-DD HH:mm:ss" v-model="queryParam.${column.javaName}Condition"/>
               </a-form-item>
             </a-col>`)
       } else {
@@ -649,16 +649,18 @@ function getListData (param) {
   tableInfo.forEach(column => {
     if (column.componentType === 'DatePicker_datetime') {
       queryTime.push(`
-        if (this.queryParam.${column.javaName}Search) {
-          this.queryParam.${column.javaName}Search[0] = getMoment(this.queryParam.${column.javaName}Search[0], 'YYYY-MM-DD HH:mm:ss')
-          this.queryParam.${column.javaName}Search[1] = getMoment(this.queryParam.${column.javaName}Search[1], 'YYYY-MM-DD HH:mm:ss')
+        if (this.queryParam.${column.javaName}Condition) {
+          this.queryParam.${column.javaName}Search = []
+          this.queryParam.${column.javaName}Search[0] = formatDate(this.queryParam.${column.javaName}Condition[0], 'YYYY-MM-DD HH:mm:ss')
+          this.queryParam.${column.javaName}Search[1] = formatDate(this.queryParam.${column.javaName}Condition[1], 'YYYY-MM-DD HH:mm:ss')
         }`)
     }
     if (column.componentType === 'DatePicker_date') {
       queryTime.push(`
-        if (this.queryParam.${column.javaName}Search) {
-          this.queryParam.${column.javaName}Search[0] = getMoment(this.queryParam.${column.javaName}Search[0], 'YYYY-MM-DD')
-          this.queryParam.${column.javaName}Search[1] = getMoment(this.queryParam.${column.javaName}Search[1], 'YYYY-MM-DD')
+        if (this.queryParam.${column.javaName}Condition) {
+          this.queryParam.${column.javaName}Search = []
+          this.queryParam.${column.javaName}Search[0] = formatDate(this.queryParam.${column.javaName}Condition[0], 'YYYY-MM-DD')
+          this.queryParam.${column.javaName}Search[1] = formatDate(this.queryParam.${column.javaName}Condition[1], 'YYYY-MM-DD')
         }`)
     }
     if (dictFlag(column)) {
