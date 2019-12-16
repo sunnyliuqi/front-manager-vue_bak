@@ -113,8 +113,10 @@ const generateCodeHandle = param => {
     code = 10000
     msg = '生成路由成功'
   } else if (param.hasPage === '1') {
+    /* 更新模板文件的占位符 */
     setDictAndDate(param.tableInfo)
     SERVICE_PATH = param.serviceName.match(/(.*):/)[1]
+    /* 更新列表页面 */
     LIST_QUERY_CONDITION = getQueryCondition(param)
     LIST_OPERATE_BATCH_DEL = getBatchDel(param)
     LIST_ROW_SELECT = getRowSelect(param)
@@ -126,22 +128,31 @@ const generateCodeHandle = param => {
     LIST_DATA = getListData(param)
     LIST_DICT = getListDict(param)
     LIST_METHOD = getListMethod(param)
-
+    /* 更新详情页面 */
     DETAIL_CONTENT = getDetail(param)
     DETAIL_PROPS = getDetailProps(param)
+    /* 更新新增页面 */
     ADD_CONTENT = getAdd(param)
     ADD_PROPS = getAddProps(param)
     ADD_SUBMIT = getAddOrEditSubmit(param)
+    /* 更新编辑页面 */
     EDIT_CONTENT = getEdit(param)
     EDIT_PROPS = getEditProps(param)
     EDIT_SUBMIT = getAddOrEditSubmit(param)
-    //  生成页面
+    /* 生成页面 */
+    /* 更新路由配置 */
     updateRouterConfig(param, 1)
+    /* 更新服务（对应后端新建工程服务路径） */
     updateApiService(param)
+    /* 创建api接口文件 */
     createApi(param)
+    /* 创建列表页面  */
     createList(param)
+    /* 创建详情页面 */
     createDetail(param)
+    /* 创建新增页面 */
     createAdd(param)
+    /* 创建编辑页面 */
     createEdit(param)
     code = 10000
     msg = '生成页面成功'
