@@ -8,7 +8,20 @@
     > <a-button v-authorize:xxx >查询</a-button> ,其中xxx对应菜单管理里面操作的操作编码
 2. v-if方式
     ><a-button v-if="$authorize('xxx')" >查询</a-button>,其中xxx对应菜单管理里面操作的操作编码
-   
+## 跳过全局性错误提示   
+> 在接口文件对应的请求中添加headers: { 'check': true }，例如：
+```
+   export function checkWorkNum (params) {
+     return axios({
+       url: path.sys + '/user/checkWorkNum',
+       method: 'GET',
+       // 设置后，业务错误时不会调用弹出全局错误信息
+       headers: { 'check': true },
+       // id=params.id&workNum=params.workNum
+       params: params
+     })
+   }
+```
 > 更多查看   
 > [vue](https://cn.vuejs.org/v2/guide/components.html)  
 > [antd-vue UI组件](https://vue.ant.design/)  
