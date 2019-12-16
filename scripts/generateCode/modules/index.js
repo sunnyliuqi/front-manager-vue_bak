@@ -857,7 +857,7 @@ function getEdit (param) {
   const temp = []
   const tableInfo = param.tableInfo
   tableInfo.forEach(column => {
-    if (column.publicFlag === '0') {
+    if (column.publicFlag === '0' && column.editFlag === '1') {
       if (column.componentType === 'Select') {
         if (dictFlag(column)) {
           let allowClear = ''
@@ -1023,7 +1023,7 @@ function getAdd (param) {
   const temp = []
   const tableInfo = param.tableInfo
   tableInfo.forEach(column => {
-    if (column.publicFlag === '0') {
+    if (column.publicFlag === '0' && column.insertFlag === '1') {
       if (column.componentType === 'Select') {
         if (dictFlag(column)) {
           let allowClear = ''
