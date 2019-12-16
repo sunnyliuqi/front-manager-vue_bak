@@ -141,11 +141,11 @@ const generateCodeHandle = param => {
     EDIT_SUBMIT = getAddOrEditSubmit(param)
     /* 生成页面 */
     /* 更新路由配置 */
-    updateRouterConfig(param, 1)
+    // updateRouterConfig(param, 1)
     /* 更新服务（对应后端新建工程服务路径） */
     updateApiService(param)
     /* 创建api接口文件 */
-    createApi(param)
+    // createApi(param)
     /* 创建列表页面  */
     createList(param)
     /* 创建详情页面 */
