@@ -682,14 +682,14 @@ export default {
           this.createCode(params).then(res => {
             if (res.code === 10000) {
               this.$message.info(`生成前端代码结果：${res.msg}`)
-              if (this.hasPage === '1') {
+              /* if (this.hasPage === '1') {
                 // 生成页面 后端代码生成
                 this.save(params).then(res => {
                   if (res.code === 10000) {
                     this.$message.info(`生成后端代码结果：${res.msg}`)
                   }
                 })
-              }
+              } */
             }
           }).finally(() => {
             this.formLoading = false
