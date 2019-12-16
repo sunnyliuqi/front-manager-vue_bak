@@ -14,7 +14,22 @@ function plugin (Vue) {
   if (plugin.installed) {
     return
   }
-
+  /**
+   *  使用v-if="$authorize('xxx')"
+   *  其中xxx为操作码
+   */
+  !Vue.prototype.$authorize && Object.defineProperties(Vue.prototype, {
+    $authorize: {
+      get () {
+        const _this = this
+        return (operationCode) => {
+          const operationCodes = _this.$store.getters.operationCodes
+          return operationCodes.includes(operationCode)
+        }
+      }
+    }
+  })
+  /* 废弃 */
   !Vue.prototype.$auth && Object.defineProperties(Vue.prototype, {
     $auth: {
       get () {
@@ -31,7 +46,7 @@ function plugin (Vue) {
       }
     }
   })
-
+  /* 废弃 */
   !Vue.prototype.$enum && Object.defineProperties(Vue.prototype, {
     $enum: {
       get () {

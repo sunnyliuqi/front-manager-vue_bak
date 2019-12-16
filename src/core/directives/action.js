@@ -2,7 +2,7 @@ import Vue from 'vue'
 import store from '@/store'
 
 /**
- * Action 权限指令
+ * Action 权限指令(废弃)
  * 指令用法：
  *  - 在需要控制 action 级别权限的组件上使用 v-action:[method] , 如下：
  *    <i-button v-action:add >添加用户</a-button>
