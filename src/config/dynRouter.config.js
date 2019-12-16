@@ -48,62 +48,6 @@ export const dynRouterMap = [{
         keepAlive: true
       }
     }, {
-      path: '/sys/role',
-      name: 'role',
-      component: () => import('@/views/form/stepForm/StepForm'),
-      meta: {
-        title: '角色管理',
-        keepAlive: true
-      }
-    }, {
-      path: '/sys/menu',
-      name: 'menu',
-      component: () => import('@/views/form/advancedForm/AdvancedForm'),
-      meta: {
-        title: '菜单管理',
-        keepAlive: true
-      }
-    }, {
-      path: '/sys/api',
-      name: 'api',
-      component: () => import('@/views/form/advancedForm/AdvancedForm'),
-      meta: {
-        title: '接口管理',
-        keepAlive: true
-      }
-    }, {
-      path: '/sys/organization',
-      name: 'organization',
-      component: () => import('@/views/form/advancedForm/AdvancedForm'),
-      meta: {
-        title: '组织机构',
-        keepAlive: true
-      }
-    }, {
-      path: '/sys/log',
-      name: 'log',
-      component: () => import('@/views/form/advancedForm/AdvancedForm'),
-      meta: {
-        title: '操作日志',
-        keepAlive: true
-      }
-    }, {
-      path: '/sys/dict',
-      name: 'dict',
-      component: () => import('@/views/form/advancedForm/AdvancedForm'),
-      meta: {
-        title: '数据字典',
-        keepAlive: true
-      }
-    }, {
-      path: '/sys/area',
-      name: 'area',
-      component: () => import('@/views/form/advancedForm/AdvancedForm'),
-      meta: {
-        title: '区域管理',
-        keepAlive: true
-      }
-    }, {
       path: '/sys/personal',
       name: 'personal',
       hidden: true,
