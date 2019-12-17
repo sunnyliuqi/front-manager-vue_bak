@@ -20,8 +20,6 @@
       </span>
       <span slot="action" slot-scope="text, record">
         <template>
-          <a @click="handleDetail(record)">详情</a>
-          <a-divider type="vertical"/>
           <a @click="handleUpdate(record)">修改</a>
           <a-divider type="vertical"/>
           <a-popconfirm title="您确认删除吗?" @confirm="handleDelete([record])" okText="确认" cancelText="取消">
@@ -30,10 +28,6 @@
         </template>
       </span>
     </s-table>
-    <detail
-      ref="roleDetail"
-      :get-status-name="getStatusName"
-      :record="recordActive"/>
     <add
       ref="roleAdd"
       :record="recordActive"
@@ -51,10 +45,8 @@
 
 <script>
 
-import { isEmpty } from '@/utils/common'
 import { del, get, queryList, save, update } from '@/api/sys/role'
 import { STable } from '@/components'
-import Detail from './components/Detail'
 import Add from './components/Add'
 import Edit from './components/Edit'
 
@@ -62,7 +54,6 @@ export default {
   name: 'RoleList',
   components: {
     STable,
-    Detail,
     Add,
     Edit
   },
@@ -99,8 +90,8 @@ export default {
         },
         {
           title: '创建者',
-          dataIndex: 'addUserCode',
-          key: 'addUserCode'
+          dataIndex: 'userName',
+          key: 'userName'
         },
         {
           title: '操作',
@@ -147,15 +138,6 @@ export default {
     // 刷新列表
     refresh () {
       this.$refs.roleTable.refresh()
-    },
-    // 打开详情
-    handleDetail (record) {
-      get(record).then(res => {
-        if (res.code === 10000) {
-          this.recordActive = res.result
-          this.$refs.roleDetail.show()
-        }
-      })
     },
     // 打开新增
     handleAdd () {
