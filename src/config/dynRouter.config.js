@@ -58,6 +58,15 @@ export const dynRouterMap = [{
         hidden: true,
         static: true
       }
+    }, {
+      path: '/sys/role',
+      name: 'role',
+      component: () => import('@/views/sys/role/RoleList'),
+      meta: {
+        title: '角色管理',
+        keepAlive: true,
+        static: true
+      }
     }]
   }]
 }, {

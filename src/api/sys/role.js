@@ -1,5 +1,7 @@
 import path from '@/api/index'
-import { axios } from '@/utils/request'
+import {
+  axios
+} from '@/utils/request'
 import parsePageParams from '@/utils/page'
 // 分页
 export function queryList (data) {
@@ -15,7 +17,7 @@ export function queryList (data) {
 export function save (data) {
   return axios({
     url: path.sys + '/role/add',
-    method: 'add',
+    method: 'PUT',
     data: data
   })
 }
