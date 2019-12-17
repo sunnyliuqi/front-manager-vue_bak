@@ -13,7 +13,7 @@
       :columns="columns"
 
       :data="loadData"
-      showPagination="auto"
+      showPagination="false"
     >
       <span slot="status" slot-scope="text">
         {{ getStatusName(text) }}

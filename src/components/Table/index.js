@@ -162,7 +162,7 @@ export default {
               this.localPagination.pageSize
           }) || false
           // 为防止删除数据后导致页面当前页面数据长度为 0 ,自动翻页到上一页
-          if (this.showPagination && r.records.length === 0 && this.showPagination && this.localPagination.current > 1) {
+          if (this.showPagination && this.showPagination && this.localPagination.current > 1 && r.records.length === 0) {
             this.localPagination.current--
             this.loadData()
             return
@@ -177,11 +177,14 @@ export default {
           } catch (e) {
             this.localPagination = false
           }
-          // console.log('loadData -> this.localPagination', this.localPagination)
-          if (['auto', true].includes(this.showPagination)) {
-            this.localDataSource = r.records // 返回结果中的数组数据
-          } else {
+          if (r instanceof Array) {
             this.localDataSource = r
+          } else {
+            this.localDataSource = r.records
+          }
+          // console.log('loadData -> this.localPagination', this.localPagination)
+          if (!['auto', true].includes(this.showPagination)) {
+            this.localPagination = false
           }
           this.localLoading = false
         })
@@ -308,7 +311,6 @@ export default {
         { Object.keys(this.$slots).map(name => (<template slot={name}>{this.$slots[name]}</template>)) }
       </a-table>
     )
-
     return (
       <div class="table-wrapper">
         { showAlert ? this.renderAlert() : null }
