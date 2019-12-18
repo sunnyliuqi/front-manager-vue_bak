@@ -140,6 +140,8 @@ export default {
     onClose () {
       this.editVisible = false
       this.form.resetFields()
+      this.checkedKeys = []
+      this.halfCheckedKeys = []
     },
     renderData () {
       return [...this.checkedKeys, ...this.halfCheckedKeys].filter(item => item !== '-1')
