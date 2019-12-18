@@ -88,8 +88,7 @@ export default {
       recordActive: {}
     }
   },
-  created () {
-    // 数据字典#{LIST_DICT}
+  created () {{LIST_DICT}
   },
   computed: {},
   methods: {

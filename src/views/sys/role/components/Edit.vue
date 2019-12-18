@@ -32,6 +32,20 @@
             </a-select>
           </a-form-item>
         </a-col>
+        <a-col :span="12">
+          <a-form-item
+            label="菜单"
+            :labelCol="{ span: 8 }"
+            :wrapperCol="{ span: 16 }">
+            <a-tree
+              v-decorator="['menus',{}]"
+              checkable
+              @check="onCheck"
+              :checkedKeys="checkedKeys"
+              :treeData="treeData"
+            />
+          </a-form-item>
+        </a-col>
       </a-row>
       <div
         :style="{
@@ -62,6 +76,16 @@
 export default {
   name: 'RoleEdit',
   props: {
+    getRoleMenus: {
+      type: Function,
+      default: undefined
+    },
+    treeData: {
+      type: Array,
+      default: function () {
+        return []
+      }
+    },
     record: {
       type: Object,
       default: function () {
@@ -85,11 +109,31 @@ export default {
     return {
       editVisible: false,
       form: this.$form.createForm(this),
-      formLoading: false
+      formLoading: false,
+      /* 选中项 */
+      checkedKeys: [],
+      /* 半选中项 */
+      halfCheckedKeys: []
     }
   },
   computed: {},
+  watch: {
+    record () {
+      if (this.record.id) {
+        this.getRoleMenus(this.record).then(res => {
+          if (res.code === 10000) {
+            this.checkedKeys = res.result.menuAndOperationIds
+            this.halfCheckedKeys = res.result.supMenuIds
+          }
+        })
+      }
+    }
+  },
   methods: {
+    onCheck (checkedKeys, info) {
+      this.checkedKeys = checkedKeys
+      this.halfCheckedKeys = info.halfCheckedKeys
+    },
     show () {
       this.editVisible = true
     },
@@ -97,11 +141,15 @@ export default {
       this.editVisible = false
       this.form.resetFields()
     },
+    renderData () {
+      return [...this.checkedKeys, ...this.halfCheckedKeys].filter(item => item !== '-1')
+    },
     handleSubmit () {
       this.formLoading = true
       this.form.validateFields((err, values) => {
         if (!err) {
           values.id = this.record.id
+          values.menuIds = this.renderData()
           this.update(values).then(res => {
             if (res.code === 10000) {
               this.$message.info(res.msg)

@@ -30,12 +30,15 @@
     </s-table>
     <add
       ref="roleAdd"
+      :tree-data="treeData"
       :record="recordActive"
       :save="save"
       :refresh="refresh"
     />
     <edit
       ref="roleEdit"
+      :tree-data="treeData"
+      :get-role-menus="getRoleMenus"
       :record="recordActive"
       :update="update"
       :refresh="refresh"
@@ -45,7 +48,8 @@
 
 <script>
 
-import { del, get, queryList, save, update } from '@/api/sys/role'
+import { del, get, queryList, save, update, getRoleMenus } from '@/api/sys/role'
+import { getMenuAndOrganization } from '@/api/sys/menu'
 import { STable } from '@/components'
 import Add from './components/Add'
 import Edit from './components/Edit'
@@ -63,6 +67,10 @@ export default {
       save: save,
       // 修改方法
       update: update,
+      /* 获取角色菜单 */
+      getMenuAndOrganization: getMenuAndOrganization,
+      /* 获取选中的菜单 */
+      getRoleMenus: getRoleMenus,
       // 查询参数
       queryParam: {},
       // 列表表头
@@ -109,15 +117,38 @@ export default {
           })
       },
       // 单个记录行
-      recordActive: {}
+      recordActive: {},
+      /* 菜单树 */
+      treeData: []
     }
   },
   created () {
-    // 数据字典
+    this.getMenuAndOrganization().then(res => {
+      if (res.code === 10000) {
+        const baseMenu = { id: '-1', name: '平台菜单', url: '', code: '-1', supId: '-1', title: '平台菜单', value: '-1', key: '-1' }
+        if (res.result && res.result.length > 0) {
+          baseMenu.children = res.result
+        }
+        this.treeData = this.formatTree([baseMenu])
+      }
+    })
   },
   computed: {},
   methods: {
-
+    /* 格式化树 */
+    formatTree (baseMenuArray) {
+      if (baseMenuArray && baseMenuArray instanceof Array && baseMenuArray.length > 0) {
+        baseMenuArray = baseMenuArray.map(item => {
+          if (item.children) {
+            item.children = this.formatTree(item.children)
+          }
+          return Object.assign(item, { title: item.name, key: item.id })
+        })
+        return baseMenuArray
+      } else {
+        return baseMenuArray
+      }
+    },
     getStatusName (key) {
       let value = ''
       switch (key) {

@@ -24,10 +24,23 @@
             label="状态"
             :labelCol="{ span: 8 }"
             :wrapperCol="{ span: 16 }">
-            <a-select v-decorator="['status',{initialValue:'0',rules:[{required: true, message: '状态,0禁用，1启用不能为空'}]}]" placeholder="请选择状态,0禁用，1启用">
+            <a-select v-decorator="['status',{initialValue:'0',rules:[{required: true, message: '状态不能为空'}]}]" placeholder="请选择状态">
               <a-select-option value="0">禁用</a-select-option>
               <a-select-option value="1">启用</a-select-option>
             </a-select>
+          </a-form-item>
+        </a-col>
+        <a-col :span="12">
+          <a-form-item
+            label="菜单"
+            :labelCol="{ span: 8 }"
+            :wrapperCol="{ span: 16 }">
+            <a-tree
+              v-decorator="['menus',{}]"
+              checkable
+              @check="onCheck"
+              :treeData="treeData"
+            />
           </a-form-item>
         </a-col>
       </a-row>
@@ -58,11 +71,16 @@
 
 <script>
 import ACol from 'ant-design-vue/es/grid/Col'
-
 export default {
   name: 'RoleAdd',
   components: { ACol },
   props: {
+    treeData: {
+      type: Array,
+      default: function () {
+        return []
+      }
+    },
     record: {
       type: Object,
       default: function () {
@@ -86,11 +104,22 @@ export default {
     return {
       addVisible: false,
       form: this.$form.createForm(this),
-      formLoading: false
+      formLoading: false,
+      /* 选中项 */
+      checkedKeys: [],
+      /* 半选中项 */
+      halfCheckedKeys: []
     }
   },
-  computed: {},
+  computed: {
+  },
+  created: function () {
+  },
   methods: {
+    onCheck (checkedKeys, info) {
+      this.checkedKeys = checkedKeys
+      this.halfCheckedKeys = info.halfCheckedKeys
+    },
     show () {
       this.addVisible = true
     },
@@ -99,10 +128,14 @@ export default {
       this.formLoading = false
       this.form.resetFields()
     },
+    renderData () {
+      return [...this.checkedKeys, ...this.halfCheckedKeys].filter(item => item !== '-1')
+    },
     handleSubmit () {
       this.formLoading = true
       this.form.validateFields((err, values) => {
         if (!err) {
+          values.menuIds = this.renderData()
           this.save(values).then(res => {
             if (res.code === 10000) {
               this.$message.info(res.msg)
