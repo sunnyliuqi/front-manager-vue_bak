@@ -26,7 +26,7 @@
       </div>
 
       <div class="table-operator">
-        <a-button type="primary" icon="plus" @click="handleAdd()">新建</a-button>
+        <a-button v-authorize:CODE_GENERATE_ADD type="primary" icon="plus" @click="handleAdd()">新建</a-button>
       </div>
     </div>
     <s-table
@@ -42,7 +42,7 @@
       </span>
       <span slot="action" slot-scope="text, record">
         <template>
-          <a-popconfirm title="您确认删除吗?" @confirm="handleDelete(record)" okText="确认" cancelText="取消">
+          <a-popconfirm v-authorize:CODE_GENERATE_DEL title="您确认删除吗?" @confirm="handleDelete(record)" okText="确认" cancelText="取消">
             <a href="javascript:void(0)">删除</a>
           </a-popconfirm>
         </template>
