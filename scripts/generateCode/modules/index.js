@@ -657,7 +657,7 @@ function getListData (param) {
   const tableInfo = param.tableInfo
   const queryTime = []
   const dicts = []
-  tableInfo.forEach(column => {
+  tableInfo.sort(columnSort).forEach(column => {
     if (column.componentType === 'DatePicker_datetime') {
       queryTime.push(`
         if (this.queryParam.${column.javaName}Condition) {
@@ -753,6 +753,22 @@ function getListData (param) {
   return temp.join('')
 }
 
+/**
+ * 数组排序 -升序
+ * @param obj1
+ * @param obj2
+ */
+function columnSort (obj1, obj2) {
+  const val1 = obj1.sort
+  const val2 = obj2.sort
+  if (val1 > val2) {
+    return 1
+  } else if (val1 < val2) {
+    return -1
+  } else {
+    return 0
+  }
+}
 /**
  * 数据字典数据
  * @param param
