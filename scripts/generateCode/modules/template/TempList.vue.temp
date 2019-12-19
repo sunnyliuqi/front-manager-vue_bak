@@ -88,7 +88,7 @@ export default {
       recordActive: {}
     }
   },
-  created () {{LIST_DICT}
+  created () {#{LIST_DICT}
   },
   computed: {},
   methods: {
