@@ -68,7 +68,7 @@
       </div>
 
       <div class="table-operator">
-        <a-button type="primary" icon="plus" @click="handleAdd()">新建</a-button>
+        <a-button v-authorize:SYS_USER_ADD type="primary" icon="plus" @click="handleAdd()">新建</a-button>
       </div>
     </div>
     <s-table
@@ -84,22 +84,22 @@
       </span>
       <span slot="action" slot-scope="text, record">
         <template>
-          <a @click="handleDetail(record)">详情</a>
-          <a-divider type="vertical"/>
-          <a @click="handleUpdate(record)">修改</a>
-          <a-divider type="vertical"/>
-          <a-popconfirm title="您确认删除吗?" @confirm="handleDelete(record)" okText="确认" cancelText="取消">
+          <a v-authorize:SYS_USER_DETAILS @click="handleDetail(record)">详情</a>
+          <a-divider v-authorize:SYS_USER_DETAILS type="vertical"/>
+          <a v-authorize:SYS_USER_UPDATE @click="handleUpdate(record)">修改</a>
+          <a-divider v-authorize:SYS_USER_UPDATE type="vertical"/>
+          <a-popconfirm v-authorize:SYS_USER_DELETE title="您确认删除吗?" @confirm="handleDelete(record)" okText="确认" cancelText="取消">
             <a href="javascript:void(0)">删除</a>
           </a-popconfirm>
-          <a-divider type="vertical"/>
-          <a-popconfirm title="确认冻结该用户吗?" @confirm="handleDisabled(record)" okText="确认" cancelText="取消">
+          <a-divider v-authorize:SYS_USER_DELETE type="vertical"/>
+          <a-popconfirm v-authorize:SYS_USER_ENABLED title="确认冻结该用户吗?" @confirm="handleDisabled(record)" okText="确认" cancelText="取消">
             <a v-if="record.enabled" href="javascript:void(0)">冻结</a>
           </a-popconfirm>
-          <a-popconfirm title="确认解冻该用户吗?" @confirm="handleEnabled(record)" okText="确认" cancelText="取消">
+          <a-popconfirm v-authorize:SYS_USER_ENABLED title="确认解冻该用户吗?" @confirm="handleEnabled(record)" okText="确认" cancelText="取消">
             <a v-if="!record.enabled" href="javascript:void(0)">解冻</a>
           </a-popconfirm>
-          <a-divider type="vertical"/>
-          <a-popconfirm title="确认要重置该用户的密码吗?" @confirm="handleRestPassword(record)" okText="确认" cancelText="取消">
+          <a-divider v-authorize:SYS_USER_ENABLED type="vertical"/>
+          <a-popconfirm v-authorize:SYS_USER_RESETPASSWORD title="确认要重置该用户的密码吗?" @confirm="handleRestPassword(record)" okText="确认" cancelText="取消">
             <a href="javascript:void(0)">重置密码</a>
           </a-popconfirm>
         </template>
