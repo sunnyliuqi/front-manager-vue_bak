@@ -67,6 +67,15 @@ export const dynRouterMap = [{
         keepAlive: true,
         static: true
       }
+    }, {
+      path: '/sys/menu',
+      name: 'menu',
+      component: () => import('@/views/sys/menu/MenuList'),
+      meta: {
+        title: '菜单管理',
+        keepAlive: true,
+        static: true
+      }
     }]
   }]
 }, {
