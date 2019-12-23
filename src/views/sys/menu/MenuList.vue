@@ -2,7 +2,7 @@
   <a-card :bordered="false">
     <div>
       <div class="table-operator">
-        <a-button type="primary" icon="plus" @click="handleAdd()">新建</a-button>
+        <a-button v-authorize:SYS_MENU_EDIT type="primary" icon="plus" @click="handleAdd()">新建</a-button>
       </div>
     </div>
     <s-table
@@ -19,13 +19,13 @@
       </span>
       <span slot="action" slot-scope="text, record">
         <template>
-          <a v-if="record.id != -1" @click="handleUpdate(record)">修改</a>
-          <a-divider v-if="record.id != -1" type="vertical"/>
-          <a-popconfirm v-if="record.id != -1" title="您确认删除吗?" @confirm="handleDelete([record])" okText="确认" cancelText="取消">
+          <a v-if="record.id != -1" v-authorize:SYS_MENU_EDIT @click="handleUpdate(record)">修改</a>
+          <a-divider v-if="record.id != -1" v-authorize:SYS_MENU_EDIT type="vertical"/>
+          <a-popconfirm v-if="record.id != -1" v-authorize:SYS_MENU_DELETE title="您确认删除吗?" @confirm="handleDelete([record])" okText="确认" cancelText="取消">
             <a href="javascript:void(0)">删除</a>
           </a-popconfirm>
-          <a-divider v-if="record.id != -1" type="vertical"/>
-          <a @click="handleAdd(record.id,record.url,true)">添加下级</a>
+          <a-divider v-if="record.id != -1" v-authorize:SYS_MENU_DELETE type="vertical"/>
+          <a v-authorize:SYS_MENU_EDIT @click="handleAdd(record.id,record.url,true)">添加下级</a>
         </template>
       </span>
     </s-table>
