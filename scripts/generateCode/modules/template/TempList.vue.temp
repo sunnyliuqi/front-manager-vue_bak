@@ -24,8 +24,7 @@
       ref="#{FUNCTION_NAME_LOWER}Table"
       size="default"
       :rowKey="(recordActive) => recordActive.id"
-      :columns="columns"
-#{LIST_ROW_SELECT}
+      :columns="columns"#{LIST_ROW_SELECT}
       :data="loadData"
       showPagination="auto"
     >#{LIST_CONTENT_SELECT}

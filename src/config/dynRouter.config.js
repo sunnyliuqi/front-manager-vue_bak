@@ -76,6 +76,15 @@ export const dynRouterMap = [{
         keepAlive: true,
         static: true
       }
+    }, {
+      path: '/sys/api',
+      name: 'api',
+      component: () => import('@/views/sys/api/ApiList'),
+      meta: {
+        title: '接口管理',
+        keepAlive: true,
+        static: true
+      }
     }]
   }]
 }, {
