@@ -16,6 +16,7 @@
             :wrapperCol="{ span: 16 }">
             <a-tree-select
               showSearch
+              treeDefaultExpandAll
               :disabled="record.disabled"
               :treeData="menuTreeData"
               :filterTreeNode="filterTreeNode"
@@ -40,8 +41,8 @@
             :labelCol="{ span: 8 }"
             :wrapperCol="{ span: 16 }">
             <a-input
-              v-decorator="['url',{initialValue: record.url,rules:[{required: true, message: 'URL不能为空'}]}]"
-              placeholder="请输入URL"/>
+              v-decorator="['url',{initialValue: record.url, rules:[{required: true, message: 'URL不能为空'}, {pattern:/^\/.+$/,message:'请输入正确的URL'}, {validator:validatorUrl}]}]"
+              :placeholder="getPlaceHoledr"/>
           </a-form-item>
         </a-col>
         <a-col :span="12">
@@ -92,43 +93,54 @@
             :showPagination="false"
           >
             <span slot="operateName" slot-scope="text, recordChildren">
-              <a-input
-                class="editTable"
-                :value="text"
-                @change="e => handleChange({'name': e.target.value}, recordChildren)"
-              />
+              <a-form-item
+                :wrapperCol="{ span: 24 }">
+                <a-input
+                  v-decorator="[recordChildren.id+'name',{initialValue: text, rules:[{required: true,message: '操作名称不能为空'}]}]"
+                  @change="e => handleChange({'name': e.target.value}, recordChildren)"
+                  placeholder="请输入操作名称"/>
+              </a-form-item>
             </span>
+            <span class="custom-required" slot="customNameTitle">操作名称</span>
             <span slot="operateCode" slot-scope="text, recordChildren">
-              <a-input
-                class="editTable"
-                :value="text"
-                @change="e => handleChange({'code': e.target.value}, recordChildren)"
-              />
+              <a-form-item
+                :wrapperCol="{ span: 24 }">
+                <a-input
+                  v-decorator="[recordChildren.id,{initialValue: text,rules:[{required: true,message: '操作编码不能为空'}, {validator:validatorOperateCode}]}]"
+                  @change="e => handleChange({'code': e.target.value}, recordChildren)"
+                  placeholder="请输入操作编码"/>
+              </a-form-item>
             </span>
-            <span slot="customCodeTitle">
-              <a-tooltip>
+            <span class="custom-required" slot="customCodeTitle">
+              操作编码<a-tooltip style="margin-left: 4px">
                 <template slot="title">
                   对应权限指令v-authorize:xxx、权限属性$authorize('xxx')中的xxx
                 </template>
                 <Icon type="question-circle" />
-            </a-tooltip>
-              操作编码
+              </a-tooltip>
             </span>
+            <span class="custom-required" slot="customApiTitle">API</span>
             <span slot="operateApis" slot-scope="text, recordChildren">
-              <a-select
-                mode="multiple"
-                showSearch
-                optionFilterProp="children"
-                :filterOption="filterOption"
-                :options="apiList"
-                :value="recordChildren.sysApis"
-                @change=" value => handleChange({'sysApis':value}, recordChildren)"
-              >
-              </a-select>
+              <a-form-item
+                :wrapperCol="{ span: 24 }">
+                <a-select
+                  mode="multiple"
+                  showSearch
+                  optionFilterProp="children"
+                  :filterOption="filterOption"
+                  :options="apiList"
+                  v-decorator="[recordChildren.id+'sysApis',{initialValue: recordChildren.sysApis,rules:[{required: true,message: 'API不能为空'}]}]"
+                  @change=" value => handleChange({'sysApis':value}, recordChildren)"
+                >
+                </a-select>
+              </a-form-item>
             </span>
             <span slot="operateAction" slot-scope="text, recordChildren">
               <template>
+                <a-form-item
+                  :wrapperCol="{ span: 24 }">
                   <a @click="handleOperateDelete(recordChildren)" >删除</a>
+                </a-form-item>
               </template>
             </span>
           </s-table>
@@ -161,11 +173,20 @@
 
 <script>
 import { STable } from '@/components'
+import { isEmpty } from '@/utils/common'
 import Icon from 'ant-design-vue/es/icon'
 export default {
   name: 'MenuEdit',
   components: { STable, Icon },
   props: {
+    checkCode: {
+      type: Function,
+      default: undefined
+    },
+    checkUrl: {
+      type: Function,
+      default: undefined
+    },
     menuTreeData: {
       type: Array,
       default: function () {
@@ -174,15 +195,11 @@ export default {
     },
     title: {
       type: String,
-      defult: '编辑'
+      default: '编辑'
     },
     loadApi: {
       type: Function,
       default: undefined
-    },
-    isEmpty: {
-      type: Function,
-      defalut: undefined
     },
     record: {
       type: Object,
@@ -198,6 +215,10 @@ export default {
       type: Function,
       default: undefined
     },
+    save: {
+      type: Function,
+      default: undefined
+    },
     customWidth: {
       type: Number,
       default: 720
@@ -209,11 +230,12 @@ export default {
       form: this.$form.createForm(this),
       formLoading: false,
       apiList: [],
+      isEmpty: isEmpty,
       operateColumns: [{
-        title: '操作名称',
         dataIndex: 'name',
         width: '300px',
         key: 'name',
+        slots: { title: 'customNameTitle' },
         scopedSlots: { customRender: 'operateName' }
       },
       {
@@ -224,10 +246,10 @@ export default {
         scopedSlots: { customRender: 'operateCode' }
       },
       {
-        title: 'API',
         dataIndex: 'sysApis',
         key: 'sysApis',
         width: '300px',
+        slots: { title: 'customApiTitle' },
         scopedSlots: { customRender: 'operateApis' }
       },
       {
@@ -254,6 +276,12 @@ export default {
     }
   },
   computed: {
+    /* url提示语 */
+    getPlaceHoledr () {
+      const parentUrl = this.record.parentUrl || ''
+      const placeHoledr = `请输入以${parentUrl}/开头的URL`
+      return placeHoledr
+    }
   },
   created () {
     this.loadApi().then(res => {
@@ -265,11 +293,41 @@ export default {
     })
   },
   watch: {
+    /* 当前数据变化时，刷新操作列表 */
     record: function () {
       this.refreshOperatesTable()
     }
   },
   methods: {
+    /* 验证操作编码 */
+    validatorOperateCode (rule, value, callback) {
+      const index = this.operations.filter(item => item.code === value)
+      if (index.length > 1) {
+        callback(new Error('操作编码已经存在当前页面'))
+      } else {
+        const params = { 'code': value, 'id': rule.field }
+        this.checkCode(params).then(res => {
+          if (res.code !== 10000) {
+            callback(new Error(res.msg))
+          } else if (res.code === 10000 && res.result > 0) {
+            callback(new Error('操作编码已经存在'))
+          }
+          callback()
+        })
+      }
+    },
+    /* 验证url */
+    validatorUrl (rule, value, callback) {
+      const params = { 'url': value, 'id': this.record.id }
+      this.checkUrl(params).then(res => {
+        if (res.code !== 10000) {
+          callback(new Error(res.msg))
+        } else if (res.code === 10000 && res.result > 0) {
+          callback(new Error('url已存在'))
+        }
+        callback()
+      })
+    },
     /* api多选下拉框 筛选 */
     filterOption (input, option) {
       return (
@@ -278,7 +336,7 @@ export default {
     },
     /* 新增操作 */
     addOperate () {
-      const newOperate = { 'id': '' + Math.random(), 'code': '', 'name': '', 'menuId': this.record.id, 'sysApis': [] }
+      const newOperate = { 'id': `PAGE_ID${Math.random()}`, 'code': '', 'name': '', 'menuId': this.record.id, 'sysApis': [] }
       this.operations.push(newOperate)
     },
     // 操作列信息值更新
@@ -295,6 +353,7 @@ export default {
         this.operations.splice(index, 1)
       }
     },
+    /* 树查询 */
     filterTreeNode (inputValue, treeNode) {
       return treeNode.data.props.title.indexOf(inputValue) > -1
     },
@@ -316,15 +375,31 @@ export default {
       this.form.validateFields((err, values) => {
         if (!err) {
           values.id = this.record.id
-          this.update(values).then(res => {
-            if (res.code === 10000) {
-              this.$message.info(res.msg)
-              this.refresh()
+          values.operations = this.operations
+          if (!values.id) {
+            this.save(values).then(res => {
+              if (res.code === 10000) {
+                this.$message.info(res.msg)
+                this.refresh()
+              }
             }
-          }).finally(() => {
-            this.formLoading = false
-            this.onClose()
-          })
+            ).finally(
+              () => {
+                this.formLoading = false
+                this.onClose()
+              }
+            )
+          } else {
+            this.update(values).then(res => {
+              if (res.code === 10000) {
+                this.$message.info(res.msg)
+                this.refresh()
+              }
+            }).finally(() => {
+              this.formLoading = false
+              this.onClose()
+            })
+          }
         } else {
           setTimeout(() => {
             this.formLoading = false
@@ -336,6 +411,9 @@ export default {
 }
 </script>
 
-<style scoped>
-
+<style lang="less" scoped>
+  /*穿透重置表格里面单元格高度*/
+  /deep/  .ant-table-tbody tr td{
+    padding: 16px 16px 0 16px;
+  }
 </style>

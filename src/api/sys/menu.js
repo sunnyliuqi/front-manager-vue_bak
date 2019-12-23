@@ -49,6 +49,7 @@ export function checkCode (params) {
   return axios({
     url: path.sys + '/menu/checkCode',
     method: 'GET',
+    headers: { 'check': true },
     // id=params.id&code=params.code
     params: params
   })
@@ -59,6 +60,7 @@ export function checkUrl (params) {
   return axios({
     url: path.sys + '/menu/checkUrl',
     method: 'GET',
+    headers: { 'check': true },
     // id=params.id&url=params.url
     params: params
   })

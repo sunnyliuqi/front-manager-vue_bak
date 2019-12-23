@@ -25,18 +25,20 @@
             <a href="javascript:void(0)">删除</a>
           </a-popconfirm>
           <a-divider v-if="record.id != -1" type="vertical"/>
-          <a @click="handleAdd(record.id,true)">添加下级</a>
+          <a @click="handleAdd(record.id,record.url,true)">添加下级</a>
         </template>
       </span>
     </s-table>
     <edit
       ref="menuEdit"
       :title="title"
-      :is-empty="isEmpty"
       :menu-tree-data="menuTreeData"
       :load-api="loadApi"
+      :check-url="checkUrl"
+      :check-code="checkCode"
       :record="recordActive"
       :update="update"
+      :save="save"
       :custom-width="1000"
       :refresh="refresh"
     />
@@ -45,11 +47,10 @@
 
 <script>
 
-import { del, get, queryList, save, update } from '@/api/sys/menu'
+import { del, get, queryList, save, update, checkUrl, checkCode } from '@/api/sys/menu'
 import { loadApi } from '@/api/sys/api'
 import { STable } from '@/components'
 import Edit from './components/Edit'
-import { isEmpty } from '@/utils/common'
 /**
  * 格式化树名称为标题
  * @param list
@@ -72,12 +73,16 @@ export default {
   },
   data () {
     return {
-      isEmpty: isEmpty,
       // 保存方法
       save: save,
       // 修改方法
       update: update,
+      /* 读取api列表 */
       loadApi: loadApi,
+      /* 检查url唯一性 */
+      checkUrl: checkUrl,
+      /* 检查操作编码唯一性 */
+      checkCode: checkCode,
       title: '编辑',
       // 查询参数
       queryParam: {},
@@ -146,7 +151,7 @@ export default {
   computed: {
   },
   methods: {
-
+    /* 是否显示转换 */
     getShowFlagName (key) {
       let value = ''
       switch (key) {
@@ -169,8 +174,8 @@ export default {
       this.$refs.menuTable.refresh()
     },
     // 打开新增
-    handleAdd (supId, disabled) {
-      this.recordActive = { supId: supId || '', disabled: disabled || false }
+    handleAdd (supId, url, disabled) {
+      this.recordActive = { supId: supId || '', parentUrl: url, disabled: disabled || false }
       this.title = '新增'
       this.$refs.menuEdit.show()
     },
