@@ -21,7 +21,13 @@
         <template>
           <a v-if="record.id != -1" v-authorize:SYS_MENU_EDIT @click="handleUpdate(record)">修改</a>
           <a-divider v-if="record.id != -1" v-authorize:SYS_MENU_EDIT type="vertical"/>
-          <a-popconfirm v-if="record.id != -1" v-authorize:SYS_MENU_DELETE title="您确认删除吗?" @confirm="handleDelete([record])" okText="确认" cancelText="取消">
+          <a-popconfirm
+            v-if="record.id != -1"
+            v-authorize:SYS_MENU_DELETE
+            title="您确认删除吗?"
+            @confirm="handleDelete([record])"
+            okText="确认"
+            cancelText="取消">
             <a href="javascript:void(0)">删除</a>
           </a-popconfirm>
           <a-divider v-if="record.id != -1" v-authorize:SYS_MENU_DELETE type="vertical"/>
