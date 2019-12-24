@@ -10,7 +10,7 @@
       size="default"
       :rowKey="(recordActive) => recordActive.id"
       :columns="columns"
-
+      :expandedRowKeys="expandedKeys"
       :data="loadData"
       showPagination="false"
     >
@@ -155,6 +155,26 @@ export default {
   created () {
   },
   computed: {
+    /* 展开行 */
+    expandedKeys () {
+      const _menuTreeData = this.menuTreeData
+      if (_menuTreeData && _menuTreeData.length > 0) {
+        const keys = []
+        _menuTreeData.forEach(item => {
+          keys.push(item.id)
+          /* 展开第二层级
+          if (item.children && item.children.length > 0) {
+            const _childrens = item.children
+            _childrens.forEach(children => {
+              keys.push(children.id)
+            })
+          } */
+        })
+        return keys
+      } else {
+        return []
+      }
+    }
   },
   methods: {
     /* 是否显示转换 */
