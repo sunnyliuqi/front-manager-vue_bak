@@ -10,7 +10,7 @@
       size="default"
       :rowKey="(recordActive) => recordActive.id"
       :columns="columns"
-      :defaultExpandAllRows="['-1']"
+      :defaultExpandedRowKeys="['-1']"
       :data="loadData"
       showPagination="false"
     >
