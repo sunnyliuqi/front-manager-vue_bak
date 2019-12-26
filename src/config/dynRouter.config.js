@@ -102,6 +102,15 @@ export const dynRouterMap = [{
         title: '区域管理',
         keepAlive: true
       }
+    }, {
+      path: '/sys/dict',
+      name: 'dict',
+      component: () => import('@/views/sys/dict/DictList'),
+      meta: {
+        title: '数据字典',
+        keepAlive: true,
+        static: true
+      }
     }]
   }]
 }, {

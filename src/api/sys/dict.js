@@ -40,7 +40,7 @@ export function del (data) {
 }
 
 // 获取详情
-export async function get (params) {
+export function get (params) {
   return axios({
     url: path.sys + '/dict/' + params.id,
     method: 'GET'
@@ -48,7 +48,7 @@ export async function get (params) {
 }
 
 // 检查类别
-export async function checkType (params) {
+export function checkType (params) {
   return axios({
     url: path.sys + '/dict/checkType',
     method: 'GET',
@@ -58,7 +58,7 @@ export async function checkType (params) {
 }
 
 // 获取所有的字典数据
-export async function getAllDict () {
+export function getAllDict () {
   return axios({
     url: path.sys + '/dict/allType',
     method: 'GET'
