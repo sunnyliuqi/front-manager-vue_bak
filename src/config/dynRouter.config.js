@@ -111,6 +111,15 @@ export const dynRouterMap = [{
         keepAlive: true,
         static: true
       }
+    }, {
+      path: '/sys/log',
+      name: 'log',
+      component: () => import('@/views/sys/log/LogList'),
+      meta: {
+        title: '操作日志',
+        keepAlive: true,
+        static: true
+      }
     }]
   }]
 }, {
