@@ -94,6 +94,14 @@ export const dynRouterMap = [{
         keepAlive: true,
         static: true
       }
+    }, {
+      path: '/sys/area',
+      name: 'area',
+      component: () => import('@/views/sys/area/AreaList'),
+      meta: {
+        title: '区域管理',
+        keepAlive: true
+      }
     }]
   }]
 }, {

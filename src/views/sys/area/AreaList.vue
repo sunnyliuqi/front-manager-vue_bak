@@ -1,12 +1,42 @@
 <template>
   <a-card :bordered="false">
     <div>
+      <div class="table-page-search-wrapper">
+        <a-form layout="inline">
+          <a-row :gutter="48">
+            <a-col :md="8" :sm="12" :xs="24">
+              <a-form-item label="编码">
+                <a-input v-model="queryParam.code" placeholder="请输入编码"/>
+              </a-form-item>
+            </a-col>
+            <a-col :md="8" :sm="12" :xs="24">
+              <a-form-item label="名称">
+                <a-input v-model="queryParam.name" placeholder="请输入名称"/>
+              </a-form-item>
+            </a-col>
+            <a-col :md="8" :sm="12" :xs="24">
+              <a-form-item label="区域类型">
+                <a-select :options="areaType" v-model="queryParam.type" placeholder="请选择区域类型"/>
+              </a-form-item>
+            </a-col>
+            <a-col :md="8" :sm="12" :xs="24">
+              <span
+                class="table-page-search-submitButtons">
+                <a-button type="primary" @click="$refs.areaTable.refresh(true)">查询</a-button>
+                <a-button style="margin-left: 8px" @click="restQuery()">重置</a-button>
+              </span>
+            </a-col>
+          </a-row>
+        </a-form>
+      </div>
+
       <div class="table-operator">
-        <a-button v-authorize:SYS_ORGANIZATION_ADD type="primary" icon="plus" @click="handleAdd()">新建</a-button>
+        <a-button type="primary" icon="plus" @click="handleAdd()">新建</a-button>
+
       </div>
     </div>
     <s-table
-      ref="organizationTable"
+      ref="areaTable"
       size="default"
       :rowKey="(recordActive) => recordActive.id"
       :columns="columns"
@@ -15,39 +45,35 @@
       :expand="expand"
       showPagination="false"
     >
-      <span slot="orgType" slot-scope="text">
-        {{ getOrgTypeName(text) }}
+      <span slot="type" slot-scope="text">
+        {{ getTypeName(text) }}
       </span>
       <span slot="action" slot-scope="text, record">
         <template>
-          <a v-authorize:SYS_ORGANIZATION_UPDATE @click="handleUpdate(record)">修改</a>
-          <a-divider v-authorize:SYS_ORGANIZATION_UPDATE type="vertical"/>
-          <a-popconfirm v-authorize:SYS_ORGANIZATION_DELETE title="您确认删除吗?" @confirm="handleDelete([record])" okText="确认" cancelText="取消">
+          <a @click="handleUpdate(record)">修改</a>
+          <a-divider type="vertical"/>
+          <a-popconfirm title="您确认删除吗?" @confirm="handleDelete([record])" okText="确认" cancelText="取消">
             <a href="javascript:void(0)">删除</a>
           </a-popconfirm>
-          <a-divider v-authorize:SYS_ORGANIZATION_DELETE type="vertical"/>
-          <a v-authorize:SYS_ORGANIZATION_ADD @click="handleAdd(record.id,record.code,true)">添加下级机构</a>
+          <a-divider type="vertical"/>
+          <a @click="handleAdd(record.id,record.code,true)">添加下级机构</a>
         </template>
       </span>
     </s-table>
     <add
-      ref="organizationAdd"
-      :check-code="checkCode"
-      :options-area="optionsArea"
-      :manager-users="managerUsers"
+      ref="areaAdd"
       :tree-data="treeData"
-      :org-type="selectOrgType"
+      :check-code="checkCode"
+      :area-type="selectAreaType"
       :record="recordActive"
       :save="save"
       :refresh="refresh"
     />
     <edit
-      ref="organizationEdit"
-      :check-code="checkCode"
-      :options-area="optionsArea"
-      :manager-users="managerUsers"
+      ref="areaEdit"
       :tree-data="treeData"
-      :org-type="selectOrgType"
+      :check-code="checkCode"
+      :area-type="selectAreaType"
       :record="recordActive"
       :update="update"
       :refresh="refresh"
@@ -57,9 +83,7 @@
 
 <script>
 
-import { del, get, queryList, save, update, checkCode } from '@/api/sys/organization'
-import { getUserAllList } from '@/api/sys/user'
-import { listTreeHasCounty } from '@/api/sys/area'
+import { del, get, queryList, save, update, checkCode } from '@/api/sys/area'
 import { getDictByType } from '@/api/common'
 import { STable } from '@/components'
 import Add from './components/Add'
@@ -78,7 +102,7 @@ const formatTree = list => {
   })
 }
 export default {
-  name: 'OrganizationList',
+  name: 'AreaList',
   components: {
     STable,
     Add,
@@ -96,40 +120,25 @@ export default {
       // 列表表头
       columns: [
         {
-          title: '机构名称',
+          title: '名称',
           dataIndex: 'name',
           key: 'name'
         },
         {
-          title: '机构编码',
+          title: '编码',
           dataIndex: 'code',
           key: 'code'
         },
         {
-          title: '机构类型',
-          dataIndex: 'orgType',
-          key: 'orgType',
-          scopedSlots: { customRender: 'orgType' }
+          title: '区域类型',
+          dataIndex: 'type',
+          key: 'type',
+          scopedSlots: { customRender: 'type' }
         },
         {
-          title: '负责人',
-          dataIndex: 'fullName',
-          key: 'fullName'
-        },
-        {
-          title: '手机号',
-          dataIndex: 'mobileNum',
-          key: 'mobileNum'
-        },
-        {
-          title: '归属区域',
-          dataIndex: 'addressName',
-          key: 'addressName'
-        },
-        {
-          title: '详细地址',
-          dataIndex: 'address',
-          key: 'address'
+          title: '备注',
+          dataIndex: 'remark',
+          key: 'remark'
         },
         {
           title: '操作',
@@ -139,6 +148,7 @@ export default {
         }
       ],
       treeData: [],
+      expandedKeys: [],
       loadData: parameter => {
         return queryList(Object.assign(parameter, this.queryParam))
           .then(res => {
@@ -152,46 +162,26 @@ export default {
             }
           })
       },
-      orgType: [{ label: '全部', value: '' }],
-      selectOrgType: [],
+      areaType: [{ label: '全部', value: '' }],
+      selectAreaType: [],
       // 单个记录行
-      recordActive: {},
-      /* 展开行 */
-      expandedKeys: [],
-      /* 负责人列表 */
-      managerUsers: [],
-      /* 区域级联 */
-      optionsArea: []
+      recordActive: {}
     }
   },
   created () {
-    getDictByType('org_type').then(
+    getDictByType('area_type').then(
       (res) => {
         if (res.code === 10000) {
-          const dnyOrgType = res.result.map(item => {
+          const dnyAreaType = res.result.map(item => {
             return { label: `${item.dictKey}`, value: `${item.dictValue}` }
           })
-          this.orgType = [...this.orgType, ...dnyOrgType]
-          this.selectOrgType = dnyOrgType
+          this.areaType = [...this.areaType, ...dnyAreaType]
+          this.selectAreaType = dnyAreaType
         }
       }
     )
-    getUserAllList().then(res => {
-      if (res.code === 10000) {
-        const _managerUsers = res.result.map(item => {
-          return { label: `${item.fullName}`, value: `${item.userCode}` }
-        })
-        this.managerUsers = [...this.managerUsers, ..._managerUsers]
-      }
-    })
-    listTreeHasCounty().then(res => {
-      if (res.code === 10000) {
-        this.optionsArea = res.result
-      }
-    })
   },
-  computed: {
-  },
+  computed: {},
   methods: {
     /* 递归拿出id */
     renderTree (treeData) {
@@ -218,9 +208,9 @@ export default {
       }
       this.expandedKeys = _expandedKeys
     },
-    getOrgTypeName (key) {
+    getTypeName (key) {
       let value = ''
-      this.selectOrgType.forEach(item => {
+      this.selectAreaType.forEach(item => {
         if (item.value === key) {
           value = item.label
         }
@@ -230,25 +220,32 @@ export default {
     // 重置查询
     restQuery () {
       this.queryParam = {}
-      this.$refs.organizationTable.refresh(true)
+      this.$refs.areaTable.refresh(true)
     },
     // 刷新列表
     refresh () {
-      this.$refs.organizationTable.refresh()
+      this.$refs.areaTable.refresh()
+    },
+    // 打开详情
+    handleDetail (record) {
+      get(record).then(res => {
+        if (res.code === 10000) {
+          this.recordActive = res.result
+          this.$refs.areaDetail.show()
+        }
+      })
     },
     // 打开新增
     handleAdd (supId, supCode, disabled) {
       this.recordActive = { supId: supId || '', supCode: supCode || '', disabled: disabled || false }
-      this.$refs.organizationAdd.show()
+      this.$refs.areaAdd.show()
     },
     // 打开更新
     handleUpdate (record) {
       get(record).then(res => {
         if (res.code === 10000) {
-          const result = res.result
-          result.srcAreaId = result.srcAreaId ? result.srcAreaId.split(',') : undefined
-          this.recordActive = result
-          this.$refs.organizationEdit.show()
+          this.recordActive = res.result
+          this.$refs.areaEdit.show()
         }
       })
     },

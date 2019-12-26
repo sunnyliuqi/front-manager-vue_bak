@@ -113,6 +113,8 @@ const generateCodeHandle = param => {
     code = 10000
     msg = '生成路由成功'
   } else if (param.hasPage === '1') {
+    /* 字段信息排序 */
+    param.tableInfo = param.tableInfo.sort(columnSort)
     /* 更新模板文件的占位符 */
     setDictAndDate(param.tableInfo)
     SERVICE_PATH = param.serviceName.match(/(.*):/)[1]
@@ -657,7 +659,7 @@ function getListData (param) {
   const tableInfo = param.tableInfo
   const queryTime = []
   const dicts = []
-  tableInfo.sort(columnSort).forEach(column => {
+  tableInfo.forEach(column => {
     if (column.componentType === 'DatePicker_datetime') {
       queryTime.push(`
         if (this.queryParam.${column.javaName}Condition) {

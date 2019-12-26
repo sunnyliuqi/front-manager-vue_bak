@@ -1,14 +1,12 @@
 import path from '@/api/index'
 import { axios } from '@/utils/request'
-import parsePageParams from '@/utils/page'
 
 // 分页
 export function queryList (data) {
   return axios({
-    url: path.sys + '/area',
+    url: path.sys + '/area/list',
     method: 'POST',
-    data: data,
-    params: parsePageParams(data)
+    data: data
   })
 }
 
@@ -66,6 +64,7 @@ export function checkCode (params) {
   return axios({
     url: path.sys + '/area/checkCode',
     method: 'GET',
+    headers: { 'check': true },
     // id=params.id&code=params.code
     params: params
   })

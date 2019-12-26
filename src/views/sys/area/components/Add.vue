@@ -11,7 +11,7 @@
       <a-row :gutter="16">
         <a-col :span="12">
           <a-form-item
-            label="上级机构"
+            label="上级区域"
             :labelCol="{ span: 8 }"
             :wrapperCol="{ span: 16 }">
             <a-tree-select
@@ -22,79 +22,38 @@
               :treeData="treeData"
               :filterTreeNode="filterTreeNode"
               v-decorator="['supId',{initialValue: record.supId,rules:[]}]"
-              placeholder="请选择上级机构">
+              placeholder="请选择上级区域">
             </a-tree-select>
           </a-form-item>
         </a-col>
         <a-col :span="12">
           <a-form-item
-            label="机构名称"
+            label="名称"
             :labelCol="{ span: 8 }"
             :wrapperCol="{ span: 16 }">
             <a-input
-              v-decorator="['name',{rules:[{required: true, message: '机构名称不能为空'}]}]"
-              placeholder="请输入机构名称"/>
+              v-decorator="['name',{rules:[{required: true, message: '名称不能为空'}]}]"
+              placeholder="请输入名称"/>
           </a-form-item>
         </a-col>
         <a-col :span="12">
           <a-form-item
-            label="机构编码"
+            label="编码"
             :labelCol="{ span: 8 }"
             :wrapperCol="{ span: 16 }">
             <a-input
-              v-decorator="['code',{rules:[{required: true, message: '机构编码不能为空'},{validator: validatorCheckCode}]}]"
+              v-decorator="['code',{rules:[{required: true, message: '编码不能为空'},{validator: validatorCheckCode}]}]"
               :placeholder="getPlaceHolder"/>
           </a-form-item>
         </a-col>
         <a-col :span="12">
           <a-form-item
-            label="机构类型"
-            :labelCol="{ span: 8 }"
-            :wrapperCol="{ span: 16 }">
-            <a-select :options="orgType" v-decorator="['orgType',{initialValue:'0',rules:[{required: true, message: '机构类型不能为空'}]}]" placeholder="请选择机构类型"/>
-          </a-form-item>
-        </a-col>
-        <a-col :span="12">
-          <a-form-item
-            label="负责人"
-            :labelCol="{ span: 8 }"
-            :wrapperCol="{ span: 16 }">
-            <a-select :options="managerUsers" v-decorator="['principalCode',{initialValue: record.principalCode,rules:[]}]" placeholder="请选择负责人"/>
-          </a-form-item>
-        </a-col>
-        <a-col :span="12">
-          <a-form-item
-            label="手机号"
+            label="备注"
             :labelCol="{ span: 8 }"
             :wrapperCol="{ span: 16 }">
             <a-input
-              v-decorator="['mobileNum',{rules:[{pattern:/^1\d{10}$/,message:'请填写正确格式的手机号'}]}]"
-              placeholder="请输入手机号"/>
-          </a-form-item>
-        </a-col>
-        <a-col :span="12">
-          <a-form-item
-            label="归属区域"
-            :labelCol="{ span: 8 }"
-            :wrapperCol="{ span: 16 }">
-            <a-cascader
-              allowClear
-              changeOnSelect
-              :options="optionsArea"
-              v-decorator="['srcAreaId',{initialValue: record.srcAreaId,rules:[]}]"
-              :fieldNames="{ label: 'name', value: 'id', children: 'children' }"
-              placeholder="请选择归属区域"
-            />
-          </a-form-item>
-        </a-col>
-        <a-col :span="12">
-          <a-form-item
-            label="详细地址"
-            :labelCol="{ span: 8 }"
-            :wrapperCol="{ span: 16 }">
-            <a-input
-              v-decorator="['address',{}]"
-              placeholder="请输入详细地址"/>
+              v-decorator="['remark',{}]"
+              placeholder="请输入备注"/>
           </a-form-item>
         </a-col>
       </a-row>
@@ -116,7 +75,7 @@
         >
           取消
         </a-button>
-        <a-button v-authorize:SYS_ORGANIZATION_ADD @click="handleSubmit" type="primary" :loading="formLoading">保存</a-button>
+        <a-button @click="handleSubmit" type="primary" :loading="formLoading">保存</a-button>
       </div>
 
     </a-form>
@@ -127,30 +86,18 @@
 import ACol from 'ant-design-vue/es/grid/Col'
 
 export default {
-  name: 'OrganizationAdd',
+  name: 'AreaAdd',
   components: { ACol },
   props: {
-    checkCode: {
-      type: Function,
-      default: undefined
-    },
-    optionsArea: {
-      type: Array,
-      default: function () {
-        return []
-      }
-    },
-    managerUsers: {
-      type: Array,
-      default: function () {
-        return []
-      }
-    },
     treeData: {
       type: Array,
       default: function () {
         return []
       }
+    },
+    checkCode: {
+      type: Function,
+      default: undefined
     },
     record: {
       type: Object,
@@ -166,7 +113,7 @@ export default {
       type: Function,
       default: undefined
     },
-    orgType: {
+    areaType: {
       type: Array,
       default: function () {
         return {}
@@ -221,11 +168,6 @@ export default {
       this.formLoading = true
       this.form.validateFields((err, values) => {
         if (!err) {
-          if (values.srcAreaId && values.srcAreaId.length > 0) {
-            values.srcAreaId = values.srcAreaId[values.srcAreaId.length - 1]
-          } else {
-            values.srcAreaId = ''
-          }
           this.save(values).then(res => {
             if (res.code === 10000) {
               this.$message.info(res.msg)
