@@ -156,7 +156,7 @@ export default {
               const result = res.result
               formatTree(result)
               this.treeData = result
-              /* 默认展开所有 */
+              /* 默认展开两层 */
               this.expandedKeys = this.renderTree(this.treeData)
               return this.treeData
             }
@@ -183,15 +183,12 @@ export default {
   },
   computed: {},
   methods: {
-    /* 递归拿出id */
+    /* 拿出id */
     renderTree (treeData) {
       if (treeData) {
         const keys = []
         treeData.forEach(item => {
           keys.push(item.id)
-          if (item.children && item.children.length > 0) {
-            keys.push(...this.renderTree(item.children))
-          }
         })
         return keys
       }
