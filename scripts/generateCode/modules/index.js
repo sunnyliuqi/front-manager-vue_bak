@@ -635,10 +635,10 @@ function getListImport (param) {
   const temp = []
   const tableInfo = param.tableInfo
   if (isDate) {
-    temp.push(`\nimport { formatDate, getMoment, isEmpty } from '@/utils/common'`)
-  } else {
+    temp.push(`\nimport { formatDate, getMoment } from '@/utils/common'`)
+  }/*  else {
     temp.push(`\nimport { isEmpty } from '@/utils/common'`)
-  }
+  } */
   temp.push(`\nimport { del, get, queryList, save, update } from '@/api${FULL_ROUTER}'`)
   if (isDict) {
     temp.push(`\nimport { getDictByType } from '@/api/common'`)
