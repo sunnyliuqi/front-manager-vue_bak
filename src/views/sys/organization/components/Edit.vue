@@ -118,7 +118,7 @@
         >
           取消
         </a-button>
-        <a-button @click="handleSubmit" type="primary" :loading="formLoading">保存</a-button>
+        <a-button v-authorize:SYS_ORGANIZATION_UPDATE @click="handleSubmit" type="primary" :loading="formLoading">保存</a-button>
       </div>
 
     </a-form>
