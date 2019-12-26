@@ -28,6 +28,11 @@
 > 标签添加class="custom-required"  
 ## 菜单路由静态化（代码生成的默认设置）
 > 动态路由配置文件front-manager-vue\src\config\dynRouter.config.js里面设置 static: true
+## 日期工具类
+> front-manager-vue\src\utils\common.js  
+> getMoment 获取当前时间  
+> formatDate 日期转字符串  
+> offsetMoment 日期偏移  
 ## 更多文档查看   
 > [vue](https://cn.vuejs.org/v2/guide/components.html)  
 > [antd-vue UI组件](https://vue.ant.design/)  

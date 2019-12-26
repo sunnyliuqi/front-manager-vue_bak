@@ -7,8 +7,11 @@ import moment from 'moment'
  * @returns {*}
  */
 export function getMoment (date, format) {
+  if (isEmpty(format)) {
+    format = 'YYYY-MM-DD HH:mm:ss'
+  }
   if (isEmpty(date)) {
-    return null
+    return moment(new Date(), format)
   } else {
     return moment(date, format)
   }
@@ -20,11 +23,31 @@ export function getMoment (date, format) {
  * 返回字符串
  */
 export function formatDate (date, format) {
+  if (isEmpty(format)) {
+    format = 'YYYY-MM-DD HH:mm:ss'
+  }
   if (isEmpty(date)) {
     return ''
   } else {
     return moment(date).format(format)
   }
+}
+
+/**
+ * 时间偏移
+ * @param date 时间
+ * @param format 格式化
+ * @param type 偏移类型 'year' 'month' 'week' 'day' 'hour' 'minute' 'second'
+ * @param offset 偏移量
+ */
+export function offsetMoment (date, format, type, offset) {
+  if (isEmpty(date)) {
+    date = new Date()
+  }
+  if (isEmpty(format)) {
+    format = 'YYYY-MM-DD HH:mm:ss'
+  }
+  return moment(moment(date).add(offset, type), format)
 }
 /**
  * 判断是否为空

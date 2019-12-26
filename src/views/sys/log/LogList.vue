@@ -55,7 +55,7 @@
 
 <script>
 
-import { formatDate, getMoment } from '@/utils/common'
+import { formatDate, getMoment, offsetMoment } from '@/utils/common'
 import { get, queryList } from '@/api/sys/log'
 import { STable } from '@/components'
 import Detail from './components/Detail'
@@ -68,7 +68,7 @@ export default {
   data () {
     return {
       // 查询参数
-      queryParam: {},
+      queryParam: { addTimeCondition: [offsetMoment(undefined, undefined, 'week', -1), getMoment()] },
       // 列表表头
       columns: [
         {
