@@ -2,10 +2,11 @@ import path from '@/api/index'
 import { axios } from '@/utils/request'
 
 // 分页
-export function queryList () {
+export function queryList (data) {
   return axios({
     url: path.sys + '/organization/list',
-    method: 'POST'
+    method: 'POST',
+    data: data
   })
 }
 
@@ -49,6 +50,7 @@ export function checkCode (params) {
   return axios({
     url: path.sys + '/organization/checkCode',
     method: 'GET',
+    headers: { 'check': true },
     // id=params.id&code=params.code
     params: params
   })

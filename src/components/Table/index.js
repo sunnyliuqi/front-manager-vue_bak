@@ -19,6 +19,18 @@ export default {
       type: [String, Function],
       default: 'key'
     },
+    expandedRowsChange: {
+      type: Function,
+      required: false,
+      default: function () {
+      }
+    },
+    expand: {
+      type: Function,
+      required: false,
+      default: function () {
+      }
+    },
     data: {
       type: Function,
       required: true
@@ -276,7 +288,6 @@ export default {
     const props = {}
     const localKeys = Object.keys(this.$data)
     const showAlert = (typeof this.alert === 'object' && this.alert !== null && this.alert.show) && typeof this.rowSelection.selectedRowKeys !== 'undefined' || this.alert
-
     Object.keys(T.props).forEach(k => {
       const localKey = `local${k.substring(0, 1).toUpperCase()}${k.substring(1)}`
       if (localKeys.includes(localKey)) {
@@ -307,7 +318,7 @@ export default {
       return props[k]
     })
     const table = (
-      <a-table {...{ props, scopedSlots: { ...this.$scopedSlots } }} onChange={this.loadData}>
+      <a-table {...{ props, scopedSlots: { ...this.$scopedSlots } }} onChange={this.loadData} onExpand= {this.expand} onExpandedRowsChange = {this.expandedRowsChange} >
         { Object.keys(this.$slots).map(name => (<template slot={name}>{this.$slots[name]}</template>)) }
       </a-table>
     )

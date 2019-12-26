@@ -85,6 +85,15 @@ export const dynRouterMap = [{
         keepAlive: true,
         static: true
       }
+    }, {
+      path: '/sys/organization',
+      name: 'organization',
+      component: () => import('@/views/sys/organization/OrganizationList'),
+      meta: {
+        title: '组织机构',
+        keepAlive: true,
+        static: true
+      }
     }]
   }]
 }, {

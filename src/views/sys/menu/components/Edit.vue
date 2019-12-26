@@ -42,7 +42,7 @@
             :wrapperCol="{ span: 16 }">
             <a-input
               v-decorator="['url',{initialValue: record.url, rules:[{required: true, message: 'URL不能为空'}, {pattern:/^\/.+$/,message:'请输入正确的URL'}, {validator:validatorUrl}]}]"
-              :placeholder="getPlaceHoledr"/>
+              :placeholder="getPlaceHolder"/>
           </a-form-item>
         </a-col>
         <a-col :span="12">
@@ -277,7 +277,7 @@ export default {
   },
   computed: {
     /* url提示语 */
-    getPlaceHoledr () {
+    getPlaceHolder () {
       const parentUrl = this.record.parentUrl || ''
       const placeHoledr = `请输入以${parentUrl}/开头的URL`
       return placeHoledr

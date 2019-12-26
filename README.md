@@ -8,6 +8,8 @@
     > <a-button v-authorize:xxx >查询</a-button> ,其中xxx对应菜单管理里面操作的操作编码
 2. v-if方式
     ><a-button v-if="$authorize('xxx')" >查询</a-button>,其中xxx对应菜单管理里面操作的操作编码
+3. 去掉菜单路由静态化
+    >front-manager-vue\src\config\dynRouter.config.js里面对应菜单设置 static: false
 ## 跳过全局性错误提示   
 > 在接口文件对应的请求中添加headers: { 'check': true }，例如：
 ```
@@ -24,6 +26,8 @@
 ```
 ## 添加必填效果
 > 标签添加class="custom-required"  
+## 菜单路由静态化（代码生成的默认设置）
+> 动态路由配置文件front-manager-vue\src\config\dynRouter.config.js里面设置 static: true
 ## 更多文档查看   
 > [vue](https://cn.vuejs.org/v2/guide/components.html)  
 > [antd-vue UI组件](https://vue.ant.design/)  
